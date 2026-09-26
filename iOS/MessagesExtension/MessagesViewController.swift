@@ -25,6 +25,7 @@ final class MessagesViewController: MSMessagesAppViewController {
         super.willBecomeActive(with: conversation)
         store.chatSize = conversation.remoteParticipantIdentifiers.count + 1
         if let url = conversation.selectedMessage?.url { store.open(url) }
+        store.checkPendingImport()
     }
     override func didSelect(_ message: MSMessage, conversation: MSConversation) {
         if let url = message.url { store.open(url) }

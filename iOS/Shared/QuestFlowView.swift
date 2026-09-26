@@ -12,6 +12,14 @@ struct QuestFlowView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     QuestBrand()
+                    if store.pendingImportCount > 0 {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Conversation ready").font(.headline)
+                            Text("\(store.pendingImportCount) messages imported")
+                            Button("Review Messages") { store.reviewPendingImport() }.buttonStyle(.borderedProminent)
+                            Button("Discard", role: .destructive) { store.discardPendingImport() }
+                        }.questCard()
+                    }
                     if let session = store.session { sessionContent(session) }
                     else {
                         Text("Your next hangout starts here.").font(.system(.largeTitle, design: .rounded, weight: .bold))
@@ -28,6 +36,7 @@ struct QuestFlowView: View {
                             Text("An offline demo is ready. For shared sessions, set your group's server in Settings.").font(.caption).foregroundStyle(.secondary)
                         }
                     }
+                    if store.session == nil && !store.messages.isEmpty { MessageImportView(store: store) }
                     if !store.status.isEmpty { Text(store.status).font(.subheadline).foregroundStyle(.secondary).accessibilityIdentifier("status") }
                 }.padding(20)
             }.background(Color.questBackground)

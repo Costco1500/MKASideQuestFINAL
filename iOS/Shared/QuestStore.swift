@@ -62,6 +62,7 @@ enum MembershipVault {
     @Published var demoParticipantID = "alex"
     @Published var membership: Membership?
     @Published var isReading = false
+    @Published var pendingImportCount = 0
     /// People in the active Messages conversation; nil outside Messages.
     @Published var chatSize: Int?
     private var readTask: Task<Void, Never>?
@@ -94,6 +95,24 @@ enum MembershipVault {
         }
     }
     private func cancelWork() { lifecycleID = UUID(); workTask?.cancel(); workTask = nil; busy = false }
+    func checkPendingImport() {
+        pendingImportCount = (try? SharedImportStore().loadImportedMessages().count) ?? 0
+    }
+    func reviewPendingImport() {
+        guard membership == nil || isOwner else { status = "The organizer adds the conversation for this session."; return }
+        do {
+            var imported = try SharedImportStore().loadImportedMessages()
+            guard !imported.isEmpty else { checkPendingImport(); return }
+            MessageImport.select(.latest50, in: &imported)
+            stopReading(); messages = imported
+            try SharedImportStore().clearImportedMessages()
+            pendingImportCount = 0; status = "Choose the messages you want to analyze."
+        } catch { status = error.localizedDescription }
+    }
+    func discardPendingImport() {
+        do { try SharedImportStore().clearImportedMessages(); pendingImportCount = 0 }
+        catch { status = error.localizedDescription }
+    }
     func startSession(expectedParticipantCount: Int) {
         guard (1...12).contains(expectedParticipantCount), session == nil else { return }
         expand?()

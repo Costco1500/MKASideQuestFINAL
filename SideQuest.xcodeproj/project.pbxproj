@@ -11,6 +11,7 @@
 		019F8D95174FD5AB0E462733 /* QuestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B01FE8DD73520E2CBD60A1 /* QuestStore.swift */; };
 		112BBD6645CF79AF546C00DA /* QuestFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37CBB340F77C8372B1EFE30E /* QuestFlowView.swift */; };
 		124DAB883EE988CDFEDABD1F /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 625930BA50A00E3FF2CAAF78 /* OnboardingView.swift */; };
+		12FB93A2066D1C1DFD4B84CE /* SideQuestShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 34494685C52E7100B818D4F6 /* SideQuestShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		18EC44258FEE5465D7AB84FB /* Participant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D34554072CC368FC93400D5 /* Participant.swift */; };
 		1B2654ADE682A08C27609CF4 /* QuestStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03802A902E99D465D1ADCF39 /* QuestStyle.swift */; };
 		29B5D6160220002B2772F42E /* SideQuestCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448BC1702DE5EFF917FD7781 /* SideQuestCore.framework */; };
@@ -21,15 +22,20 @@
 		45AAD8208D62646C3791D982 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
 		498B0338ED66DE95D594083A /* SideQuestMessages.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1662FB1CF3A462EEE817D041 /* SideQuestMessages.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4F2C199F7F601ECBE0B193FE /* SideQuestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B98A8FE4AD8A60E2C0E8D5B /* SideQuestApp.swift */; };
+		553FFB106A9BD2B14B679B16 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C13D7C71EFA8C33C708CB3B /* ShareViewController.swift */; };
+		5A0672678921B75121F55BEB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
 		614E515D7FD295B193BDB116 /* MessageImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34B4756536541930DF95D54 /* MessageImportView.swift */; };
 		6518B96F16447A4B055DF32B /* AvailabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93334DE91AF5F9B49BCB79EB /* AvailabilityTests.swift */; };
 		688D963BB1A8641A2844757E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A705CE70EB09B71EE680584 /* SettingsView.swift */; };
+		6FC3FC4E389E55794D81AD4D /* SideQuestCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448BC1702DE5EFF917FD7781 /* SideQuestCore.framework */; };
 		75D0B130353028550D1DF74A /* PlanCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7848DFCF7700445A3E0A6F0A /* PlanCard.swift */; };
 		773EB96AB2FC602E1F80FF0F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
 		856D96115F1EB731E2D133FC /* MessageImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34B4756536541930DF95D54 /* MessageImportView.swift */; };
 		88A2B69375679EEC46AE8F70 /* CalendarEventEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679194ADE9B4CC3EFB31FCD0 /* CalendarEventEditor.swift */; };
 		897A57D7EA574F54FB5C8234 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A705CE70EB09B71EE680584 /* SettingsView.swift */; };
+		899E5491E4943872662EF301 /* SharedImportStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B34D495DBBDFF421985E9C6 /* SharedImportStore.swift */; };
 		8FC5B7BCB65902F4AD3F5EB2 /* ScreenshotMessageParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809C0AE43BD4D5AD20C5DA7B /* ScreenshotMessageParser.swift */; };
+		90CB3E5D27AB04FE768AE0EC /* QuestStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03802A902E99D465D1ADCF39 /* QuestStyle.swift */; };
 		922E56DB188D0432795B1480 /* SideQuestCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448BC1702DE5EFF917FD7781 /* SideQuestCore.framework */; };
 		933A4E2167D1543C0D5A4144 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
 		9D532E7BAAC33A7C445CA0C9 /* SharedImportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 514CD008A0FBEED13FD8FCBF /* SharedImportTests.swift */; };
@@ -58,12 +64,26 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		659E9B931279F661B636ACA7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C77A1570478B3C601B348331 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4AA43E96993CFC92D8D21631;
+			remoteInfo = SideQuestCore;
+		};
 		770DAA3E12508618788DCEB8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C77A1570478B3C601B348331 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 4AA43E96993CFC92D8D21631;
 			remoteInfo = SideQuestCore;
+		};
+		81BD05BC82911E38EF545FDF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C77A1570478B3C601B348331 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 18891820C75930724BD2BD48;
+			remoteInfo = SideQuestShare;
 		};
 		B080F0C84B658A3B76256214 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -110,6 +130,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				498B0338ED66DE95D594083A /* SideQuestMessages.appex in Embed App Extensions */,
+				12FB93A2066D1C1DFD4B84CE /* SideQuestShare.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -125,6 +146,8 @@
 		20CB826E037AA45234462646 /* AvailabilityEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AvailabilityEngine.swift; path = iOS/Core/AvailabilityEngine.swift; sourceTree = "<group>"; };
 		231419ECA1AEF7807520A4ED /* SideQuest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SideQuest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		28828CDE2FDFE993EC3EBB28 /* SideQuestUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SideQuestUITests.swift; path = iOS/UITests/SideQuestUITests.swift; sourceTree = "<group>"; };
+		2C13D7C71EFA8C33C708CB3B /* ShareViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShareViewController.swift; path = iOS/SideQuestShare/ShareViewController.swift; sourceTree = "<group>"; };
+		34494685C52E7100B818D4F6 /* SideQuestShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SideQuestShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		37CBB340F77C8372B1EFE30E /* QuestFlowView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = QuestFlowView.swift; path = iOS/Shared/QuestFlowView.swift; sourceTree = "<group>"; };
 		3A705CE70EB09B71EE680584 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsView.swift; path = iOS/Shared/SettingsView.swift; sourceTree = "<group>"; };
 		448BC1702DE5EFF917FD7781 /* SideQuestCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SideQuestCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -136,6 +159,7 @@
 		6843BBB5271423246A6913F4 /* CalendarProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CalendarProvider.swift; path = iOS/Core/CalendarProvider.swift; sourceTree = "<group>"; };
 		6D34554072CC368FC93400D5 /* Participant.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Participant.swift; path = iOS/Core/Participant.swift; sourceTree = "<group>"; };
 		7848DFCF7700445A3E0A6F0A /* PlanCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlanCard.swift; path = iOS/Shared/PlanCard.swift; sourceTree = "<group>"; };
+		7B34D495DBBDFF421985E9C6 /* SharedImportStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SharedImportStore.swift; path = iOS/Core/SharedImportStore.swift; sourceTree = "<group>"; };
 		7B716BE670DE5A28A64A0DF4 /* MainInterface.storyboard */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file.storyboard; name = MainInterface.storyboard; path = iOS/MessagesExtension/MainInterface.storyboard; sourceTree = "<group>"; };
 		7B98A8FE4AD8A60E2C0E8D5B /* SideQuestApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SideQuestApp.swift; path = iOS/App/SideQuestApp.swift; sourceTree = "<group>"; };
 		809C0AE43BD4D5AD20C5DA7B /* ScreenshotMessageParser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ScreenshotMessageParser.swift; path = iOS/Core/ScreenshotMessageParser.swift; sourceTree = "<group>"; };
@@ -162,6 +186,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				933A4E2167D1543C0D5A4144 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7F8B8B273CB48444901AA3D7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A0672678921B75121F55BEB /* Foundation.framework in Frameworks */,
+				6FC3FC4E389E55794D81AD4D /* SideQuestCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -243,6 +276,14 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
+		39623D72F75DAAB7C6EC373A /* SideQuestShare */ = {
+			isa = PBXGroup;
+			children = (
+				2C13D7C71EFA8C33C708CB3B /* ShareViewController.swift */,
+			);
+			name = SideQuestShare;
+			sourceTree = "<group>";
+		};
 		46A6D48446289B11EE786FBB /* iOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -252,6 +293,7 @@
 				C7623560112D3934199078C5 /* MessagesExtension */,
 				232EA413F1C55D647DB97ED1 /* Tests */,
 				7CC6E0961D1DB035D78BDF37 /* UITests */,
+				39623D72F75DAAB7C6EC373A /* SideQuestShare */,
 			);
 			name = iOS;
 			sourceTree = "<group>";
@@ -292,6 +334,7 @@
 				BCE73A91D179D4D32A66FAD3 /* Session.swift */,
 				B4312BBF722CDE2CE8D181C4 /* ChatScreenshotOCRService.swift */,
 				809C0AE43BD4D5AD20C5DA7B /* ScreenshotMessageParser.swift */,
+				7B34D495DBBDFF421985E9C6 /* SharedImportStore.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -322,6 +365,7 @@
 				1662FB1CF3A462EEE817D041 /* SideQuestMessages.appex */,
 				B7CEE04B47375DE4CE98E4D7 /* SideQuestTests.xctest */,
 				E8453011D7D7A341A706D607 /* SideQuestUITests.xctest */,
+				34494685C52E7100B818D4F6 /* SideQuestShare.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -339,6 +383,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		18891820C75930724BD2BD48 /* SideQuestShare */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6D893EB53F6C020D0546456D /* Build configuration list for PBXNativeTarget "SideQuestShare" */;
+			buildPhases = (
+				B187ACCA08D23269595D10EC /* Sources */,
+				7F8B8B273CB48444901AA3D7 /* Frameworks */,
+				B71C24948E3F2AA7D9057D9E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F459D5E9B34DE54632D17E59 /* PBXTargetDependency */,
+			);
+			name = SideQuestShare;
+			productName = SideQuestShare;
+			productReference = 34494685C52E7100B818D4F6 /* SideQuestShare.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		4AA43E96993CFC92D8D21631 /* SideQuestCore */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A66EEE23E394321CE228B1ED /* Build configuration list for PBXNativeTarget "SideQuestCore" */;
@@ -407,6 +469,7 @@
 			dependencies = (
 				941684D77AFF54EEC5B8CD62 /* PBXTargetDependency */,
 				060FC057B2B92EBE33AB0BDF /* PBXTargetDependency */,
+				5A88943C844858D1FB6FF6AD /* PBXTargetDependency */,
 			);
 			name = SideQuest;
 			productName = SideQuest;
@@ -461,6 +524,7 @@
 				9E418096E91579B85998AB28 /* SideQuestMessages */,
 				CBA8C880C3C94CB6F37A8F57 /* SideQuestTests */,
 				AD66ED119B6DDD27D35C779F /* SideQuestUITests */,
+				18891820C75930724BD2BD48 /* SideQuestShare */,
 			);
 		};
 /* End PBXProject section */
@@ -481,6 +545,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		43DA6484F2839A0649786BAE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B71C24948E3F2AA7D9057D9E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -517,6 +588,7 @@
 				FD7C95075A6179B781C0F865 /* Session.swift in Sources */,
 				BC29E1AB4CED95E0DE50D481 /* ChatScreenshotOCRService.swift in Sources */,
 				8FC5B7BCB65902F4AD3F5EB2 /* ScreenshotMessageParser.swift in Sources */,
+				899E5491E4943872662EF301 /* SharedImportStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -541,6 +613,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				DF60F58BD6D91FAE4DDB5A56 /* SideQuestUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B187ACCA08D23269595D10EC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				553FFB106A9BD2B14B679B16 /* ShareViewController.swift in Sources */,
+				90CB3E5D27AB04FE768AE0EC /* QuestStyle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -593,6 +674,12 @@
 			target = B6CD47E59473CC5A3982A29F /* SideQuest */;
 			targetProxy = B080F0C84B658A3B76256214 /* PBXContainerItemProxy */;
 		};
+		5A88943C844858D1FB6FF6AD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SideQuestShare;
+			target = 18891820C75930724BD2BD48 /* SideQuestShare */;
+			targetProxy = 81BD05BC82911E38EF545FDF /* PBXContainerItemProxy */;
+		};
 		7841E4B1C3C5B7DD630F1CA7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = SideQuestCore;
@@ -616,6 +703,12 @@
 			name = SideQuestCore;
 			target = 4AA43E96993CFC92D8D21631 /* SideQuestCore */;
 			targetProxy = B96E7482376D9B00EBF5E133 /* PBXContainerItemProxy */;
+		};
+		F459D5E9B34DE54632D17E59 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SideQuestCore;
+			target = 4AA43E96993CFC92D8D21631 /* SideQuestCore */;
+			targetProxy = 659E9B931279F661B636ACA7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -715,6 +808,27 @@
 			};
 			name = Release;
 		};
+		7827C77E977CF4676F4F42BB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = iOS/Shared/SideQuest.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphonesimulator*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = iOS/SideQuestShare/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sidequest.app.share;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
 		7FE4FC9F53BBE0E5642DE721 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -813,6 +927,28 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B1E38ADDC7771E0CAB2648A1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = iOS/Shared/SideQuest.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphonesimulator*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = iOS/SideQuestShare/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sidequest.app.share;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = YES;
@@ -1006,6 +1142,15 @@
 			buildConfigurations = (
 				7FF4CE11D26702990C870316 /* Release */,
 				DE9E5CBCC2F3430E1A259968 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6D893EB53F6C020D0546456D /* Build configuration list for PBXNativeTarget "SideQuestShare" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B1E38ADDC7771E0CAB2648A1 /* Release */,
+				7827C77E977CF4676F4F42BB /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
