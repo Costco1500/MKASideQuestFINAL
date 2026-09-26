@@ -57,7 +57,7 @@ def validate_plans(plans, request):
             if not all(text(plan[key], limit) for key, limit in [("id", 64), ("title", 100), ("activity", 500), ("explanation", 1000)]): return False
             if not number(plan["estimatedCostPerPerson"], 0, 500) or not number(plan["groupFitScore"], 0, 100): return False
             if type(plan["minimumAge"]) is not int or plan["minimumAge"] < 0 or (end - start).total_seconds() < 5400: return False
-            if plan.get("venueSearchQuery") is not None and not text(plan["venueSearchQuery"], 200): return False
+            if plan.get("venueSearchQuery") is not None and not text(plan["venueSearchQuery"], 80): return False
             if plan.get("secondStop") is not None and not text(plan["secondStop"], 500): return False
             if not isinstance(plan["concerns"], list) or len(plan["concerns"]) > 10 or not all(text(c, 500) for c in plan["concerns"]): return False
             if plan["area"] not in [p["approximateArea"] for p in request["participants"]]: return False
@@ -92,6 +92,8 @@ def schema(request):
                       concerns={"type": "array", "items": string},
                       whyItWorks={"type": "object", "properties": {p["id"]: string for p in request["participants"]},
                                   "required": [p["id"] for p in request["participants"]], "additionalProperties": False})
+    properties["venueSearchQuery"] = {"type": "string", "minLength": 2, "maxLength": 80,
+        "description": "One short place category, e.g. pottery studio, art supply store, boba tea, public park, or art gallery. Never combine stops or add materials, prices, or neighborhoods; the app supplies the location. For DIY crafts, search art supply store."}
     properties["estimatedCostPerPerson"].update(minimum=0, maximum=min(p["maxBudget"] for p in request["participants"]))
     properties["minimumAge"].update(minimum=0, maximum=min(eligibility(p["ageRange"]) for p in request["participants"]))
     properties["groupFitScore"].update(minimum=0, maximum=100)
