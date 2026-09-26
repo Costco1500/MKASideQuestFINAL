@@ -9,7 +9,7 @@
   <meta property="og:title" content="SideQuest — Less planning. More hanging out.">
   <meta property="og:description" content="Turn the group chat into your next good memory. An iMessage app built at HackGT 13.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=3">
   <script>
     document.documentElement.classList.add("js");
     // Apply a saved theme before first paint to avoid a flash. No saved choice = follow the system.
@@ -68,7 +68,24 @@
     </section>
 
     <section class="statement">
-      <p class="container reveal">From “we should hang out” to a plan on everyone’s calendar. <span>Without leaving Messages.</span></p>
+      <div class="statement-grid">
+        <ul class="chat-col left reveal" aria-label="Messages that never become plans">
+          <li><b>Maya</b>we should hang out this week!!</li>
+          <li><b>Jake</b>down whenever</li>
+          <li><b>Priya</b>idk what do you guys wanna do</li>
+          <li><b>Sam</b>lmk 👍</li>
+        </ul>
+
+        <p class="statement-text reveal">From “we should hang out” to a plan on everyone’s calendar. <span>Without leaving Messages.</span></p>
+
+        <ul class="chat-col right reveal" aria-label="More messages that never become plans">
+          <li><b>Alex</b>we need to do this fr</li>
+          <li><b>Jordan</b>can’t this weekend, maybe next?</li>
+          <li><b>Maya</b>someone make a plan lol</li>
+          <li><b>Jake</b>haha yes 100%</li>
+          <li class="read">Read Tuesday</li>
+        </ul>
+      </div>
     </section>
 
     <section id="how" class="band">
