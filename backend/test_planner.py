@@ -104,4 +104,14 @@ class PlannerTests(unittest.TestCase):
         self.assertEqual(result["source"], "demo")
         self.assertTrue(all("venue" not in plan for plan in result["plans"]))
 
+    def test_response_schema_constrains_lowest_budget_age_and_supplied_areas(self):
+        from planner import schema
+        request = context()
+        request["participants"].append(dict(request["participants"][0], id="maya", maxBudget=5, ageRange="under18", approximateArea="Campus"))
+        fields = schema(request)["properties"]["plans"]["items"]["properties"]
+        self.assertEqual(fields["estimatedCostPerPerson"]["maximum"], 5)
+        self.assertEqual(fields["estimatedCostPerPerson"]["minimum"], 0)
+        self.assertEqual(fields["minimumAge"]["maximum"], 0)
+        self.assertCountEqual(fields["area"]["enum"], ["Midtown", "Campus"])
+
 if __name__ == "__main__": unittest.main()
