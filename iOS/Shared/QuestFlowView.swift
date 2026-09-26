@@ -2,81 +2,122 @@ import SwiftUI
 import SideQuestCore
 
 struct QuestFlowView: View {
-    @State private var participants: [Participant] = []
+    @ObservedObject var store: QuestStore
     @State private var showingProfile = false
-    @State private var messages: [ImportedMessage] = []
-    @State private var plans: [PlanOption] = []
-    @State private var source = "demo"
-    @State private var loading = false
-    @State private var errorMessage = ""
-    @State private var isDemo = false
+    @State private var showingSettings = false
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     QuestBrand()
-                    Text("Your next hangout starts here.").font(.title.bold())
-                    Text("You choose what SideQuest sees.").foregroundStyle(.secondary)
-                    if participants.isEmpty {
-                        Button("Try Demo") {
-                            isDemo = true
-                            participants = DemoData.participants()
-                            messages = MessageImport.parse(DemoData.conversation)
-                            MessageImport.select(.all, in: &messages)
+                    if let session = store.session { sessionContent(session) }
+                    else {
+                        Text("Your next hangout starts here.").font(.system(.largeTitle, design: .rounded, weight: .bold))
+                        Text("You choose what SideQuest sees.").foregroundStyle(.secondary)
+                        if let invitation = store.invitation {
+                            Text("Join this SideQuest").font(.headline)
+                            Text("Share your own context with this group at \(invitation.serverURL.host ?? ""). Joining restarts planning so your constraints are included.").font(.subheadline)
+                            Button("Join SideQuest") { store.expand?(); showingProfile = true }.buttonStyle(.borderedProminent)
+                        } else {
+                            Button("Try Demo") { store.startDemo() }.buttonStyle(.borderedProminent).controlSize(.large)
+                            Button("Start SideQuest") { store.expand?(); showingProfile = true }.buttonStyle(.bordered)
+                            Text("An offline demo is ready. For shared sessions, set your group's server in Settings.").font(.caption).foregroundStyle(.secondary)
                         }
-                            .buttonStyle(.borderedProminent).controlSize(.large)
-                        Button("Start SideQuest") { showingProfile = true }.buttonStyle(.bordered)
-                    } else if !plans.isEmpty {
-                        Text("Three ways to make it happen").font(.title2.bold())
-                        Text(source == "demo" ? "Demo plans · works offline" : "Planned for your group").font(.caption)
-                        ForEach(plans) { PlanCard(plan: $0) }
-                    } else {
-                        Text("The group context").font(.headline)
-                        ForEach(participants) { person in
-                            VStack(alignment: .leading, spacing: 6) {
-                                Text(person.displayName).font(.headline)
-                                Text("\(person.ageRange.label) · Up to $\(Int(person.maxBudget)) · \(person.approximateArea)")
-                                    .font(.subheadline).foregroundStyle(.secondary)
-                            }.questCard()
-                        }
-                        MessageImportView(messages: $messages)
-                        let windows = AvailabilityEngine.sharedFreeWindows(participants, range: participants[0].availability)
-                        VStack(alignment: .leading, spacing: 8) {
-                            Label("Shared free time", systemImage: "calendar").font(.headline)
-                            if windows.isEmpty { Text("No shared 90-minute window. Adjust availability before planning.") }
-                            ForEach(windows.indices, id: \.self) { index in
-                                Text("\(windows[index].start.formatted(date: .abbreviated, time: .shortened)) – \(windows[index].end.formatted(date: .omitted, time: .shortened))")
-                            }
-                        }.questCard()
                     }
-                }.padding(24)
+                    if !store.status.isEmpty { Text(store.status).font(.subheadline).foregroundStyle(.secondary).accessibilityIdentifier("status") }
+                }.padding(20)
             }.background(Color.questBackground)
                 .safeAreaInset(edge: .bottom) {
-                    if !participants.isEmpty && plans.isEmpty {
-                        VStack {
-                            if !errorMessage.isEmpty { Text(errorMessage).font(.caption).foregroundStyle(.red) }
-                            Button(loading ? "Finding your next SideQuest…" : "Analyze \(MessageImport.analysisMessages(messages).count) selected messages") {
-                                loading = true
-                                Task { @MainActor in
-                                    defer { loading = false }
-                                    do {
-                                        let result = try await PlanGenerator.generate(PlanningRequest(participants: participants, messages: messages))
-                                        plans = result.plans; source = result.source
-                                        messages = []
-                                    } catch { errorMessage = error.localizedDescription }
-                                }
-                            }.buttonStyle(.borderedProminent).controlSize(.large)
-                                .disabled(loading || MessageImport.analysisMessages(messages).isEmpty).accessibilityIdentifier("generatePlans")
-                        }.padding().frame(maxWidth: .infinity).background(.ultraThinMaterial)
+                    if let session = store.session, session.planOptions.isEmpty, store.isOwner {
+                        Button(store.busy ? "Finding your next SideQuest…" : "Analyze \(MessageImport.analysisMessages(store.messages).count) selected messages") { store.generate() }
+                            .buttonStyle(.borderedProminent).controlSize(.large)
+                            .disabled(store.busy || MessageImport.analysisMessages(store.messages).isEmpty).accessibilityIdentifier("generatePlans")
+                            .padding().frame(maxWidth: .infinity).background(.ultraThinMaterial)
                     }
+                }
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) { Button { showingSettings = true } label: { Image(systemName: "gearshape") }.accessibilityLabel("Settings") }
+                    if store.session != nil { ToolbarItem(placement: .topBarLeading) { Button("New") { store.reset() } } }
                 }
                 .sheet(isPresented: $showingProfile) {
                     NavigationStack {
-                        ProfileSetupView(profile: Participant(availability: DemoData.range())) {
-                            participants = [$0]; showingProfile = false
-                        }
+                        ProfileSetupView(profile: ownProfile) { store.saveProfile($0); showingProfile = false }
+                            .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Cancel") { showingProfile = false } } }
+                    }
+                }
+                .sheet(isPresented: $showingSettings) { NavigationStack { SettingsView() } }
+                .task(id: store.session?.id) {
+                    guard !store.isDemo, store.membership != nil else { return }
+                    while !Task.isCancelled {
+                        await store.refresh(silent: true)
+                        do { try await Task.sleep(for: .seconds(5)) } catch { return }
                     }
                 }
         }.tint(.questAccent)
+    }
+    private var ownProfile: Participant { store.session?.participants.first { $0.id == store.participantID } ?? QuestPreferences.profile }
+    @ViewBuilder private func sessionContent(_ session: SideQuestSession) -> some View {
+        if store.isDemo { Label("Offline demo · votes stay on this device", systemImage: "airplane").font(.caption).foregroundStyle(.secondary) }
+        else {
+            Label("Shared session · \(session.participants.count) joined", systemImage: "person.2.fill").font(.caption)
+            Button("Refresh session") { Task { await store.refresh() } }
+        }
+        if let winner = session.winningPlan {
+            Text("SideQuest set 🎉").font(.largeTitle.bold())
+            PlanCard(plan: winner)
+            Button("Share winning plan") { store.share() }.buttonStyle(.borderedProminent)
+        } else if !session.planOptions.isEmpty {
+            Text("Make it a group yes.").font(.system(.largeTitle, design: .rounded, weight: .bold))
+            Text(session.source == "demo" ? "Three demo suggestions. Confirm prices and availability." : "Three plans shaped around your group.").font(.subheadline).foregroundStyle(.secondary)
+            if store.isDemo {
+                Picker("Demo voter", selection: $store.demoParticipantID) { ForEach(session.participants) { Text($0.displayName).tag($0.id) } }.pickerStyle(.menu)
+            }
+            ForEach(session.planOptions) { plan in
+                VStack(spacing: 8) {
+                    PlanCard(plan: plan)
+                    if let fit = plan.whyItWorks[store.participantID] { Text("For you: \(fit)").font(.caption).foregroundStyle(.secondary) }
+                    HStack {
+                        ForEach(VoteValue.allCases, id: \.self) { value in
+                            let selected = session.votes.last { $0.participantId == store.participantID && $0.planId == plan.id }?.value == value
+                            Button(value.label) { store.vote(plan, value: value) }.buttonStyle(.bordered).tint(selected ? .questAccent : .gray)
+                                .accessibilityIdentifier("vote-\(plan.id)-\(value.rawValue)")
+                                .accessibilityValue(selected ? "Selected" : "Not selected").disabled(store.busy)
+                        }
+                    }
+                    Text("\(session.votes.filter { $0.planId == plan.id }.count) votes").font(.caption)
+                }
+            }
+            Button("Insert poll into Messages") { store.share() }.buttonStyle(.borderedProminent)
+            Text("The card goes into the compose field. You choose when to send.").font(.caption)
+            if store.isOwner {
+                Button("Set the SideQuest") { store.finalize() }.buttonStyle(.bordered)
+                    .disabled(VoteEngine.winner(in: session) == nil || store.busy).accessibilityIdentifier("finalize")
+            }
+        } else {
+            Text("Bring everyone into the plan.").font(.title2.bold())
+            DisclosureGroup("\(session.participants.count) people · up to $\(Int(Participant.groupBudget(session.participants) ?? 0))/person") {
+                ForEach(session.participants) { person in
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(person.displayName).font(.headline)
+                        Text("\(person.ageRange.label) · $\(Int(person.maxBudget)) max · \(person.approximateArea)").font(.caption)
+                    }.frame(maxWidth: .infinity, alignment: .leading).padding(.vertical, 6)
+                }
+            }.questCard()
+            if !store.isDemo {
+                Button("Invite group to contribute") { store.share() }.buttonStyle(.borderedProminent)
+                Button("Edit my context") { showingProfile = true }
+                Text("Each person joins with their own information. Wait for everyone before generating.").font(.caption)
+            }
+            if store.isOwner { MessageImportView(messages: $store.messages) }
+            else { Text("Your context is shared. The organizer will generate plans when everyone has joined.") }
+            let request = PlanningRequest(participants: session.participants, messages: [])
+            VStack(alignment: .leading, spacing: 8) {
+                Label("Shared free time", systemImage: "calendar").font(.headline)
+                if request.candidateTimeWindows.isEmpty { Text("No shared 90-minute window. Edit availability before planning.") }
+                ForEach(request.candidateTimeWindows.indices, id: \.self) { index in
+                    Text(request.candidateTimeWindows[index].start.formatted(date: .abbreviated, time: .shortened) + " – " + request.candidateTimeWindows[index].end.formatted(date: .omitted, time: .shortened))
+                }
+            }.questCard()
+        }
     }
 }

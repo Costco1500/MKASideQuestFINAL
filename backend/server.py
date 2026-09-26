@@ -1,18 +1,10 @@
 """Run locally with python3 backend/server.py; use HTTPS termination for devices."""
 import json
 import os
+import threading
+import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from planner import generate
-
-class APIError(Exception):
-    def __init__(self, status, message): self.status, self.message = status, message
-
-class Service:
-    def __init__(self, model_call=None): self.model_call = model_call
-    def dispatch(self, method, path, body, token):
-        if method == "GET" and path == "/health": return {"status": "ok"}
-        if method == "POST" and path == "/sidequest/plan": return generate(body, self.model_call)
-        raise APIError(404, "Route not found")
+from sessions import Service, APIError
 
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, *_): pass  # No chat bodies, URLs containing tokens, or auth headers in logs.
@@ -21,6 +13,12 @@ class Handler(BaseHTTPRequestHandler):
     def handle_request(self):
         status = 200
         try:
+            self.connection.settimeout(15)
+            with self.server.limit_lock:
+                now = time.monotonic()
+                self.server.requests = [stamp for stamp in self.server.requests if now - stamp < 60]
+                if len(self.server.requests) >= 180: raise APIError(429, "Please try again in a minute")
+                self.server.requests.append(now)
             length = int(self.headers.get("Content-Length", 0))
             if not 0 <= length <= 150_000: raise APIError(413, "Request too large")
             body = json.loads(self.rfile.read(length)) if length else {}
@@ -36,13 +34,15 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Cache-Control", "no-store")
         self.end_headers(); self.wfile.write(data)
 
-def make_server(address=("127.0.0.1", 8787), model_call=None):
+def make_server(address=("127.0.0.1", 8787), model_call=None, database=":memory:"):
     server = ThreadingHTTPServer(address, Handler)
-    server.service = Service(model_call)
+    server.service = Service(model_call, database)
+    server.limit_lock = threading.Lock(); server.requests = []
     return server
 
 if __name__ == "__main__":
-    server = make_server((os.environ.get("HOST", "127.0.0.1"), int(os.environ.get("PORT", 8787))))
+    os.makedirs("backend/data", exist_ok=True)
+    server = make_server((os.environ.get("HOST", "127.0.0.1"), int(os.environ.get("PORT", 8787))), database=os.environ.get("SIDEQUEST_DB", "backend/data/sidequest.sqlite"))
     print(f"SideQuest API listening on port {server.server_port}; conversation logging is disabled.")
     try: server.serve_forever()
     except KeyboardInterrupt: server.server_close()

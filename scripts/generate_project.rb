@@ -28,8 +28,10 @@ definitions.each do |name, (type, folders, bundle)|
       config.build_settings.merge!('MACH_O_TYPE' => 'staticlib', 'APPLICATION_EXTENSION_API_ONLY' => 'YES', 'SKIP_INSTALL' => 'YES')
     elsif name == 'SideQuest'
       config.build_settings.merge!('INFOPLIST_FILE' => 'iOS/App/Info.plist', 'INFOPLIST_KEY_UILaunchScreen_Generation' => 'YES')
+      config.build_settings['CODE_SIGN_ENTITLEMENTS'] = 'iOS/Shared/SideQuest.entitlements'
     elsif name == 'SideQuestMessages'
       config.build_settings.merge!('INFOPLIST_FILE' => 'iOS/MessagesExtension/Info.plist', 'APPLICATION_EXTENSION_API_ONLY' => 'YES', 'SKIP_INSTALL' => 'YES')
+      config.build_settings['CODE_SIGN_ENTITLEMENTS'] = 'iOS/Shared/SideQuest.entitlements'
     elsif name == 'SideQuestTests'
       config.build_settings.merge!('TEST_HOST' => '$(BUILT_PRODUCTS_DIR)/SideQuest.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/SideQuest', 'BUNDLE_LOADER' => '$(TEST_HOST)')
     elsif name == 'SideQuestUITests'

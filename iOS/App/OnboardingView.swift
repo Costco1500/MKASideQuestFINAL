@@ -1,6 +1,8 @@
 import SwiftUI
+import SideQuestCore
 
 struct OnboardingView: View {
+    @StateObject private var preview = QuestStore()
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -14,6 +16,11 @@ struct OnboardingView: View {
                         Text("Open a conversation, tap +, then choose SideQuest. Your group plans together right there.")
                         Label("You choose what SideQuest sees.", systemImage: "hand.raised.fill").font(.subheadline)
                     }.questCard()
+                    NavigationLink("Set up my profile") {
+                        ProfileSetupView(profile: QuestPreferences.profile) { QuestPreferences.profile = $0 }
+                    }.buttonStyle(.borderedProminent)
+                    NavigationLink("Try Demo") { QuestFlowView(store: preview).onAppear { if preview.session == nil { preview.startDemo() } } }.buttonStyle(.bordered)
+                    NavigationLink("Settings") { SettingsView() }
                 }.padding(24)
             }.background(Color.questBackground)
         }.tint(.questAccent)
