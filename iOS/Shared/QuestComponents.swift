@@ -127,7 +127,7 @@ struct ReadinessRing: View {
 /// Invite → Share → Plan → Vote → Go.
 struct QuestStepProgress: View {
     let current: Int
-    private let steps = ["Invite", "Share", "Plan", "Vote", "Go"]
+    private let steps = ["Chat", "Understand", "Vote", "Go"]
     var body: some View {
         HStack(spacing: 6) {
             ForEach(steps.indices, id: \.self) { index in

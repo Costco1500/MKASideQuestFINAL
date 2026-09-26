@@ -94,16 +94,24 @@ public enum DemoPlanner {
     public static func plans(for request: PlanningRequest) throws -> [PlanOption] {
         guard let window = request.candidateTimeWindows.first, let first = request.participants.first,
               let budget = request.participants.map(\.maxBudget).min(), window.duration >= 5400 else { throw PlanningError.noAvailability }
-        let titles = budget < 10 ? ["Sketch & stroll", "Bring-your-own picnic", "Neighborhood photo walk"] : ["Clay & boba", "Park picnic", "Gallery & dessert"]
-        let activities = budget < 10 ? ["Sketch outdoors with supplies you own", "Bring snacks from home and relax in the park", "Find interesting architecture on a photo walk"] : ["Try a small air-dry clay craft together", "Pack a casual picnic and a card game", "Visit a free public gallery, then find a sweet treat"]
+        let titles = budget < 10 ? ["Sketch & stroll", "Bring-your-own picnic", "Neighborhood photo walk"] : ["Clay & Boba", "Sunset Picnic + Cards", "Gallery + Dessert"]
+        let activities = budget < 10 ? ["Sketch outdoors with supplies you own", "Bring snacks from home and relax in the park", "Find interesting architecture on a photo walk"] : ["Make something a little wonky. Grab boba after.", "Bring snacks, a deck of cards, and absolutely no agenda.", "A little art, a sweet treat, and room to catch up."]
+        let seven = Calendar.current.date(bySettingHour: 19, minute: 0, second: 0, of: window.start)!
+        let start = seven >= window.start && seven.addingTimeInterval(7200) <= window.end ? seven : window.start
+        let fits = [
+            ["alex": "You suggested boba. We heard you.", "maya": "You wanted pottery — start with an easy air-dry clay craft.", "jake": "About $12 keeps it below your $15 chat budget.", "sarah": "A small, quiet hangout without the restaurant crowd."],
+            ["alex": "Plenty of time after your 6:30 lab.", "maya": "A relaxed break from your laptop.", "jake": "An $8 plan leaves breathing room this week.", "sarah": "Space to talk, with no loud restaurant."],
+            ["alex": "An easy evening after class, with something sweet.", "maya": "A dose of creativity without a whole class.", "jake": "About $10, comfortably inside your budget.", "sarah": "An indoor option with time to catch up."]
+        ]
         return titles.enumerated().map { index, title in
             PlanOption(id: "plan-\(index + 1)", title: title, activity: activities[index], secondStop: nil,
-                       start: window.start, end: min(window.end, window.start.addingTimeInterval(7200)), area: first.approximateArea,
+                       start: start, end: min(window.end, start.addingTimeInterval(7200)), area: first.approximateArea,
                        estimatedCostPerPerson: budget < 10 ? 0 : [12.0, 8, 10][index],
-                       explanation: "A relaxed option within the group's budget and shared free time.",
-                       whyItWorks: Dictionary(uniqueKeysWithValues: request.participants.map { ($0.id, "Fits your available time and comfortable budget.") }),
-                       concerns: ["Demo suggestion. Check opening hours, access, weather, and prices before going."], minimumAge: 0, groupFitScore: Double(90 - index),
-                       venueSearchQuery: ["art supply store", "public park", "art gallery"][index])
+                       explanation: ["Creative · quiet · everyone available", "Relaxed · inexpensive · easy for everyone", "Indoor · casual · time to reconnect"][index],
+                       whyItWorks: Dictionary(uniqueKeysWithValues: request.participants.map { ($0.id, fits[index][$0.id] ?? "Fits your available time and comfortable budget.") }),
+                       concerns: ["Curated demo suggestion. Prices, access and opening hours are not verified."], minimumAge: 0, groupFitScore: Double(90 - index),
+                       venueSearchQuery: ["art supply store", "public park", "art gallery"][index],
+                       venue: PlanVenue(name: "Midtown meetup point", address: "Midtown Atlanta · demo meeting point", latitude: DemoData.location.latitude, longitude: DemoData.location.longitude))
         }
     }
 }

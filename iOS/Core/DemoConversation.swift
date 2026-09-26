@@ -1,19 +1,24 @@
 import Foundation
 
 public enum DemoConfiguration {
-    #if DEBUG && targetEnvironment(simulator)
-    public static var preloadConversation = true
-    #else
-    public static let preloadConversation = false
-    #endif
+    public static let preloadConversation = true
 }
 
-/// Fictional input only. Plans, locations, votes and Calendar all use the real app flow.
+/// Curated prototype fixtures; Calendar and Messages actions use native system APIs.
 public enum DemoConversation {
     public static var messages: [ImportedMessage] {
         var messages = MessageImport.parse(transcript)
         MessageImport.select(.latest50, in: &messages)
         return messages
+    }
+    public static let insights: [(symbol: String, text: String)] = [
+        ("clock.fill", "Thursday after 6:30"), ("dollarsign.circle.fill", "Under $15 each"),
+        ("paintpalette.fill", "Something creative"), ("cup.and.saucer.fill", "Boba sounds good"),
+        ("leaf.fill", "Quiet / not crowded"), ("mappin.and.ellipse", "Midtown / Georgia Tech")
+    ]
+    public static func votes(for person: String, plans: [PlanOption]) -> [Vote] {
+        let values: [String: [VoteValue]] = ["maya": [.down, .maybe, .pass], "jake": [.maybe, .down, .maybe], "sarah": [.down, .maybe, .down]]
+        return zip(plans, values[person] ?? []).map { Vote(participantId: person, planId: $0.0.id, value: $0.1) }
     }
     public static let transcript = """
     Alex: who left a blue hoodie in the library

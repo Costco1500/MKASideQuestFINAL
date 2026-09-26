@@ -26,7 +26,6 @@ struct PlanCard<Footer: View>: View {
             let window = CalendarBusyInterval(start: plan.start, end: plan.end)
             QuestPill(text: window.dayLabel + " · " + window.timeLabel, systemImage: "clock.fill")
             if let venue = plan.venue {
-                VenuePreview(venue: venue)
                 HStack(alignment: .center, spacing: 10) {
                     VStack(alignment: .leading, spacing: 2) {
                         Label(venue.name, systemImage: "mappin.and.ellipse").font(.system(.headline, design: .rounded))
@@ -36,7 +35,7 @@ struct PlanCard<Footer: View>: View {
                     Button { onOpenMaps?(); venue.mapItem.openInMaps() } label: { Image(systemName: "arrow.triangle.turn.up.right.diamond.fill") }
                         .buttonStyle(QuestSecondaryButtonStyle()).accessibilityLabel("Open in Apple Maps").accessibilityIdentifier("openMaps-\(plan.id)")
                 }
-                HoursBadge(status: venue.hoursStatus(from: plan.start, to: plan.end))
+                Text("Demo meetup pin · choose a venue before going").font(.caption2).foregroundStyle(Color.questSecondary)
             } else {
                 Label(plan.area, systemImage: "mappin.and.ellipse").font(.headline)
                 Text("Specific location not found").font(.caption).foregroundStyle(Color.questSecondary)
@@ -57,23 +56,6 @@ struct PlanCard<Footer: View>: View {
 extension PlanCard where Footer == EmptyView {
     init(plan: PlanOption, onOpenMaps: (() -> Void)? = nil) {
         self.init(plan: plan, onOpenMaps: onOpenMaps) { EmptyView() }
-    }
-}
-
-/// Small, non-interactive map of the venue.
-struct VenuePreview: View {
-    let venue: PlanVenue
-    var body: some View {
-        let coordinate = CLLocationCoordinate2D(latitude: venue.latitude, longitude: venue.longitude)
-        Map(initialPosition: .region(MKCoordinateRegion(center: coordinate, latitudinalMeters: 800, longitudinalMeters: 800)), interactionModes: []) {
-            Marker(venue.name, coordinate: coordinate).tint(Color.questClay)
-        }
-        .mapStyle(.standard(pointsOfInterest: .excludingAll))
-        .frame(height: 130)
-        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 18, style: .continuous).stroke(Color.questBorder))
-        .allowsHitTesting(false)
-        .accessibilityHidden(true)
     }
 }
 

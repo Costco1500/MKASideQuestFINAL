@@ -2,5 +2,6 @@ import SwiftUI
 
 @main
 struct SideQuestApp: App {
-    var body: some Scene { WindowGroup { OnboardingView() } }
+    @StateObject private var store = QuestStore()
+    var body: some Scene { WindowGroup { QuestFlowView(store: store) } }
 }

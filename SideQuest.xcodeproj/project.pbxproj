@@ -11,36 +11,29 @@
 		019F8D95174FD5AB0E462733 /* QuestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B01FE8DD73520E2CBD60A1 /* QuestStore.swift */; };
 		112BBD6645CF79AF546C00DA /* QuestFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37CBB340F77C8372B1EFE30E /* QuestFlowView.swift */; };
 		1204C74F62B91BADC8AA014A /* WarmDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1B7143A57DD0C1482AE96D /* WarmDemoTests.swift */; };
-		124DAB883EE988CDFEDABD1F /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 625930BA50A00E3FF2CAAF78 /* OnboardingView.swift */; };
-		12FB93A2066D1C1DFD4B84CE /* SideQuestShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 34494685C52E7100B818D4F6 /* SideQuestShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		18EC44258FEE5465D7AB84FB /* Participant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D34554072CC368FC93400D5 /* Participant.swift */; };
 		1B2654ADE682A08C27609CF4 /* QuestStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03802A902E99D465D1ADCF39 /* QuestStyle.swift */; };
 		29B5D6160220002B2772F42E /* SideQuestCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448BC1702DE5EFF917FD7781 /* SideQuestCore.framework */; };
 		29DC29B3C664DC3B14CEED75 /* CalendarProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6843BBB5271423246A6913F4 /* CalendarProvider.swift */; };
-		329D7B57FA205537C0E3A076 /* ScreenshotImportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F009BD59C081650C4C67C89 /* ScreenshotImportTests.swift */; };
-		371ED7D82F882E829EDB8F82 /* ProfileSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33D9F9B5C9604CE45A0CC8B /* ProfileSetupView.swift */; };
 		3902F8FB6DD901AD53FDD709 /* SideQuestCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448BC1702DE5EFF917FD7781 /* SideQuestCore.framework */; };
 		4412282E93ECCE51FECD1C1D /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F2FE737C92F80F64E06EA76 /* LocationService.swift */; };
 		45AAD8208D62646C3791D982 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
 		498B0338ED66DE95D594083A /* SideQuestMessages.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1662FB1CF3A462EEE817D041 /* SideQuestMessages.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4DBD536527ABE20A0549DB9F /* QuestComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752DDA9A39ADC5D14A3190CB /* QuestComponents.swift */; };
 		4F2C199F7F601ECBE0B193FE /* SideQuestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B98A8FE4AD8A60E2C0E8D5B /* SideQuestApp.swift */; };
+		52C01BD41635672B3F129E79 /* OpeningHours.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97B48936FD952D5EDE67AC50 /* OpeningHours.swift */; };
 		553FFB106A9BD2B14B679B16 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C13D7C71EFA8C33C708CB3B /* ShareViewController.swift */; };
 		5A0672678921B75121F55BEB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
-		614E515D7FD295B193BDB116 /* MessageImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34B4756536541930DF95D54 /* MessageImportView.swift */; };
 		6518B96F16447A4B055DF32B /* AvailabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93334DE91AF5F9B49BCB79EB /* AvailabilityTests.swift */; };
-		688D963BB1A8641A2844757E /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A705CE70EB09B71EE680584 /* SettingsView.swift */; };
 		6FC3FC4E389E55794D81AD4D /* SideQuestCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448BC1702DE5EFF917FD7781 /* SideQuestCore.framework */; };
 		75D0B130353028550D1DF74A /* PlanCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7848DFCF7700445A3E0A6F0A /* PlanCard.swift */; };
 		773EB96AB2FC602E1F80FF0F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
-		856D96115F1EB731E2D133FC /* MessageImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34B4756536541930DF95D54 /* MessageImportView.swift */; };
 		88A2B69375679EEC46AE8F70 /* CalendarEventEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679194ADE9B4CC3EFB31FCD0 /* CalendarEventEditor.swift */; };
-		897A57D7EA574F54FB5C8234 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A705CE70EB09B71EE680584 /* SettingsView.swift */; };
 		899E5491E4943872662EF301 /* SharedImportStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B34D495DBBDFF421985E9C6 /* SharedImportStore.swift */; };
 		8FC5B7BCB65902F4AD3F5EB2 /* ScreenshotMessageParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809C0AE43BD4D5AD20C5DA7B /* ScreenshotMessageParser.swift */; };
 		90CB3E5D27AB04FE768AE0EC /* QuestStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03802A902E99D465D1ADCF39 /* QuestStyle.swift */; };
 		922E56DB188D0432795B1480 /* SideQuestCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448BC1702DE5EFF917FD7781 /* SideQuestCore.framework */; };
 		933A4E2167D1543C0D5A4144 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
-		9D532E7BAAC33A7C445CA0C9 /* SharedImportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 514CD008A0FBEED13FD8FCBF /* SharedImportTests.swift */; };
 		A1D83610A84ACDF137263857 /* PlanCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7848DFCF7700445A3E0A6F0A /* PlanCard.swift */; };
 		A2A19C9C167C2E5C4BC56047 /* LocationVenueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3834D6081C12D2BE3014CDF9 /* LocationVenueTests.swift */; };
 		A76A77E80B7B61F2B8136EC7 /* MessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33E659C8D6B3FD3FEBF8CEC /* MessageTests.swift */; };
@@ -53,25 +46,18 @@
 		C21DE472F18D324ABDDADA2A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
 		C26390FA673A91B1956FB4E6 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B716BE670DE5A28A64A0DF4 /* MainInterface.storyboard */; };
 		CD9C11E9F6CE1F2BFC234725 /* SessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAAC255185CA48773439E49 /* SessionTests.swift */; };
+		D1D240E27B9409C5884782F6 /* QuestComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752DDA9A39ADC5D14A3190CB /* QuestComponents.swift */; };
 		D9D46ED4CBE2D7F22FD54529 /* VenueResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6516EB8711BA5DA52583AFA /* VenueResolver.swift */; };
 		DF60F58BD6D91FAE4DDB5A56 /* SideQuestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28828CDE2FDFE993EC3EBB28 /* SideQuestUITests.swift */; };
 		E05447FB98C8602AE7975A82 /* QuestStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03802A902E99D465D1ADCF39 /* QuestStyle.swift */; };
-		E2BC323A04C3869149B39CA8 /* ClientAndStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE33B095D16EAEEABB2EC5A0 /* ClientAndStoreTests.swift */; };
 		E5441727E63290CA856F829B /* ShellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CCAAEFE789C7C9C6499AE1 /* ShellTests.swift */; };
-		E777D17DE4BB8075BBCFEECA /* SessionWorkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4244FA07F5EDB013EDB71A /* SessionWorkflowTests.swift */; };
 		EA60D77FF0EACDB0D41F240B /* DemoConversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59431FA49B4E0FAFE1F0A92 /* DemoConversation.swift */; };
 		EFE46681FBD80CBF19747C09 /* CalendarEventEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679194ADE9B4CC3EFB31FCD0 /* CalendarEventEditor.swift */; };
 		F1D362FD2EFC4754A6B16177 /* ProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FCE718858D266564E40E51 /* ProfileTests.swift */; };
 		F742364DDADFAEFF84B59AED /* AvailabilityEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20CB826E037AA45234462646 /* AvailabilityEngine.swift */; };
 		F98B2A5EF6FBD6083D25E593 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484EB1630A1E6DF1F3B559A5 /* MessagesViewController.swift */; };
-		FA8D0C1D909963E9296E8B35 /* ProfileSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33D9F9B5C9604CE45A0CC8B /* ProfileSetupView.swift */; };
-		FD7C95075A6179B781C0F865 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE73A91D179D4D32A66FAD3 /* Session.swift */; };
-		52C01BD41635672B3F129E79 /* OpeningHours.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97B48936FD952D5EDE67AC50 /* OpeningHours.swift */; };
 		FAA9BE8358CE129F74BBCCDB /* OpeningHoursTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F27DF15FC6CF76D71D14A83D /* OpeningHoursTests.swift */; };
-		D1D240E27B9409C5884782F6 /* QuestComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752DDA9A39ADC5D14A3190CB /* QuestComponents.swift */; };
-		4DBD536527ABE20A0549DB9F /* QuestComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752DDA9A39ADC5D14A3190CB /* QuestComponents.swift */; };
-		3C6126F68EBFDB2B2B0EB426 /* PlaceHoursCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3162721A3C1C47FE77DD631 /* PlaceHoursCheckView.swift */; };
-		3E5A16F0DE75520A0400E46D /* PlaceHoursCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3162721A3C1C47FE77DD631 /* PlaceHoursCheckView.swift */; };
+		FD7C95075A6179B781C0F865 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE73A91D179D4D32A66FAD3 /* Session.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -88,13 +74,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 4AA43E96993CFC92D8D21631;
 			remoteInfo = SideQuestCore;
-		};
-		81BD05BC82911E38EF545FDF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C77A1570478B3C601B348331 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 18891820C75930724BD2BD48;
-			remoteInfo = SideQuestShare;
 		};
 		B080F0C84B658A3B76256214 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -141,7 +120,6 @@
 			dstSubfolderSpec = 13;
 			files = (
 				498B0338ED66DE95D594083A /* SideQuestMessages.appex in Embed App Extensions */,
-				12FB93A2066D1C1DFD4B84CE /* SideQuestShare.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -158,7 +136,6 @@
 		231419ECA1AEF7807520A4ED /* SideQuest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SideQuest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		28828CDE2FDFE993EC3EBB28 /* SideQuestUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SideQuestUITests.swift; path = iOS/UITests/SideQuestUITests.swift; sourceTree = "<group>"; };
 		2C13D7C71EFA8C33C708CB3B /* ShareViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShareViewController.swift; path = iOS/SideQuestShare/ShareViewController.swift; sourceTree = "<group>"; };
-		34494685C52E7100B818D4F6 /* SideQuestShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SideQuestShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		37CBB340F77C8372B1EFE30E /* QuestFlowView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = QuestFlowView.swift; path = iOS/Shared/QuestFlowView.swift; sourceTree = "<group>"; };
 		3834D6081C12D2BE3014CDF9 /* LocationVenueTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LocationVenueTests.swift; path = iOS/Tests/LocationVenueTests.swift; sourceTree = "<group>"; };
 		3A705CE70EB09B71EE680584 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsView.swift; path = iOS/Shared/SettingsView.swift; sourceTree = "<group>"; };
@@ -171,6 +148,7 @@
 		679194ADE9B4CC3EFB31FCD0 /* CalendarEventEditor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CalendarEventEditor.swift; path = iOS/Shared/CalendarEventEditor.swift; sourceTree = "<group>"; };
 		6843BBB5271423246A6913F4 /* CalendarProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CalendarProvider.swift; path = iOS/Core/CalendarProvider.swift; sourceTree = "<group>"; };
 		6D34554072CC368FC93400D5 /* Participant.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Participant.swift; path = iOS/Core/Participant.swift; sourceTree = "<group>"; };
+		752DDA9A39ADC5D14A3190CB /* QuestComponents.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = QuestComponents.swift; path = iOS/Shared/QuestComponents.swift; sourceTree = "<group>"; };
 		7848DFCF7700445A3E0A6F0A /* PlanCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlanCard.swift; path = iOS/Shared/PlanCard.swift; sourceTree = "<group>"; };
 		7B34D495DBBDFF421985E9C6 /* SharedImportStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SharedImportStore.swift; path = iOS/Core/SharedImportStore.swift; sourceTree = "<group>"; };
 		7B716BE670DE5A28A64A0DF4 /* MainInterface.storyboard */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file.storyboard; name = MainInterface.storyboard; path = iOS/MessagesExtension/MainInterface.storyboard; sourceTree = "<group>"; };
@@ -178,6 +156,7 @@
 		809C0AE43BD4D5AD20C5DA7B /* ScreenshotMessageParser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ScreenshotMessageParser.swift; path = iOS/Core/ScreenshotMessageParser.swift; sourceTree = "<group>"; };
 		8D4244FA07F5EDB013EDB71A /* SessionWorkflowTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionWorkflowTests.swift; path = iOS/Tests/SessionWorkflowTests.swift; sourceTree = "<group>"; };
 		93334DE91AF5F9B49BCB79EB /* AvailabilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AvailabilityTests.swift; path = iOS/Tests/AvailabilityTests.swift; sourceTree = "<group>"; };
+		97B48936FD952D5EDE67AC50 /* OpeningHours.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OpeningHours.swift; path = iOS/Core/OpeningHours.swift; sourceTree = "<group>"; };
 		9F2FE737C92F80F64E06EA76 /* LocationService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LocationService.swift; path = iOS/Core/LocationService.swift; sourceTree = "<group>"; };
 		A59431FA49B4E0FAFE1F0A92 /* DemoConversation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DemoConversation.swift; path = iOS/Core/DemoConversation.swift; sourceTree = "<group>"; };
 		AF38D753F2D36601675BE136 /* MessageImport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MessageImport.swift; path = iOS/Core/MessageImport.swift; sourceTree = "<group>"; };
@@ -190,14 +169,12 @@
 		D34B4756536541930DF95D54 /* MessageImportView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MessageImportView.swift; path = iOS/Shared/MessageImportView.swift; sourceTree = "<group>"; };
 		D47B3EF8054A16C74D732F86 /* PlanningTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlanningTests.swift; path = iOS/Tests/PlanningTests.swift; sourceTree = "<group>"; };
 		DE33B095D16EAEEABB2EC5A0 /* ClientAndStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ClientAndStoreTests.swift; path = iOS/Tests/ClientAndStoreTests.swift; sourceTree = "<group>"; };
+		E3162721A3C1C47FE77DD631 /* PlaceHoursCheckView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlaceHoursCheckView.swift; path = iOS/Shared/PlaceHoursCheckView.swift; sourceTree = "<group>"; };
 		E6516EB8711BA5DA52583AFA /* VenueResolver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VenueResolver.swift; path = iOS/Core/VenueResolver.swift; sourceTree = "<group>"; };
 		E8453011D7D7A341A706D607 /* SideQuestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SideQuestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F27DF15FC6CF76D71D14A83D /* OpeningHoursTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OpeningHoursTests.swift; path = iOS/Tests/OpeningHoursTests.swift; sourceTree = "<group>"; };
 		F768863AB9C72A84EE0E4828 /* Planning.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Planning.swift; path = iOS/Core/Planning.swift; sourceTree = "<group>"; };
 		FCA69AFF2378409BBE288CE1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		97B48936FD952D5EDE67AC50 /* OpeningHours.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OpeningHours.swift; path = iOS/Core/OpeningHours.swift; sourceTree = "<group>"; };
-		F27DF15FC6CF76D71D14A83D /* OpeningHoursTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OpeningHoursTests.swift; path = iOS/Tests/OpeningHoursTests.swift; sourceTree = "<group>"; };
-		752DDA9A39ADC5D14A3190CB /* QuestComponents.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = QuestComponents.swift; path = iOS/Shared/QuestComponents.swift; sourceTree = "<group>"; };
-		E3162721A3C1C47FE77DD631 /* PlaceHoursCheckView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlaceHoursCheckView.swift; path = iOS/Shared/PlaceHoursCheckView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -206,15 +183,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				933A4E2167D1543C0D5A4144 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		7F8B8B273CB48444901AA3D7 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				5A0672678921B75121F55BEB /* Foundation.framework in Frameworks */,
-				6FC3FC4E389E55794D81AD4D /* SideQuestCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -394,7 +362,6 @@
 				1662FB1CF3A462EEE817D041 /* SideQuestMessages.appex */,
 				B7CEE04B47375DE4CE98E4D7 /* SideQuestTests.xctest */,
 				E8453011D7D7A341A706D607 /* SideQuestUITests.xctest */,
-				34494685C52E7100B818D4F6 /* SideQuestShare.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -412,24 +379,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		18891820C75930724BD2BD48 /* SideQuestShare */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 6D893EB53F6C020D0546456D /* Build configuration list for PBXNativeTarget "SideQuestShare" */;
-			buildPhases = (
-				B187ACCA08D23269595D10EC /* Sources */,
-				7F8B8B273CB48444901AA3D7 /* Frameworks */,
-				B71C24948E3F2AA7D9057D9E /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				F459D5E9B34DE54632D17E59 /* PBXTargetDependency */,
-			);
-			name = SideQuestShare;
-			productName = SideQuestShare;
-			productReference = 34494685C52E7100B818D4F6 /* SideQuestShare.appex */;
-			productType = "com.apple.product-type.app-extension";
-		};
 		4AA43E96993CFC92D8D21631 /* SideQuestCore */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A66EEE23E394321CE228B1ED /* Build configuration list for PBXNativeTarget "SideQuestCore" */;
@@ -498,7 +447,6 @@
 			dependencies = (
 				941684D77AFF54EEC5B8CD62 /* PBXTargetDependency */,
 				060FC057B2B92EBE33AB0BDF /* PBXTargetDependency */,
-				5A88943C844858D1FB6FF6AD /* PBXTargetDependency */,
 			);
 			name = SideQuest;
 			productName = SideQuest;
@@ -553,7 +501,6 @@
 				9E418096E91579B85998AB28 /* SideQuestMessages */,
 				CBA8C880C3C94CB6F37A8F57 /* SideQuestTests */,
 				AD66ED119B6DDD27D35C779F /* SideQuestUITests */,
-				18891820C75930724BD2BD48 /* SideQuestShare */,
 			);
 		};
 /* End PBXProject section */
@@ -574,13 +521,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		43DA6484F2839A0649786BAE /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B71C24948E3F2AA7D9057D9E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -629,17 +569,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3E5A16F0DE75520A0400E46D /* PlaceHoursCheckView.swift in Sources */,
 				4DBD536527ABE20A0549DB9F /* QuestComponents.swift in Sources */,
 				F98B2A5EF6FBD6083D25E593 /* MessagesViewController.swift in Sources */,
 				112BBD6645CF79AF546C00DA /* QuestFlowView.swift in Sources */,
 				E05447FB98C8602AE7975A82 /* QuestStyle.swift in Sources */,
-				371ED7D82F882E829EDB8F82 /* ProfileSetupView.swift in Sources */,
-				856D96115F1EB731E2D133FC /* MessageImportView.swift in Sources */,
 				88A2B69375679EEC46AE8F70 /* CalendarEventEditor.swift in Sources */,
 				75D0B130353028550D1DF74A /* PlanCard.swift in Sources */,
 				019F8D95174FD5AB0E462733 /* QuestStore.swift in Sources */,
-				897A57D7EA574F54FB5C8234 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -648,15 +584,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DF60F58BD6D91FAE4DDB5A56 /* SideQuestUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B187ACCA08D23269595D10EC /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				553FFB106A9BD2B14B679B16 /* ShareViewController.swift in Sources */,
-				90CB3E5D27AB04FE768AE0EC /* QuestStyle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -671,10 +598,6 @@
 				6518B96F16447A4B055DF32B /* AvailabilityTests.swift in Sources */,
 				B8BAB5A1F4E19E1136FB77B4 /* PlanningTests.swift in Sources */,
 				CD9C11E9F6CE1F2BFC234725 /* SessionTests.swift in Sources */,
-				E2BC323A04C3869149B39CA8 /* ClientAndStoreTests.swift in Sources */,
-				E777D17DE4BB8075BBCFEECA /* SessionWorkflowTests.swift in Sources */,
-				329D7B57FA205537C0E3A076 /* ScreenshotImportTests.swift in Sources */,
-				9D532E7BAAC33A7C445CA0C9 /* SharedImportTests.swift in Sources */,
 				A2A19C9C167C2E5C4BC56047 /* LocationVenueTests.swift in Sources */,
 				1204C74F62B91BADC8AA014A /* WarmDemoTests.swift in Sources */,
 			);
@@ -684,18 +607,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3C6126F68EBFDB2B2B0EB426 /* PlaceHoursCheckView.swift in Sources */,
 				D1D240E27B9409C5884782F6 /* QuestComponents.swift in Sources */,
 				4F2C199F7F601ECBE0B193FE /* SideQuestApp.swift in Sources */,
-				124DAB883EE988CDFEDABD1F /* OnboardingView.swift in Sources */,
 				B9963331BEBA2E1220DFE956 /* QuestFlowView.swift in Sources */,
 				1B2654ADE682A08C27609CF4 /* QuestStyle.swift in Sources */,
-				FA8D0C1D909963E9296E8B35 /* ProfileSetupView.swift in Sources */,
-				614E515D7FD295B193BDB116 /* MessageImportView.swift in Sources */,
 				EFE46681FBD80CBF19747C09 /* CalendarEventEditor.swift in Sources */,
 				A1D83610A84ACDF137263857 /* PlanCard.swift in Sources */,
 				BA23073A97CA471AC5CF4CA9 /* QuestStore.swift in Sources */,
-				688D963BB1A8641A2844757E /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -713,12 +631,6 @@
 			name = SideQuest;
 			target = B6CD47E59473CC5A3982A29F /* SideQuest */;
 			targetProxy = B080F0C84B658A3B76256214 /* PBXContainerItemProxy */;
-		};
-		5A88943C844858D1FB6FF6AD /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = SideQuestShare;
-			target = 18891820C75930724BD2BD48 /* SideQuestShare */;
-			targetProxy = 81BD05BC82911E38EF545FDF /* PBXContainerItemProxy */;
 		};
 		7841E4B1C3C5B7DD630F1CA7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -743,12 +655,6 @@
 			name = SideQuestCore;
 			target = 4AA43E96993CFC92D8D21631 /* SideQuestCore */;
 			targetProxy = B96E7482376D9B00EBF5E133 /* PBXContainerItemProxy */;
-		};
-		F459D5E9B34DE54632D17E59 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = SideQuestCore;
-			target = 4AA43E96993CFC92D8D21631 /* SideQuestCore */;
-			targetProxy = 659E9B931279F661B636ACA7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1188,15 +1094,6 @@
 			buildConfigurations = (
 				7FF4CE11D26702990C870316 /* Release */,
 				DE9E5CBCC2F3430E1A259968 /* Debug */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		6D893EB53F6C020D0546456D /* Build configuration list for PBXNativeTarget "SideQuestShare" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B1E38ADDC7771E0CAB2648A1 /* Release */,
-				7827C77E977CF4676F4F42BB /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
