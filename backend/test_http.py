@@ -26,12 +26,15 @@ class HTTPTests(unittest.TestCase):
         self.assertEqual(self.post("/sidequest/plan", {})[0], 400)
         self.assertEqual(self.post("/missing", {})[0], 404)
     def test_two_clients_join_plan_vote_and_finalize_over_http(self):
-        status, owner = self.post("/api/sessions", {"participant": profile()})
+        status, owner = self.post("/api/sessions", {"expectedParticipantCount": 2})
         self.assertEqual(status, 200)
         path = "/api/sessions/" + owner["session"]["id"]
+        request = context(); request.pop("participants")
+        self.assertEqual(self.post(path + "/plan", request, owner["memberToken"])[0], 409)
         status, guest = self.post(path + "/join", {"participant": profile("Maya")}, owner["inviteToken"])
         self.assertEqual(status, 200)
-        request = context(); request.pop("participants")
+        self.assertEqual(self.post(path + "/plan", request, owner["memberToken"])[0], 409)
+        self.assertEqual(self.post(path + "/context", {"participant": profile()}, owner["memberToken"])[0], 200)
         status, session = self.post(path + "/plan", request, owner["memberToken"])
         self.assertEqual(status, 200); self.assertEqual(len(session["planOptions"]), 3)
         status, session = self.post(path + "/vote", {"planId": "plan-2", "value": "down"}, guest["memberToken"])
@@ -39,7 +42,7 @@ class HTTPTests(unittest.TestCase):
         status, session = self.post(path + "/finalize", {}, owner["memberToken"])
         self.assertEqual(status, 200); self.assertEqual(session["winningPlanId"], "plan-2")
     def test_unauthorized_session_vote_is_forbidden(self):
-        _, owner = self.post("/api/sessions", {"participant": profile()})
+        _, owner = self.post("/api/sessions", {"expectedParticipantCount": 1})
         status, _ = self.post("/api/sessions/" + owner["session"]["id"] + "/vote", {"planId": "plan-1", "value": "down"}, "invalid")
         self.assertEqual(status, 403)
 
