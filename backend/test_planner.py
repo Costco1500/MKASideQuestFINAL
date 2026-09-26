@@ -114,4 +114,11 @@ class PlannerTests(unittest.TestCase):
         self.assertEqual(fields["minimumAge"]["maximum"], 0)
         self.assertCountEqual(fields["area"]["enum"], ["Midtown", "Campus"])
 
+    def test_map_queries_are_short_single_search_inputs(self):
+        from planner import schema
+        field = schema(context())["properties"]["plans"]["items"]["properties"]["venueSearchQuery"]
+        self.assertEqual(field["maxLength"], 80)
+        plans = demo_plans(context()); plans[0]["venueSearchQuery"] = "a" * 81
+        self.assertFalse(validate_plans(plans, context()))
+
 if __name__ == "__main__": unittest.main()
