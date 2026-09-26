@@ -26,6 +26,7 @@
 		DF60F58BD6D91FAE4DDB5A56 /* SideQuestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28828CDE2FDFE993EC3EBB28 /* SideQuestUITests.swift */; };
 		E05447FB98C8602AE7975A82 /* QuestStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03802A902E99D465D1ADCF39 /* QuestStyle.swift */; };
 		E5441727E63290CA856F829B /* ShellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CCAAEFE789C7C9C6499AE1 /* ShellTests.swift */; };
+		F1D362FD2EFC4754A6B16177 /* ProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FCE718858D266564E40E51 /* ProfileTests.swift */; };
 		F98B2A5EF6FBD6083D25E593 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484EB1630A1E6DF1F3B559A5 /* MessagesViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -91,6 +92,7 @@
 /* Begin PBXFileReference section */
 		03802A902E99D465D1ADCF39 /* QuestStyle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = QuestStyle.swift; path = iOS/Shared/QuestStyle.swift; sourceTree = "<group>"; };
 		1662FB1CF3A462EEE817D041 /* SideQuestMessages.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SideQuestMessages.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		17FCE718858D266564E40E51 /* ProfileTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProfileTests.swift; path = iOS/Tests/ProfileTests.swift; sourceTree = "<group>"; };
 		231419ECA1AEF7807520A4ED /* SideQuest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SideQuest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		28828CDE2FDFE993EC3EBB28 /* SideQuestUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SideQuestUITests.swift; path = iOS/UITests/SideQuestUITests.swift; sourceTree = "<group>"; };
 		37CBB340F77C8372B1EFE30E /* QuestFlowView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = QuestFlowView.swift; path = iOS/Shared/QuestFlowView.swift; sourceTree = "<group>"; };
@@ -166,6 +168,7 @@
 			isa = PBXGroup;
 			children = (
 				B8CCAAEFE789C7C9C6499AE1 /* ShellTests.swift */,
+				17FCE718858D266564E40E51 /* ProfileTests.swift */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -464,6 +467,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E5441727E63290CA856F829B /* ShellTests.swift in Sources */,
+				F1D362FD2EFC4754A6B16177 /* ProfileTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
