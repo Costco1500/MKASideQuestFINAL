@@ -1,4 +1,5 @@
 import XCTest
+import MapKit
 @testable import SideQuestCore
 
 final class LocationVenueTests: XCTestCase {
@@ -36,6 +37,14 @@ final class LocationVenueTests: XCTestCase {
         let old = try APIJSON.decoder.decode([PlanOption].self, from: APIJSON.encoder.encode(plans))
         XCTAssertNil(old[0].venue)
         XCTAssertNotNil(old[0].venueSearchQuery)
+    }
+    func testVenueSelectionSkipsParkingForParkPlans() {
+        let parking = MKMapItem(placemark: MKPlacemark(coordinate: .init(latitude: 33.78, longitude: -84.39)))
+        parking.name = "Public Parking"; parking.pointOfInterestCategory = .parking
+        let park = MKMapItem(placemark: MKPlacemark(coordinate: .init(latitude: 33.79, longitude: -84.38)))
+        park.name = "A real park"; park.pointOfInterestCategory = .park
+        XCTAssertEqual(VenueResolver.venue(from: [parking, park], query: "public park")?.name, "A real park")
+        XCTAssertNil(VenueResolver.venue(from: [parking], query: "public park"))
     }
     func testResolutionFailureDoesNotFabricateCoordinates() async throws {
         let request = PlanningRequest(participants: DemoData.participants(), messages: [])
