@@ -3,8 +3,21 @@ import json
 import os
 import threading
 import time
+from pathlib import Path
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from sessions import Service, APIError
+
+def configure_private_environment(path=None):
+    """Load this machine's credentials outside the checkout; never print their values."""
+    path = Path(path or os.environ.get("SIDEQUEST_CONFIG", Path.home() / "Library/Application Support/SideQuest/server.json"))
+    if not path.exists(): return
+    info = path.stat()
+    if info.st_uid != os.getuid() or info.st_mode & 0o077:
+        raise PermissionError("SideQuest server configuration must be owned by this user with mode 600")
+    config = json.loads(path.read_text())
+    for name in ("OPENAI_API_KEY", "OPENAI_MODEL"):
+        if isinstance(config.get(name), str) and config[name].strip():
+            os.environ.setdefault(name, config[name].strip())
 
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, *_): pass  # No chat bodies, URLs containing tokens, or auth headers in logs.
@@ -41,6 +54,7 @@ def make_server(address=("127.0.0.1", 8787), model_call=None, database=":memory:
     return server
 
 if __name__ == "__main__":
+    configure_private_environment()
     os.makedirs("backend/data", exist_ok=True)
     server = make_server((os.environ.get("HOST", "127.0.0.1"), int(os.environ.get("PORT", 8787))), database=os.environ.get("SIDEQUEST_DB", "backend/data/sidequest.sqlite"))
     print(f"SideQuest API listening on port {server.server_port}; conversation logging is disabled.")
