@@ -5,6 +5,11 @@ struct QuestFlowView: View {
     @State private var participants: [Participant] = []
     @State private var showingProfile = false
     @State private var messages: [ImportedMessage] = []
+    @State private var plans: [PlanOption] = []
+    @State private var source = "demo"
+    @State private var loading = false
+    @State private var errorMessage = ""
+    @State private var isDemo = false
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -14,12 +19,17 @@ struct QuestFlowView: View {
                     Text("You choose what SideQuest sees.").foregroundStyle(.secondary)
                     if participants.isEmpty {
                         Button("Try Demo") {
+                            isDemo = true
                             participants = DemoData.participants()
                             messages = MessageImport.parse(DemoData.conversation)
                             MessageImport.select(.all, in: &messages)
                         }
                             .buttonStyle(.borderedProminent).controlSize(.large)
                         Button("Start SideQuest") { showingProfile = true }.buttonStyle(.bordered)
+                    } else if !plans.isEmpty {
+                        Text("Three ways to make it happen").font(.title2.bold())
+                        Text(source == "demo" ? "Demo plans · works offline" : "Planned for your group").font(.caption)
+                        ForEach(plans) { PlanCard(plan: $0) }
                     } else {
                         Text("The group context").font(.headline)
                         ForEach(participants) { person in
@@ -41,6 +51,25 @@ struct QuestFlowView: View {
                     }
                 }.padding(24)
             }.background(Color.questBackground)
+                .safeAreaInset(edge: .bottom) {
+                    if !participants.isEmpty && plans.isEmpty {
+                        VStack {
+                            if !errorMessage.isEmpty { Text(errorMessage).font(.caption).foregroundStyle(.red) }
+                            Button(loading ? "Finding your next SideQuest…" : "Analyze \(MessageImport.analysisMessages(messages).count) selected messages") {
+                                loading = true
+                                Task { @MainActor in
+                                    defer { loading = false }
+                                    do {
+                                        let result = try await PlanGenerator.generate(PlanningRequest(participants: participants, messages: messages))
+                                        plans = result.plans; source = result.source
+                                        messages = []
+                                    } catch { errorMessage = error.localizedDescription }
+                                }
+                            }.buttonStyle(.borderedProminent).controlSize(.large)
+                                .disabled(loading || MessageImport.analysisMessages(messages).isEmpty).accessibilityIdentifier("generatePlans")
+                        }.padding().frame(maxWidth: .infinity).background(.ultraThinMaterial)
+                    }
+                }
                 .sheet(isPresented: $showingProfile) {
                     NavigationStack {
                         ProfileSetupView(profile: Participant(availability: DemoData.range())) {
