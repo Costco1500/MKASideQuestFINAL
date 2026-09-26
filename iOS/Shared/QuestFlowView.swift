@@ -4,6 +4,7 @@ import SideQuestCore
 struct QuestFlowView: View {
     @State private var participants: [Participant] = []
     @State private var showingProfile = false
+    @State private var messages: [ImportedMessage] = []
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -12,7 +13,11 @@ struct QuestFlowView: View {
                     Text("Your next hangout starts here.").font(.title.bold())
                     Text("You choose what SideQuest sees.").foregroundStyle(.secondary)
                     if participants.isEmpty {
-                        Button("Try Demo") { participants = DemoData.participants() }
+                        Button("Try Demo") {
+                            participants = DemoData.participants()
+                            messages = MessageImport.parse(DemoData.conversation)
+                            MessageImport.select(.all, in: &messages)
+                        }
                             .buttonStyle(.borderedProminent).controlSize(.large)
                         Button("Start SideQuest") { showingProfile = true }.buttonStyle(.bordered)
                     } else {
@@ -24,6 +29,7 @@ struct QuestFlowView: View {
                                     .font(.subheadline).foregroundStyle(.secondary)
                             }.questCard()
                         }
+                        MessageImportView(messages: $messages)
                     }
                 }.padding(24)
             }.background(Color.questBackground)

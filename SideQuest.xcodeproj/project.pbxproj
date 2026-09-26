@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		005E7614AB44677F347783E6 /* MessageImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF38D753F2D36601675BE136 /* MessageImport.swift */; };
 		112BBD6645CF79AF546C00DA /* QuestFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37CBB340F77C8372B1EFE30E /* QuestFlowView.swift */; };
 		124DAB883EE988CDFEDABD1F /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 625930BA50A00E3FF2CAAF78 /* OnboardingView.swift */; };
 		18EC44258FEE5465D7AB84FB /* Participant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D34554072CC368FC93400D5 /* Participant.swift */; };
@@ -17,7 +18,9 @@
 		45AAD8208D62646C3791D982 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
 		498B0338ED66DE95D594083A /* SideQuestMessages.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1662FB1CF3A462EEE817D041 /* SideQuestMessages.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4F2C199F7F601ECBE0B193FE /* SideQuestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B98A8FE4AD8A60E2C0E8D5B /* SideQuestApp.swift */; };
+		614E515D7FD295B193BDB116 /* MessageImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34B4756536541930DF95D54 /* MessageImportView.swift */; };
 		773EB96AB2FC602E1F80FF0F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
+		856D96115F1EB731E2D133FC /* MessageImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34B4756536541930DF95D54 /* MessageImportView.swift */; };
 		922E56DB188D0432795B1480 /* SideQuestCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448BC1702DE5EFF917FD7781 /* SideQuestCore.framework */; };
 		933A4E2167D1543C0D5A4144 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
 		A76A77E80B7B61F2B8136EC7 /* MessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33E659C8D6B3FD3FEBF8CEC /* MessageTests.swift */; };
@@ -105,10 +108,12 @@
 		6D34554072CC368FC93400D5 /* Participant.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Participant.swift; path = iOS/Core/Participant.swift; sourceTree = "<group>"; };
 		7B716BE670DE5A28A64A0DF4 /* MainInterface.storyboard */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file.storyboard; name = MainInterface.storyboard; path = iOS/MessagesExtension/MainInterface.storyboard; sourceTree = "<group>"; };
 		7B98A8FE4AD8A60E2C0E8D5B /* SideQuestApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SideQuestApp.swift; path = iOS/App/SideQuestApp.swift; sourceTree = "<group>"; };
+		AF38D753F2D36601675BE136 /* MessageImport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MessageImport.swift; path = iOS/Core/MessageImport.swift; sourceTree = "<group>"; };
 		B33D9F9B5C9604CE45A0CC8B /* ProfileSetupView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProfileSetupView.swift; path = iOS/Shared/ProfileSetupView.swift; sourceTree = "<group>"; };
 		B7CEE04B47375DE4CE98E4D7 /* SideQuestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SideQuestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8CCAAEFE789C7C9C6499AE1 /* ShellTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShellTests.swift; path = iOS/Tests/ShellTests.swift; sourceTree = "<group>"; };
 		D33E659C8D6B3FD3FEBF8CEC /* MessageTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MessageTests.swift; path = iOS/Tests/MessageTests.swift; sourceTree = "<group>"; };
+		D34B4756536541930DF95D54 /* MessageImportView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MessageImportView.swift; path = iOS/Shared/MessageImportView.swift; sourceTree = "<group>"; };
 		E8453011D7D7A341A706D607 /* SideQuestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SideQuestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCA69AFF2378409BBE288CE1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -166,6 +171,7 @@
 				37CBB340F77C8372B1EFE30E /* QuestFlowView.swift */,
 				03802A902E99D465D1ADCF39 /* QuestStyle.swift */,
 				B33D9F9B5C9604CE45A0CC8B /* ProfileSetupView.swift */,
+				D34B4756536541930DF95D54 /* MessageImportView.swift */,
 			);
 			name = Shared;
 			sourceTree = "<group>";
@@ -230,6 +236,7 @@
 			isa = PBXGroup;
 			children = (
 				6D34554072CC368FC93400D5 /* Participant.swift */,
+				AF38D753F2D36601675BE136 /* MessageImport.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -448,6 +455,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				18EC44258FEE5465D7AB84FB /* Participant.swift in Sources */,
+				005E7614AB44677F347783E6 /* MessageImport.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -459,6 +467,7 @@
 				112BBD6645CF79AF546C00DA /* QuestFlowView.swift in Sources */,
 				E05447FB98C8602AE7975A82 /* QuestStyle.swift in Sources */,
 				371ED7D82F882E829EDB8F82 /* ProfileSetupView.swift in Sources */,
+				856D96115F1EB731E2D133FC /* MessageImportView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -489,6 +498,7 @@
 				B9963331BEBA2E1220DFE956 /* QuestFlowView.swift in Sources */,
 				1B2654ADE682A08C27609CF4 /* QuestStyle.swift in Sources */,
 				FA8D0C1D909963E9296E8B35 /* ProfileSetupView.swift in Sources */,
+				614E515D7FD295B193BDB116 /* MessageImportView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
