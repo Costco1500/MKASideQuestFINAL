@@ -69,13 +69,14 @@ struct QuestPrimaryButtonStyle: ButtonStyle {
     }
 }
 struct QuestSecondaryButtonStyle: ButtonStyle {
+    var selected = false
     @Environment(\.isEnabled) private var enabled
     func makeBody(configuration: Configuration) -> some View {
         configuration.label.font(.system(.subheadline, design: .rounded, weight: .semibold))
             .padding(.horizontal, 14).padding(.vertical, 10).frame(minWidth: 44, minHeight: 44)
             .foregroundStyle(configuration.role == .destructive ? Color.questDestructive : .questText)
-            .background(configuration.isPressed ? Color.questSoft : .questRaised, in: RoundedRectangle(cornerRadius: 20))
-            .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.questBorder, lineWidth: 1))
+            .background((configuration.isPressed || selected) ? Color.questSoft : .questRaised, in: RoundedRectangle(cornerRadius: 20))
+            .overlay(RoundedRectangle(cornerRadius: 20).stroke(selected ? Color.questClay : .questBorder, lineWidth: selected ? 2 : 1))
             .opacity(enabled ? 1 : 0.5)
     }
 }

@@ -69,6 +69,7 @@ private struct ShareImportView: View {
     @ObservedObject var model: ShareImportModel
     var done: () -> Void
     var body: some View {
+        ScrollView {
         VStack(alignment: .leading, spacing: 24) {
             QuestBrand()
             if model.reading {
@@ -82,7 +83,7 @@ private struct ShareImportView: View {
                 Text("Open SideQuest in Messages to choose what gets analyzed.")
             }
             Button(model.reading ? "Cancel" : "Done", action: done).buttonStyle(QuestPrimaryButtonStyle()).controlSize(.large)
-        }.padding(24).frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-            .questScreen()
+        }.padding(24).frame(maxWidth: .infinity, alignment: .leading)
+        }.frame(maxWidth: .infinity, maxHeight: .infinity).questScreen()
     }
 }

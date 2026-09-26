@@ -26,16 +26,16 @@ struct ProfileSetupView: View {
             Section("Location") {
                 Button { locationService.requestLocation() } label: {
                     Label(locationService.fetching ? "Finding your area…" : "Use My Location", systemImage: "location.fill")
-                }.disabled(locationService.fetching).accessibilityIdentifier("useMyLocation")
+                }.buttonStyle(QuestPrimaryButtonStyle()).disabled(locationService.fetching).accessibilityIdentifier("useMyLocation")
                 if profile.location != nil { Label("Near \(profile.approximateArea)", systemImage: "checkmark.circle.fill") }
-                if !locationService.status.isEmpty { Text(locationService.status).font(.caption) }
+                if !locationService.status.isEmpty && locationService.status != "Near \(profile.approximateArea)" { Text(locationService.status).font(.caption) }
                 DisclosureGroup("Enter area manually", isExpanded: $manualLocation) {
                     TextField("Neighborhood, campus, or city area", text: $profile.approximateArea)
                         .onChange(of: profile.approximateArea) { _, _ in if manualLocation { profile.location = nil } }
                 }
                 Text("One-time location only. Your exact position stays on this device; the group receives a broad area.").font(.caption)
                 #if DEBUG && targetEnvironment(simulator)
-                Button("Use Atlanta demo location") { locationService.useDemoLocation() }
+                Button("Use Atlanta demo location") { locationService.useDemoLocation() }.buttonStyle(QuestSecondaryButtonStyle())
                 #endif
             }.listRowBackground(Color.questSurface)
             Section("When could you hang out?") {
@@ -54,11 +54,12 @@ struct ProfileSetupView: View {
                             calendarStatus = "Availability loaded. Event titles stay on your device."
                         } catch { calendarStatus = error.localizedDescription }
                     }
-                }.disabled(loadingCalendar || profile.availability.duration <= 0)
+                }.buttonStyle(QuestSecondaryButtonStyle()).disabled(loadingCalendar || profile.availability.duration <= 0)
                 if !calendarStatus.isEmpty { Text(calendarStatus).font(.caption) }
                 Text("Google calendars already in Apple's Calendar app are included.").font(.caption)
             }.listRowBackground(Color.questSurface)
             Button(saveTitle) { save(profile) }
+                .buttonStyle(QuestPrimaryButtonStyle()).listRowBackground(Color.questSurface)
                 .disabled(!profile.isValid).accessibilityIdentifier("saveProfile")
         }.scrollContentBackground(.hidden).questScreen().navigationTitle("Your context")
             .onChange(of: locationService.location) { _, found in

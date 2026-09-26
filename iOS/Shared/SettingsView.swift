@@ -22,7 +22,7 @@ struct SettingsView: View {
                 if !status.isEmpty { Text(status).font(.caption) }
             }.listRowBackground(Color.questSurface)
             Section("Demo chat script") {
-                TextEditor(text: $chatScript).frame(minHeight: 160).font(.callout).autocorrectionDisabled()
+                TextEditor(text: $chatScript).scrollContentBackground(.hidden).frame(minHeight: 160).font(.callout).autocorrectionDisabled()
                     .accessibilityLabel("Demo chat script")
                 Text("One \"Name: message\" per line. Demo screenshots are rendered from these messages and scanned on-device. Use the demo names so plans and votes line up: \(DemoData.participants().map(\.displayName).joined(separator: ", ")).")
                     .font(.caption)
@@ -36,9 +36,9 @@ struct SettingsView: View {
                 if !chatScriptStatus.isEmpty { Text(chatScriptStatus).font(.caption) }
             }.listRowBackground(Color.questSurface)
             Section("Privacy") {
-                Text("Imported conversations stay in memory and are cleared after planning. Only selected messages are sent. Calendars contribute busy times, never titles or notes. You can enter your area manually.")
+                Text("Only selected messages are sent for planning. Reviewed conversations are cleared afterward. Shared screenshots are kept only as extracted text until you review or discard it. Calendars contribute busy times, never titles or notes. Exact user location stays on-device.")
                 Text("Shared sessions expire after seven days. Session invitations let people with the card join and view shared context.").font(.caption)
-            }
-        }.scrollContentBackground(.hidden).questScreen().navigationTitle("Settings").toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
+            }.listRowBackground(Color.questSurface)
+        }.buttonStyle(QuestSecondaryButtonStyle()).scrollContentBackground(.hidden).questScreen().navigationTitle("Settings").toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
     }
 }
