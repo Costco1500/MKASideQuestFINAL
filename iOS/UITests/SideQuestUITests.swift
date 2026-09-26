@@ -11,6 +11,17 @@ final class SideQuestUITests: XCTestCase {
         for _ in 0..<5 where !vote.isHittable { app.swipeUp() }
         vote.tap()
         XCTAssertEqual(vote.value as? String, "Selected")
+        let finalize = app.buttons["finalize"]
+        for _ in 0..<8 where !finalize.isHittable { app.swipeUp() }
+        waitForStableFrame(finalize)
+        finalize.tap()
+        XCTAssertTrue(app.staticTexts["SideQuest set 🎉"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Add to Calendar"].waitForExistence(timeout: 5))
+        app.buttons["Add to Calendar"].tap()
+        XCTAssertTrue(app.buttons["Cancel"].waitForExistence(timeout: 10))
+        let screenshot = XCTAttachment(screenshot: app.screenshot()); screenshot.lifetime = .keepAlways; add(screenshot)
+        app.buttons["Cancel"].tap()
+        if app.buttons["Discard Changes"].waitForExistence(timeout: 2) { app.buttons["Discard Changes"].tap() }
     }
     func testMessagesExtensionOpens() {
         let messages = openMessagesExtension()
@@ -29,7 +40,6 @@ final class SideQuestUITests: XCTestCase {
         for _ in 0..<8 where !insert.isHittable { messages.swipeUp() }
         waitForStableFrame(insert)
         insert.tap()
-        print("CARD STATE: \(messages.debugDescription)")
         XCTAssertTrue(messages.buttons["Send"].waitForExistence(timeout: 8))
         let screenshot = XCTAttachment(screenshot: messages.screenshot()); screenshot.lifetime = .keepAlways; add(screenshot)
     }

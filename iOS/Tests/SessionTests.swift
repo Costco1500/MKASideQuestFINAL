@@ -33,6 +33,13 @@ final class SessionTests: XCTestCase {
         session.planOptions[0].estimatedCostPerPerson = 999
         XCTAssertNil(VoteEngine.winner(in: session))
     }
+    func testReceivedWinnerMustStillSatisfyHardConstraints() throws {
+        var session = try session()
+        session.winningPlanId = "plan-1"
+        XCTAssertNotNil(session.winningPlan)
+        session.planOptions[0].estimatedCostPerPerson = 999
+        XCTAssertNil(session.winningPlan)
+    }
     func testLinkRoundTripsOnlyLightweightMetadataAndRejectsForeignLinks() throws {
         let link = SessionLink(sessionId: UUID().uuidString, inviteToken: String(repeating: "a", count: 43), serverURL: URL(string: "https://api.example.com")!, isDemo: false)
         let url = try link.url()
