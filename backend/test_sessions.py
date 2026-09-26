@@ -220,4 +220,15 @@ class SessionTests(unittest.TestCase):
         self.call("/vote", {"planId": "plan-1", "value": "down"})
         self.assertEqual(self.call("/finalize")["winningPlanId"], "plan-1")
 
+    def test_malformed_venue_payload_is_rejected_without_changing_plans(self):
+        self.ready_session(); planned = self.plan()
+        valid = [{"planId": p["id"], "venue": None} for p in planned["planOptions"]]
+        for malformed in [None, [None] * 3, [dict(v, venue="invented") for v in valid],
+                          [dict(v, planId=[]) for v in valid]]:
+            with self.subTest(payload=malformed):
+                with self.assertRaises(APIError) as error:
+                    self.call("/venues", {"revision": planned["revision"], "venues": malformed})
+                self.assertEqual(error.exception.status, 400)
+        self.assertEqual(self.call("", method="GET"), planned)
+
 if __name__ == "__main__": unittest.main()
