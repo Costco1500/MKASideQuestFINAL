@@ -2,10 +2,6 @@
 
 Native iPhone app + Messages extension, built with SwiftUI, Messages, EventKit, and a small Python API. No web frontend or third-party Swift packages.
 
-## Website
-
-A static showcase page lives in `site/` and deploys to GitHub Pages at https://costco1500.github.io/MKASideQuestFINAL/ on pushes that change it. Preview locally with `python3 -m http.server 8000 --directory site`. To embed the demo video, set `data-youtube-id` in `site/index.html` to the 11-character YouTube video ID.
-
 ## Run in Xcode
 
 1. Open `SideQuest.xcodeproj` in Xcode 26.3 or newer.
