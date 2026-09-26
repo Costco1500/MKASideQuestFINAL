@@ -46,14 +46,18 @@ public struct VenueResolver {
                                                latitudinalMeters: 24_000, longitudinalMeters: 24_000)
         }
         guard let response = try? await MKLocalSearch(request: request).start() else { return nil }
-        return venue(from: response.mapItems, query: query)
+        return venue(from: response.mapItems, query: query, center: center)
     }
-    static func venue(from items: [MKMapItem], query: String) -> PlanVenue? {
+    static func venue(from items: [MKMapItem], query: String, center: ParticipantLocation? = nil) -> PlanVenue? {
         let seeksParking = query.localizedCaseInsensitiveContains("parking")
-        guard let item = items.first(where: {
-            let parking = $0.pointOfInterestCategory == .parking || ($0.name?.localizedCaseInsensitiveContains("parking") == true)
-            return $0.name?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false &&
-                CLLocationCoordinate2DIsValid($0.placemark.coordinate) && (!parking || seeksParking)
+        guard let item = items.first(where: { item in
+            let parking = item.pointOfInterestCategory == .parking || (item.name?.localizedCaseInsensitiveContains("parking") == true)
+            let withinArea = center.map { center in
+                CLLocation(latitude: center.latitude, longitude: center.longitude)
+                    .distance(from: CLLocation(latitude: item.placemark.coordinate.latitude, longitude: item.placemark.coordinate.longitude)) <= 25_000
+            } ?? true
+            return item.name?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false &&
+                CLLocationCoordinate2DIsValid(item.placemark.coordinate) && (!parking || seeksParking) && withinArea
         }) else { return nil }
         let place = item.placemark
         let street = [place.subThoroughfare, place.thoroughfare].compactMap { $0 }.joined(separator: " ")
