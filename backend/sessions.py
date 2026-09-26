@@ -68,10 +68,12 @@ class Service:
         return session
     def reset(self, session):
         session.update(planOptions=[], votes=[], winningPlanId=None, context=None, source="demo")
-    def add_member(self, session, value, owner=False):
+    def add_member(self, session, value=None, owner=False):
         participant_id, token = str(uuid.uuid4()), secrets.token_urlsafe(32)
-        person = profile(value, participant_id)
-        session["participants"].append(person)
+        if value is not None:
+            person = profile(value, participant_id)
+            session["participants"].append(person)
+            session["readyParticipantIds"].append(participant_id)
         self.db.execute("INSERT INTO members VALUES (?, ?, ?, ?)", (session["id"], participant_id, digest(token), int(owner)))
         return participant_id, token
     def membership(self, session, participant_id, token, invite, owner):
@@ -82,13 +84,15 @@ class Service:
         with self.lock:
             self.db.execute("DELETE FROM sessions WHERE expires < ?", (time.time(),)); self.db.commit()
             if method == "POST" and path == "/api/sessions":
-                if set(body) != {"participant"}: raise APIError(400, "Provide only your own context")
-                profile(body["participant"], "validate")
-                session = {"id": str(uuid.uuid4()), "participants": [], "revision": 0}
+                if set(body) != {"expectedParticipantCount"}: raise APIError(400, "Provide the expected number of people")
+                count = body["expectedParticipantCount"]
+                if type(count) is not int or not 1 <= count <= 12: raise APIError(400, "Choose between 1 and 12 people")
+                session = {"id": str(uuid.uuid4()), "participants": [], "revision": 0,
+                           "expectedParticipantCount": count, "readyParticipantIds": []}
                 self.reset(session)
                 invite = secrets.token_urlsafe(32)
                 self.db.execute("INSERT INTO sessions VALUES (?, ?, ?, ?)", (session["id"], "{}", digest(invite), time.time() + 604800))
-                pid, member_token = self.add_member(session, body["participant"], True)
+                pid, member_token = self.add_member(session, owner=True)
                 return self.membership(self.save(session), pid, member_token, invite, True)
             parts = path.strip("/").split("/")
             if len(parts) not in [3, 4] or parts[:2] != ["api", "sessions"]: raise APIError(404, "Route not found")
@@ -99,11 +103,15 @@ class Service:
             member = self.db.execute("SELECT participant_id, owner FROM members WHERE session_id=? AND token_hash=?", (sid, digest(token))).fetchone()
             invited = secrets.compare_digest(row[1], digest(token))
             if not member and not invited: raise APIError(403, "Use the session invitation or your member token")
+            member_ids = {row[0] for row in self.db.execute("SELECT participant_id FROM members WHERE session_id=?", (sid,))}
+            # Existing sessions must explicitly complete Done before another generation.
+            session.setdefault("expectedParticipantCount", len(member_ids))
+            session.setdefault("readyParticipantIds", [])
             if method == "GET" and not action: return session
             if method != "POST": raise APIError(404, "Route not found")
             if action == "join":
                 if not invited or set(body) != {"participant"}: raise APIError(403, "Invitation required")
-                if len(session["participants"]) >= 12: raise APIError(409, "This session is full")
+                if len(member_ids) >= session["expectedParticipantCount"]: raise APIError(409, "Everyone in this session has already joined")
                 pid, new_token = self.add_member(session, body["participant"])
                 self.reset(session)
                 return self.membership(self.save(session), pid, new_token, token, False)
@@ -112,7 +120,12 @@ class Service:
             if action == "context":
                 if set(body) != {"participant"}: raise APIError(400, "Only your own context may be updated")
                 person = profile(body["participant"], pid)
-                session["participants"] = [person if p["id"] == pid else p for p in session["participants"]]
+                if any(p["id"] == pid for p in session["participants"]):
+                    session["participants"] = [person if p["id"] == pid else p for p in session["participants"]]
+                else:
+                    session["participants"].append(person)
+                if pid not in session["readyParticipantIds"]:
+                    session["readyParticipantIds"].append(pid)
                 self.reset(session)
                 return self.save(session)
             if action == "vote":
@@ -130,6 +143,10 @@ class Service:
             if action != "plan": raise APIError(404, "Route not found")
             if not owner: raise APIError(403, "Only the organizer may generate plans")
             if set(body) != {"selectedMessages", "candidateTimeWindows", "timeZone"}: raise APIError(400, "Invalid planning request")
+            if (len(member_ids) != session["expectedParticipantCount"] or
+                set(session["readyParticipantIds"]) != member_ids or
+                {p["id"] for p in session["participants"]} != member_ids):
+                raise APIError(409, "Waiting for everyone to finish their context and tap Done")
             people = [{"id": p["id"], "ageRange": p["ageRange"], "maxBudget": p["maxBudget"], "approximateArea": p["approximateArea"], "availability": free_intervals(p)} for p in session["participants"]]
             request = dict(body, participants=people)
             validate_request(request)
