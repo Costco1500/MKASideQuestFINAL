@@ -2,6 +2,15 @@ import XCTest
 
 final class SideQuestUITests: XCTestCase {
     override func setUp() { continueAfterFailure = false }
+    override func tearDown() {
+        if (testRun?.failureCount ?? 0) > 0 {
+            let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot()); attachment.lifetime = .keepAlways; add(attachment)
+            for bundle in ["com.sidequest.app", "com.apple.MobileSMS", "com.apple.mobileslideshow"] {
+                let app = XCUIApplication(bundleIdentifier: bundle)
+                if app.state == .runningForeground { print("FAILURE UI: \(app.debugDescription)") }
+            }
+        }
+    }
     func testProfileAndServerSettingsAreAvailableInContainingApp() {
         let app = XCUIApplication(); app.launch()
         app.buttons["Set up my profile"].tap()
@@ -37,8 +46,8 @@ final class SideQuestUITests: XCTestCase {
         app.buttons["Try Demo"].tap()
         readDemoChat(in: app)
         app.buttons["generatePlans"].tap()
-        XCTAssertTrue(app.staticTexts["Make it a group yes."].waitForExistence(timeout: 10))
-        let vote = app.buttons["vote-plan-1-down"]
+        XCTAssertTrue(app.staticTexts["Make it a group yes."].waitForExistence(timeout: 60))
+        let vote = app.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@ AND identifier ENDSWITH %@", "vote-", "-down")).firstMatch
         for _ in 0..<5 where !vote.isHittable { app.swipeUp() }
         vote.tap()
         XCTAssertEqual(vote.value as? String, "Selected")
@@ -65,7 +74,7 @@ final class SideQuestUITests: XCTestCase {
         readDemoChat(in: messages)
         waitForStableFrame(messages.buttons["generatePlans"])
         messages.buttons["generatePlans"].tap()
-        XCTAssertTrue(messages.staticTexts["Make it a group yes."].waitForExistence(timeout: 10))
+        XCTAssertTrue(messages.staticTexts["Make it a group yes."].waitForExistence(timeout: 60))
         let insert = messages.buttons["Insert poll into Messages"]
         for _ in 0..<8 where !insert.isHittable { messages.swipeUp() }
         waitForStableFrame(insert)
@@ -77,6 +86,8 @@ final class SideQuestUITests: XCTestCase {
     func testMessagesPreloadsRecentGroupChat() {
         let messages = openMessagesExtension(resetSession: false)
         XCTAssertTrue(messages.staticTexts["Recent group chat"].waitForExistence(timeout: 10))
+        let visible = XCTNSPredicateExpectation(predicate: NSPredicate(format: "hittable == true"), object: messages.buttons["Choose Messages"])
+        XCTAssertEqual(XCTWaiter.wait(for: [visible], timeout: 8), .completed)
         XCTAssertTrue(messages.buttons["Analyze Recent Chat"].isEnabled)
         XCTAssertTrue(messages.buttons["Choose Messages"].exists)
     }
@@ -89,6 +100,9 @@ final class SideQuestUITests: XCTestCase {
         let quest = messages.staticTexts["SideQuest"].firstMatch
         for _ in 0..<3 where !quest.exists { messages.swipeUp() }
         if quest.waitForExistence(timeout: 4) { quest.tap() }
+        if resetSession, messages.buttons["New"].waitForExistence(timeout: 5) {
+            waitForStableFrame(messages.buttons["New"]); messages.buttons["New"].tap()
+        }
         return messages
     }
     func testMessagesWinnerOffersCalendarAndShare() {
@@ -96,14 +110,37 @@ final class SideQuestUITests: XCTestCase {
         waitForStableFrame(messages.buttons["Try Demo"]); messages.buttons["Try Demo"].tap()
         readDemoChat(in: messages)
         waitForStableFrame(messages.buttons["generatePlans"]); messages.buttons["generatePlans"].tap()
-        XCTAssertTrue(messages.staticTexts["Make it a group yes."].waitForExistence(timeout: 8))
-        let vote = messages.buttons["vote-plan-1-down"]
+        XCTAssertTrue(messages.staticTexts["Make it a group yes."].waitForExistence(timeout: 60))
+        let groundedPlan = messages.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "openMaps-")).firstMatch
+        XCTAssertTrue(groundedPlan.waitForExistence(timeout: 8), "At least one live demo search should resolve a venue")
+        let planID = String(groundedPlan.identifier.dropFirst("openMaps-".count))
+        let vote = messages.buttons["vote-\(planID)-down"]
         for _ in 0..<5 where !vote.isHittable { messages.swipeUp() }
         waitForStableFrame(vote); vote.tap()
         let finalize = messages.buttons["finalize"]
         for _ in 0..<8 where !finalize.isHittable { messages.swipeUp() }
         waitForStableFrame(finalize); finalize.tap()
+        let openMaps = messages.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "openMaps-")).firstMatch
+        XCTAssertTrue(openMaps.waitForExistence(timeout: 8), "Live MapKit should ground the winning demo plan")
+        for _ in 0..<5 where !openMaps.isHittable { messages.swipeDown() }
+        waitForStableFrame(openMaps); openMaps.tap()
+        let maps = XCUIApplication(bundleIdentifier: "com.apple.Maps")
+        XCTAssertTrue(maps.wait(for: .runningForeground, timeout: 10))
+        if maps.buttons["Continue"].waitForExistence(timeout: 2) { maps.buttons["Continue"].tap() }
+        let mapsPermission = XCUIApplication(bundleIdentifier: "com.apple.springboard").buttons["Allow While Using App"]
+        if mapsPermission.waitForExistence(timeout: 2) { mapsPermission.tap() }
+        let mapAttachment = XCTAttachment(screenshot: maps.screenshot()); mapAttachment.lifetime = .keepAlways; add(mapAttachment)
+        messages.activate()
+        XCTAssertTrue(messages.wait(for: .runningForeground, timeout: 10))
+        if messages.buttons["add"].exists {
+            waitForStableFrame(messages.buttons["add"])
+            messages.buttons["add"].tap()
+            let sidequest = messages.staticTexts["SideQuest"].firstMatch
+            for _ in 0..<3 where !sidequest.exists { messages.swipeUp() }
+            XCTAssertTrue(sidequest.waitForExistence(timeout: 5)); sidequest.tap()
+        }
         let calendar = messages.buttons["Add to Calendar"]
+        reveal(calendar, in: messages)
         waitForStableFrame(calendar); calendar.tap()
         XCTAssertTrue(messages.buttons["Cancel"].waitForExistence(timeout: 10))
         let screenshot = XCTAttachment(screenshot: messages.screenshot()); screenshot.lifetime = .keepAlways; add(screenshot)
@@ -117,27 +154,31 @@ final class SideQuestUITests: XCTestCase {
     private func readDemoChat(in app: XCUIApplication) {
         let analyze = app.buttons["generatePlans"]
         XCTAssertTrue(analyze.waitForExistence(timeout: 8))
-        let loaded = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@ AND enabled == true", "Analyze 8 Messages"), object: analyze)
-        XCTAssertEqual(XCTWaiter.wait(for: [loaded], timeout: 20), .completed)
+        let loaded = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@ AND enabled == true", "Analyze Recent Chat"), object: analyze)
+        XCTAssertEqual(XCTWaiter.wait(for: [loaded], timeout: 15), .completed)
     }
     func testScreenshotReviewSelectionAndSenderCorrection() {
         let app = XCUIApplication(); app.launch()
         app.buttons["Try Demo"].tap()
         readDemoChat(in: app)
+        app.buttons["Choose Messages"].tap()
         let clear = app.buttons["Clear"]
-        for _ in 0..<5 where !clear.isHittable { app.swipeUp() }
+        reveal(clear, in: app)
         waitForStableFrame(clear); clear.tap()
         XCTAssertFalse(app.buttons["generatePlans"].isEnabled)
-        app.buttons["Last 10"].tap()
-        XCTAssertTrue(app.buttons["generatePlans"].isEnabled)
+        let latest = app.buttons["Last 10"]
+        reveal(latest, in: app)
+        waitForStableFrame(latest); latest.tap()
+        let selected = XCTNSPredicateExpectation(predicate: NSPredicate(format: "enabled == true"), object: app.buttons["generatePlans"])
+        XCTAssertEqual(XCTWaiter.wait(for: [selected], timeout: 5), .completed)
         let sender = app.buttons.matching(identifier: "messageSender").firstMatch
-        for _ in 0..<3 where !sender.isHittable { app.swipeUp() }
+        reveal(sender, in: app)
         waitForStableFrame(sender); sender.tap()
         let unknown = app.buttons["Unknown"].firstMatch
         XCTAssertTrue(unknown.waitForExistence(timeout: 5)); unknown.tap()
         XCTAssertEqual(sender.label, "Unknown")
         let scan = app.buttons["Scan Recent Chat"]
-        for _ in 0..<5 where !scan.isHittable { app.swipeDown() }
+        reveal(scan, in: app)
         waitForStableFrame(scan); scan.tap()
         XCTAssertTrue(app.buttons["Cancel"].waitForExistence(timeout: 10))
         app.buttons["Cancel"].tap()
@@ -147,12 +188,13 @@ final class SideQuestUITests: XCTestCase {
         let app = openMessagesExtension()
         waitForStableFrame(app.buttons["Try Demo"]); app.buttons["Try Demo"].tap()
         readDemoChat(in: app)
-        let clear = app.buttons["Clear Imported Messages"]
-        for _ in 0..<10 where !clear.isHittable { app.swipeUp() }
+        app.buttons["Choose Messages"].tap()
+        let clear = app.buttons["Clear"]
+        reveal(clear, in: app)
         waitForStableFrame(clear); clear.tap()
         XCTAssertFalse(app.buttons["generatePlans"].isEnabled)
         let scan = app.buttons["Scan Recent Chat"]
-        for _ in 0..<5 where !scan.isHittable { app.swipeDown() }
+        reveal(scan, in: app)
         waitForStableFrame(scan); scan.tap()
         XCTAssertTrue(app.buttons["Cancel"].waitForExistence(timeout: 10))
         let photos = app.images.matching(NSPredicate(format: "identifier == %@ AND label BEGINSWITH %@", "PXGGridLayout-Info", "Photo, Screenshot"))
@@ -170,7 +212,69 @@ final class SideQuestUITests: XCTestCase {
         XCTAssertEqual(XCTWaiter.wait(for: [loaded], timeout: 20), .completed)
         let attachment = XCTAttachment(screenshot: app.screenshot()); attachment.lifetime = .keepAlways; add(attachment)
         waitForStableFrame(analyze); analyze.tap()
-        XCTAssertTrue(app.staticTexts["Make it a group yes."].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.staticTexts["Make it a group yes."].waitForExistence(timeout: 60))
+    }
+    func testOneTimeLocationAndManualArea() {
+        let app = XCUIApplication(); app.launch()
+        app.buttons["Set up my profile"].tap()
+        app.buttons["Use My Location"].tap()
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        let allow = springboard.buttons["Allow While Using App"]
+        if allow.waitForExistence(timeout: 5) { allow.tap() }
+        let area = app.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Near ")).firstMatch
+        XCTAssertTrue(area.waitForExistence(timeout: 25), "Set a simulated location before running this integration test")
+        XCTAssertFalse(app.staticTexts["Demo · Near Midtown Atlanta"].exists)
+        app.buttons["Enter area manually"].tap()
+        XCTAssertTrue(app.textFields["Neighborhood, campus, or city area"].waitForExistence(timeout: 5))
+        let attachment = XCTAttachment(screenshot: app.screenshot()); attachment.lifetime = .keepAlways; add(attachment)
+    }
+    func testShareExtensionImportsIntoMessages() throws {
+        XCUIApplication(bundleIdentifier: "com.apple.MobileSMS").terminate()
+        let photos = XCUIApplication(bundleIdentifier: "com.apple.mobileslideshow"); photos.launch()
+        if photos.buttons["Done"].exists { photos.buttons["Done"].tap() }
+        if photos.buttons["Close"].exists { photos.buttons["Close"].tap() }
+        if photos.buttons["Continue"].waitForExistence(timeout: 3) { photos.buttons["Continue"].tap() }
+        if photos.buttons["Cancel"].exists { photos.buttons["Cancel"].tap() }
+        let screenshots = photos.images.matching(NSPredicate(format: "identifier == %@ AND label BEGINSWITH %@", "PXGGridLayout-Info", "Photo, Screenshot"))
+        guard screenshots.count >= 3 else { throw XCTSkip("Seed the three demo screenshots into Simulator Photos first.") }
+        photos.buttons["Select"].tap()
+        for index in [2, 1, 0] {
+            screenshots.element(boundBy: index).coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        }
+        XCTAssertTrue(photos.buttons["Share"].isEnabled)
+        photos.buttons["Share"].tap()
+        let sidequest = photos.cells["SideQuest"]
+        XCTAssertTrue(sidequest.waitForExistence(timeout: 5)); sidequest.tap()
+        let found = photos.staticTexts.matching(NSPredicate(format: "label ENDSWITH %@", " messages found")).firstMatch
+        XCTAssertTrue(found.waitForExistence(timeout: 25))
+        let count = try XCTUnwrap(Int(found.label.components(separatedBy: " ")[0]))
+        XCTAssertGreaterThanOrEqual(count, 8) // Photos may deliver overlapping screenshots in library order.
+        XCTAssertTrue(photos.staticTexts["Ready for SideQuest"].exists)
+        let attachment = XCTAttachment(screenshot: photos.screenshot()); attachment.lifetime = .keepAlways; add(attachment)
+        photos.buttons["Done"].tap()
+        let messages = openMessagesExtension(resetSession: false)
+        XCTAssertTrue(messages.staticTexts["Conversation ready"].waitForExistence(timeout: 10))
+        XCTAssertTrue(messages.staticTexts["\(count) messages imported"].exists)
+        messages.buttons["Review Messages"].tap()
+        XCTAssertFalse(messages.staticTexts["Conversation ready"].exists)
+        let demo = messages.buttons["Try Demo"]
+        if demo.exists { waitForStableFrame(demo); demo.tap() }
+        let analyze = messages.buttons["generatePlans"]
+        let imported = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@ AND enabled == true", "Analyze 8 Messages"), object: analyze)
+        XCTAssertEqual(XCTWaiter.wait(for: [imported], timeout: 10), .completed)
+        waitForStableFrame(analyze); analyze.tap()
+        XCTAssertTrue(messages.staticTexts["Make it a group yes."].waitForExistence(timeout: 60))
+    }
+    private func reveal(_ element: XCUIElement, in app: XCUIApplication) {
+        let scroll = app.scrollViews["questScroll"]
+        for _ in 0..<12 {
+            let frame = element.frame
+            if element.isHittable && frame.minY >= 155 && frame.maxY < app.frame.maxY - 150 { return }
+            let up = frame.maxY >= app.frame.maxY - 150
+            let start = scroll.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: up ? 0.6 : 0.35))
+            let end = scroll.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: up ? 0.35 : 0.6))
+            start.press(forDuration: 0.1, thenDragTo: end)
+        }
     }
     private func waitForStableFrame(_ element: XCUIElement) {
         var previous = CGRect.null

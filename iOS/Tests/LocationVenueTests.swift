@@ -46,6 +46,14 @@ final class LocationVenueTests: XCTestCase {
         XCTAssertEqual(VenueResolver.venue(from: [parking, park], query: "public park")?.name, "A real park")
         XCTAssertNil(VenueResolver.venue(from: [parking], query: "public park"))
     }
+    func testVenueSelectionRejectsDistantResultsOutsideGroupArea() {
+        let distant = MKMapItem(placemark: MKPlacemark(coordinate: .init(latitude: 43.9919, longitude: -76.0217)))
+        distant.name = "Distant airport"
+        let nearby = MKMapItem(placemark: MKPlacemark(coordinate: .init(latitude: 33.79, longitude: -84.38)))
+        nearby.name = "Nearby cafe"
+        XCTAssertEqual(VenueResolver.venue(from: [distant, nearby], query: "cafe", center: DemoData.location)?.name, "Nearby cafe")
+        XCTAssertNil(VenueResolver.venue(from: [distant], query: "cafe", center: DemoData.location))
+    }
     func testResolutionFailureDoesNotFabricateCoordinates() async throws {
         let request = PlanningRequest(participants: DemoData.participants(), messages: [])
         let plans = try DemoPlanner.plans(for: request)
