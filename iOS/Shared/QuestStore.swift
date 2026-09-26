@@ -106,14 +106,15 @@ enum MembershipVault {
     func checkPendingImport() {
         pendingImportCount = (try? SharedImportStore().loadImportedMessages().count) ?? 0
     }
-    func reviewPendingImport() {
+    func reviewPendingImport(from handoff: SharedImportStore = SharedImportStore()) {
         guard membership == nil || isOwner else { status = "The organizer adds the conversation for this session."; return }
+        guard session?.planOptions.isEmpty != false else { status = "Tap New to review this conversation in another SideQuest."; return }
         do {
-            var imported = try SharedImportStore().loadImportedMessages()
+            var imported = try handoff.loadImportedMessages()
             guard !imported.isEmpty else { checkPendingImport(); return }
             MessageImport.select(.latest50, in: &imported)
             stopReading(); isPreloadedConversation = false; choosingMessages = true; messages = imported
-            try SharedImportStore().clearImportedMessages()
+            try handoff.clearImportedMessages()
             pendingImportCount = 0; status = "Choose the messages you want to analyze."
         } catch { status = error.localizedDescription }
     }
