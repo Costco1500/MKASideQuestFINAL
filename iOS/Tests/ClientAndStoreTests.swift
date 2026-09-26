@@ -58,6 +58,21 @@ final class StubProtocol: URLProtocol {
         store.open(URL(string: "https://invalid.example")!)
         XCTAssertFalse(store.status.isEmpty)
     }
+    func testMessagesWinnerResumesOnceAfterOpeningMaps() throws {
+        let store = QuestStore(useLiveServices: false)
+        store.insert = { _, _ in }
+        store.isDemo = true
+        store.session = try SideQuestSession.demo()
+        let plan = store.session!.planOptions[0]
+        store.vote(plan, value: .down); store.finalize()
+        store.rememberMapsReturn()
+        let restarted = QuestStore(useLiveServices: false)
+        XCTAssertTrue(restarted.resumeAfterMaps())
+        XCTAssertEqual(restarted.session?.winningPlanId, plan.id)
+        XCTAssertFalse(QuestStore(useLiveServices: false).resumeAfterMaps())
+        store.rememberMapsReturn(now: Date().addingTimeInterval(-601))
+        XCTAssertFalse(QuestStore(useLiveServices: false).resumeAfterMaps())
+    }
     func testReadingChatStopsWhenExtensionCloses() async throws {
         QuestPreferences.demoChatScript = nil
         let store = QuestStore(useLiveServices: false); store.startDemo(preloadConversation: false)
