@@ -49,6 +49,17 @@ final class SideQuestUITests: XCTestCase {
         XCTAssertTrue(messages.buttons["Send"].waitForExistence(timeout: 10), "The saved server must support real session creation without switching to Demo")
         messages.buttons["Remove app from message"].tap()
     }
+    func testOfflineServerShowsConnectionError() {
+        let messages = openMessagesExtension()
+        setPlanningServer(in: messages, url: "http://127.0.0.1:9")
+        let start = messages.buttons["Start SideQuest"]
+        for _ in 0..<3 where !start.isHittable { messages.swipeUp() }
+        waitForStableFrame(start); start.tap()
+        let error = messages.staticTexts.matching(NSPredicate(format: "label BEGINSWITH %@", "Couldn't reach the local SideQuest server.")).firstMatch
+        XCTAssertTrue(error.waitForExistence(timeout: 10))
+        XCTAssertFalse(messages.buttons["Send"].exists)
+        // No inline restore: XCTest cleanup must leave the real Start flow usable.
+    }
     func testDemoGeneratesPlansAndAcceptsVote() {
         let app = XCUIApplication(); app.launch()
         app.buttons["Try Demo"].tap()
@@ -192,7 +203,18 @@ final class SideQuestUITests: XCTestCase {
         XCTAssertEqual(XCTWaiter.wait(for: [loaded], timeout: 15), .completed)
     }
     private func setPlanningServer(in app: XCUIApplication, url: String?) {
-        waitForStableFrame(app.buttons["Settings"]); app.buttons["Settings"].tap()
+        if url != nil {
+            // Register before changing persistent settings. Unlike an inline restore,
+            // XCTest runs this even when a later assertion aborts the test.
+            addTeardownBlock { [self] in
+                let containingApp = XCUIApplication()
+                containingApp.launch()
+                setPlanningServer(in: containingApp, url: nil)
+            }
+        }
+        let settings = app.buttons["Settings"]
+        for _ in 0..<4 where !settings.isHittable { app.swipeUp() }
+        waitForStableFrame(settings); settings.tap()
         if let url {
             let field = app.textFields["https://your-sidequest-api.example"]
             XCTAssertTrue(field.waitForExistence(timeout: 5)); field.tap()

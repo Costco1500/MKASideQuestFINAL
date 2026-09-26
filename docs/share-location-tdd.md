@@ -59,3 +59,9 @@ Use iPhone 17 Pro Simulator with its existing conversation. Set a fresh simulate
 ## Limits
 
 Physical devices still need an Apple team, provisioning for all three bundle IDs, the shared App Group, and a reachable HTTPS API. MapKit resolves real places but does not verify the proposed price, opening hours, or booking availability. OCR grouping/sender detection remains a reviewable heuristic. Pending extracted text remains in the App Group until reviewed or discarded; original images are never persisted by the extension.
+
+## Start SideQuest server-setting regression
+
+The Simulator had persisted `http://127.0.0.1:9` from the Maps offline-planner UI test while the real backend was healthy on port 8787. Demo fallback masked the bad address; shared-session creation correctly failed. RED checkpoint `06a12e3` reproduced the failed Start action and connection banner.
+
+The UI harness now registers an XCTest teardown before saving a temporary server, restores localhost:8787 through the containing app's Settings, and scrolls to Settings when needed. Two focused UI tests passed: offline Start reports a connection error, then cleanup leaves real Start able to create a session and insert an invitation. No message was sent. Command: `bash scripts/xcode.sh test -only-testing:SideQuestUITests/SideQuestUITests/testOfflineServerShowsConnectionError -only-testing:SideQuestUITests/SideQuestUITests/testStartSideQuestUsesConfiguredServer`. Result bundle: `Test-SideQuest-2026.09.26_19-17-18--0400.xcresult`. No production application code changed.
