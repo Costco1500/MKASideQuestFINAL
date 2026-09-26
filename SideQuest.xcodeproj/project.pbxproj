@@ -59,6 +59,7 @@
 		E2BC323A04C3869149B39CA8 /* ClientAndStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE33B095D16EAEEABB2EC5A0 /* ClientAndStoreTests.swift */; };
 		E5441727E63290CA856F829B /* ShellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CCAAEFE789C7C9C6499AE1 /* ShellTests.swift */; };
 		E777D17DE4BB8075BBCFEECA /* SessionWorkflowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4244FA07F5EDB013EDB71A /* SessionWorkflowTests.swift */; };
+		EA60D77FF0EACDB0D41F240B /* DemoConversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A59431FA49B4E0FAFE1F0A92 /* DemoConversation.swift */; };
 		EFE46681FBD80CBF19747C09 /* CalendarEventEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679194ADE9B4CC3EFB31FCD0 /* CalendarEventEditor.swift */; };
 		F1D362FD2EFC4754A6B16177 /* ProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FCE718858D266564E40E51 /* ProfileTests.swift */; };
 		F742364DDADFAEFF84B59AED /* AvailabilityEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20CB826E037AA45234462646 /* AvailabilityEngine.swift */; };
@@ -172,6 +173,7 @@
 		8D4244FA07F5EDB013EDB71A /* SessionWorkflowTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionWorkflowTests.swift; path = iOS/Tests/SessionWorkflowTests.swift; sourceTree = "<group>"; };
 		93334DE91AF5F9B49BCB79EB /* AvailabilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AvailabilityTests.swift; path = iOS/Tests/AvailabilityTests.swift; sourceTree = "<group>"; };
 		9F2FE737C92F80F64E06EA76 /* LocationService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LocationService.swift; path = iOS/Core/LocationService.swift; sourceTree = "<group>"; };
+		A59431FA49B4E0FAFE1F0A92 /* DemoConversation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DemoConversation.swift; path = iOS/Core/DemoConversation.swift; sourceTree = "<group>"; };
 		AF38D753F2D36601675BE136 /* MessageImport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MessageImport.swift; path = iOS/Core/MessageImport.swift; sourceTree = "<group>"; };
 		B33D9F9B5C9604CE45A0CC8B /* ProfileSetupView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProfileSetupView.swift; path = iOS/Shared/ProfileSetupView.swift; sourceTree = "<group>"; };
 		B4312BBF722CDE2CE8D181C4 /* ChatScreenshotOCRService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ChatScreenshotOCRService.swift; path = iOS/Core/ChatScreenshotOCRService.swift; sourceTree = "<group>"; };
@@ -347,6 +349,7 @@
 				7B34D495DBBDFF421985E9C6 /* SharedImportStore.swift */,
 				9F2FE737C92F80F64E06EA76 /* LocationService.swift */,
 				E6516EB8711BA5DA52583AFA /* VenueResolver.swift */,
+				A59431FA49B4E0FAFE1F0A92 /* DemoConversation.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -603,6 +606,7 @@
 				899E5491E4943872662EF301 /* SharedImportStore.swift in Sources */,
 				4412282E93ECCE51FECD1C1D /* LocationService.swift in Sources */,
 				D9D46ED4CBE2D7F22FD54529 /* VenueResolver.swift in Sources */,
+				EA60D77FF0EACDB0D41F240B /* DemoConversation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

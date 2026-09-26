@@ -20,7 +20,7 @@ struct SettingsView: View {
                     QuestPreferences.server = server; status = "Server saved."
                 }
                 if !status.isEmpty { Text(status).font(.caption) }
-            }
+            }.listRowBackground(Color.questSurface)
             Section("Demo chat script") {
                 TextEditor(text: $chatScript).frame(minHeight: 160).font(.callout).autocorrectionDisabled()
                     .accessibilityLabel("Demo chat script")
@@ -34,11 +34,11 @@ struct SettingsView: View {
                     QuestPreferences.demoChatScript = nil; chatScript = DemoData.conversation; chatScriptStatus = "Default script restored."
                 }
                 if !chatScriptStatus.isEmpty { Text(chatScriptStatus).font(.caption) }
-            }
+            }.listRowBackground(Color.questSurface)
             Section("Privacy") {
                 Text("Imported conversations stay in memory and are cleared after planning. Only selected messages are sent. Calendars contribute busy times, never titles or notes. You can enter your area manually.")
                 Text("Shared sessions expire after seven days. Session invitations let people with the card join and view shared context.").font(.caption)
             }
-        }.navigationTitle("Settings").toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
+        }.scrollContentBackground(.hidden).questScreen().navigationTitle("Settings").toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
     }
 }

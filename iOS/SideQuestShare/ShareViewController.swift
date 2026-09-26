@@ -81,8 +81,8 @@ private struct ShareImportView: View {
                 Label("Ready for SideQuest", systemImage: "checkmark.circle.fill")
                 Text("Open SideQuest in Messages to choose what gets analyzed.")
             }
-            Button(model.reading ? "Cancel" : "Done", action: done).buttonStyle(.borderedProminent).controlSize(.large)
+            Button(model.reading ? "Cancel" : "Done", action: done).buttonStyle(QuestPrimaryButtonStyle()).controlSize(.large)
         }.padding(24).frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-            .background(Color.questBackground).tint(.questAccent)
+            .questScreen()
     }
 }

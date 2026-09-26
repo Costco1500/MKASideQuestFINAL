@@ -63,6 +63,8 @@ enum MembershipVault {
     @Published var membership: Membership?
     @Published var isReading = false
     @Published var pendingImportCount = 0
+    @Published var isPreloadedConversation = false
+    @Published var choosingMessages = false
     /// People in the active Messages conversation; nil outside Messages.
     @Published var chatSize: Int?
     private var readTask: Task<Void, Never>?
@@ -110,7 +112,7 @@ enum MembershipVault {
             var imported = try SharedImportStore().loadImportedMessages()
             guard !imported.isEmpty else { checkPendingImport(); return }
             MessageImport.select(.latest50, in: &imported)
-            stopReading(); messages = imported
+            stopReading(); isPreloadedConversation = false; choosingMessages = true; messages = imported
             try SharedImportStore().clearImportedMessages()
             pendingImportCount = 0; status = "Choose the messages you want to analyze."
         } catch { status = error.localizedDescription }
@@ -129,11 +131,15 @@ enum MembershipVault {
             share()
         }
     }
-    func startDemo() {
+    func startDemo(preloadConversation: Bool = true) {
         cancelWork(); stopReading(); expand?(); isDemo = true; invitation = nil; membership = nil; status = ""
         session = try? SideQuestSession.demo(); session?.planOptions = []; session?.context = nil
-        demoParticipantID = "alex"; messages = []
-        readChat()
+        demoParticipantID = "alex"
+        if preloadConversation {
+            isPreloadedConversation = messages.isEmpty
+            if messages.isEmpty { messages = DemoConversation.messages }
+            choosingMessages = !isPreloadedConversation
+        } else { messages = []; readChat() }
     }
     /// Render the editable demo script into images and use the real Vision pipeline.
     func readChat() {
@@ -141,10 +147,12 @@ enum MembershipVault {
         importScreenshots(DemoChatScreenshots.images(script: QuestPreferences.demoChatScript))
     }
     func importScreenshots(_ images: [UIImage]) {
+        isPreloadedConversation = false; choosingMessages = true
         recognize { try await ChatScreenshotOCRService().recognizeMessages(from: images) }
     }
     func importPhotos(_ items: [PhotosPickerItem]) {
         guard !items.isEmpty else { return }
+        isPreloadedConversation = false; choosingMessages = true
         recognize {
             var blocks: [OCRTextBlock] = []
             for (index, item) in items.enumerated() {
@@ -227,7 +235,7 @@ enum MembershipVault {
     }
     func open(_ url: URL) {
         guard let incoming = try? SessionLink.decode(url) else { status = "This is not a valid SideQuest invitation."; return }
-        cancelWork(); stopReading(); messages = []; status = ""; invitation = incoming; expand?(); isDemo = incoming.isDemo
+        cancelWork(); stopReading(); isPreloadedConversation = false; choosingMessages = false; messages = []; status = ""; invitation = incoming; expand?(); isDemo = incoming.isDemo
         if incoming.isDemo {
             let data = QuestPreferences.defaults.data(forKey: "demo-" + incoming.sessionId)
             session = data.flatMap { try? APIJSON.decoder.decode(SideQuestSession.self, from: $0) } ?? (try? SideQuestSession.demo())
@@ -327,7 +335,7 @@ enum MembershipVault {
     func persistDemo() {
         if isDemo, let session { QuestPreferences.defaults.set(try? APIJSON.encoder.encode(session), forKey: "demo-" + session.id) }
     }
-    func reset() { cancelWork(); stopReading(); session = nil; membership = nil; invitation = nil; messages = []; status = ""; isDemo = false }
+    func reset() { cancelWork(); stopReading(); isPreloadedConversation = false; choosingMessages = false; session = nil; membership = nil; invitation = nil; messages = []; status = ""; isDemo = false }
 }
 
 private enum ScreenshotImportError: Error { case unreadableImage }

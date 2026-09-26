@@ -16,36 +16,36 @@ struct QuestFlowView: View {
                         VStack(alignment: .leading, spacing: 12) {
                             Text("Conversation ready").font(.headline)
                             Text("\(store.pendingImportCount) messages imported")
-                            Button("Review Messages") { store.reviewPendingImport() }.buttonStyle(.borderedProminent)
+                            Button("Review Messages") { store.reviewPendingImport() }.buttonStyle(QuestPrimaryButtonStyle())
                             Button("Discard", role: .destructive) { store.discardPendingImport() }
                         }.questCard()
                     }
                     if let session = store.session { sessionContent(session) }
                     else {
                         Text("Your next hangout starts here.").font(.system(.largeTitle, design: .rounded, weight: .bold))
-                        Text("You choose what SideQuest sees.").foregroundStyle(.secondary)
+                        Text("You choose what SideQuest sees.").foregroundStyle(Color.questSecondary)
                         if let invitation = store.invitation {
                             Text("Join this SideQuest").font(.headline)
                             Text("Share your own context with this group at \(invitation.serverURL.host ?? ""). Joining restarts planning so your constraints are included.").font(.subheadline)
-                            Button("Join SideQuest") { store.expand?(); showingProfile = true }.buttonStyle(.borderedProminent)
+                            Button("Join SideQuest") { store.expand?(); showingProfile = true }.buttonStyle(QuestPrimaryButtonStyle())
                         } else {
-                            Button("Try Demo") { store.startDemo() }.buttonStyle(.borderedProminent).controlSize(.large)
+                            Button("Try Demo") { store.startDemo() }.buttonStyle(QuestPrimaryButtonStyle()).controlSize(.large)
                             Stepper("\(expectedPeople) people, including you", value: $expectedPeople, in: 1...12)
-                            Button("Start SideQuest") { store.startSession(expectedParticipantCount: expectedPeople) }.buttonStyle(.bordered).disabled(store.busy)
+                            Button("Start SideQuest") { store.startSession(expectedParticipantCount: expectedPeople) }.buttonStyle(QuestSecondaryButtonStyle()).disabled(store.busy)
                             Text("Start a session and send the invitation first. Everyone adds their profile and taps Done before plans can be made.").font(.caption)
-                            Text("An offline demo is ready. For shared sessions, set your group's server in Settings.").font(.caption).foregroundStyle(.secondary)
+                            Text("An offline demo is ready. For shared sessions, set your group's server in Settings.").font(.caption).foregroundStyle(Color.questSecondary)
                         }
                     }
                     if store.session == nil && !store.messages.isEmpty { MessageImportView(store: store) }
-                    if !store.status.isEmpty { Text(store.status).font(.subheadline).foregroundStyle(.secondary).accessibilityIdentifier("status") }
+                    if !store.status.isEmpty { Text(store.status).font(.subheadline).foregroundStyle(Color.questSecondary).accessibilityIdentifier("status") }
                 }.padding(20)
             }.background(Color.questBackground)
                 .safeAreaInset(edge: .bottom) {
                     if let session = store.session, session.planOptions.isEmpty, store.isOwner {
-                        Button(store.busy ? "Finding your next SideQuest…" : "Analyze \(MessageImport.analysisMessages(store.messages).count) Messages") { store.generate() }
-                            .buttonStyle(.borderedProminent).controlSize(.large)
+                        Button(store.busy ? "Finding your next SideQuest…" : (store.isPreloadedConversation && !store.choosingMessages ? "Analyze Recent Chat" : "Analyze \(MessageImport.analysisMessages(store.messages).count) Messages")) { store.generate() }
+                            .buttonStyle(QuestPrimaryButtonStyle()).controlSize(.large)
                             .disabled(!store.canGenerate).accessibilityIdentifier("generatePlans")
-                            .padding().frame(maxWidth: .infinity).background(.ultraThinMaterial)
+                            .padding().frame(maxWidth: .infinity).background(Color.questBackground)
                     }
                 }
                 .toolbar {
@@ -75,11 +75,11 @@ struct QuestFlowView: View {
                         do { try await Task.sleep(for: .seconds(5)) } catch { return }
                     }
                 }
-        }.tint(.questAccent)
+        }.questScreen()
     }
     private var ownProfile: Participant { store.session?.participants.first { $0.id == store.participantID } ?? QuestPreferences.profile }
     @ViewBuilder private func sessionContent(_ session: SideQuestSession) -> some View {
-        if store.isDemo { Label("Demo", systemImage: "sparkles").font(.caption2).foregroundStyle(.secondary) }
+        if store.isDemo { Label("Demo", systemImage: "sparkles").font(.caption2).foregroundStyle(Color.questSecondary) }
         else {
             Label("Shared session · \(session.participants.count) joined", systemImage: "person.2.fill").font(.caption)
             Button("Refresh session") { Task { await store.refresh() } }
@@ -88,23 +88,23 @@ struct QuestFlowView: View {
             Text("SideQuest set 🎉").font(.largeTitle.bold())
             PlanCard(plan: winner)
             Text("\(session.participants.count) people · chosen by the group").font(.subheadline)
-            Button("Add to Calendar") { calendarPlan = winner }.buttonStyle(.borderedProminent)
-            Text("Choose a calendar and confirm in Apple's event editor.").font(.caption).foregroundStyle(.secondary)
-            Button("Share winning plan") { store.share() }.buttonStyle(.borderedProminent)
+            Button("Add to Calendar") { calendarPlan = winner }.buttonStyle(QuestPrimaryButtonStyle())
+            Text("Choose a calendar and confirm in Apple's event editor.").font(.caption).foregroundStyle(Color.questSecondary)
+            Button("Share winning plan") { store.share() }.buttonStyle(QuestPrimaryButtonStyle())
         } else if !session.planOptions.isEmpty {
             Text("Make it a group yes.").font(.system(.largeTitle, design: .rounded, weight: .bold))
-            Text(session.source == "demo" ? "Three demo suggestions. Confirm prices and availability." : "Three plans shaped around your group.").font(.subheadline).foregroundStyle(.secondary)
+            Text(session.source == "demo" ? "Three demo suggestions. Confirm prices and availability." : "Three plans shaped around your group.").font(.subheadline).foregroundStyle(Color.questSecondary)
             if store.isDemo {
                 Picker("Demo voter", selection: $store.demoParticipantID) { ForEach(session.participants) { Text($0.displayName).tag($0.id) } }.pickerStyle(.menu)
             }
             ForEach(session.planOptions) { plan in
                 VStack(spacing: 8) {
                     PlanCard(plan: plan)
-                    if let fit = plan.whyItWorks[store.participantID] { Text("For you: \(fit)").font(.caption).foregroundStyle(.secondary) }
+                    if let fit = plan.whyItWorks[store.participantID] { Text("For you: \(fit)").font(.caption).foregroundStyle(Color.questSecondary) }
                     HStack {
                         ForEach(VoteValue.allCases, id: \.self) { value in
                             let selected = session.votes.last { $0.participantId == store.participantID && $0.planId == plan.id }?.value == value
-                            Button(value.label) { store.vote(plan, value: value) }.buttonStyle(.bordered).tint(selected ? .questAccent : .gray)
+                            Button(value.label) { store.vote(plan, value: value) }.buttonStyle(QuestSecondaryButtonStyle()).tint(selected ? .questAccent : .questSecondary)
                                 .accessibilityIdentifier("vote-\(plan.id)-\(value.rawValue)")
                                 .accessibilityValue(selected ? "Selected" : "Not selected").disabled(store.busy)
                         }
@@ -112,12 +112,14 @@ struct QuestFlowView: View {
                     Text("\(session.votes.filter { $0.planId == plan.id }.count) votes").font(.caption)
                 }
             }
-            Button("Insert poll into Messages") { store.share() }.buttonStyle(.borderedProminent)
+            Button("Insert poll into Messages") { store.share() }.buttonStyle(QuestPrimaryButtonStyle())
             Text("The card goes into the compose field. You choose when to send.").font(.caption)
             if store.isOwner {
-                Button("Set the SideQuest") { store.finalize() }.buttonStyle(.bordered)
+                Button("Set the SideQuest") { store.finalize() }.buttonStyle(QuestSecondaryButtonStyle())
                     .disabled(VoteEngine.winner(in: session) == nil || store.busy).accessibilityIdentifier("finalize")
             }
+        } else if store.isPreloadedConversation {
+            MessageImportView(store: store)
         } else {
             Text("Bring everyone into the plan.").font(.title2.bold())
             VStack(alignment: .leading, spacing: 8) {
@@ -134,7 +136,7 @@ struct QuestFlowView: View {
                 }
             }.questCard()
             if !store.isDemo {
-                Button("Invite group to contribute") { store.share() }.buttonStyle(.borderedProminent)
+                Button("Invite group to contribute") { store.share() }.buttonStyle(QuestPrimaryButtonStyle())
                 Button(session.participants.contains { $0.id == store.participantID } ? "Edit my context" : "Add my profile & availability") { showingProfile = true }.accessibilityIdentifier("myContext")
                 Text("Send the invitation to the whole group. Each person opens it and taps Done with their own information.").font(.caption)
             }

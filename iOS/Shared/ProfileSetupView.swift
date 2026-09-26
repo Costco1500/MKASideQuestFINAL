@@ -16,13 +16,13 @@ struct ProfileSetupView: View {
                 Picker("Age range", selection: $profile.ageRange) {
                     ForEach(AgeRange.allCases, id: \.self) { Text($0.label).tag($0) }
                 }
-                Text("Age is used only for activity eligibility.").font(.caption).foregroundStyle(.secondary)
-            }
+                Text("Age is used only for activity eligibility.").font(.caption).foregroundStyle(Color.questSecondary)
+            }.listRowBackground(Color.questSurface)
             Section("Your comfortable maximum") {
                 Text("Up to \(profile.maxBudget, format: .currency(code: "USD")) per person")
                 Slider(value: $profile.maxBudget, in: 0...80, step: 5).accessibilityLabel("Maximum budget")
                 Text("The group stays within everyone's budget.").font(.caption)
-            }
+            }.listRowBackground(Color.questSurface)
             Section("Location") {
                 Button { locationService.requestLocation() } label: {
                     Label(locationService.fetching ? "Finding your area…" : "Use My Location", systemImage: "location.fill")
@@ -37,7 +37,7 @@ struct ProfileSetupView: View {
                 #if DEBUG && targetEnvironment(simulator)
                 Button("Use Atlanta demo location") { locationService.useDemoLocation() }
                 #endif
-            }
+            }.listRowBackground(Color.questSurface)
             Section("When could you hang out?") {
                 DatePicker("From", selection: $profile.availability.start)
                 DatePicker("Until", selection: $profile.availability.end)
@@ -57,10 +57,10 @@ struct ProfileSetupView: View {
                 }.disabled(loadingCalendar || profile.availability.duration <= 0)
                 if !calendarStatus.isEmpty { Text(calendarStatus).font(.caption) }
                 Text("Google calendars already in Apple's Calendar app are included.").font(.caption)
-            }
+            }.listRowBackground(Color.questSurface)
             Button(saveTitle) { save(profile) }
                 .disabled(!profile.isValid).accessibilityIdentifier("saveProfile")
-        }.navigationTitle("Your context")
+        }.scrollContentBackground(.hidden).questScreen().navigationTitle("Your context")
             .onChange(of: locationService.location) { _, found in
                 guard let found else { return }
                 manualLocation = false; profile.location = found

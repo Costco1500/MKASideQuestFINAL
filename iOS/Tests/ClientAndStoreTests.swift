@@ -36,7 +36,7 @@ final class StubProtocol: URLProtocol {
     }
     func testOfflineJourneyClearsChatVotesFinalizesAndReopens() async throws {
         QuestPreferences.demoChatScript = nil
-        let store = QuestStore(useLiveServices: false); store.startDemo()
+        let store = QuestStore(useLiveServices: false); store.startDemo(preloadConversation: false)
         XCTAssertTrue(store.messages.isEmpty)
         XCTAssertTrue(store.isReading)
         for _ in 0..<500 where store.isReading { try await Task.sleep(for: .milliseconds(20)) }
@@ -60,7 +60,7 @@ final class StubProtocol: URLProtocol {
     }
     func testReadingChatStopsWhenExtensionCloses() async throws {
         QuestPreferences.demoChatScript = nil
-        let store = QuestStore(useLiveServices: false); store.startDemo()
+        let store = QuestStore(useLiveServices: false); store.startDemo(preloadConversation: false)
         store.stopReading(); let partial = store.messages.count
         XCTAssertFalse(store.isReading)
         XCTAssertLessThan(partial, 8)

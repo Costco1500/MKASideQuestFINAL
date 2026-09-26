@@ -16,15 +16,15 @@ struct PlanCard: View {
             Label(plan.start.formatted(date: .abbreviated, time: .shortened) + " – " + plan.end.formatted(date: .omitted, time: .shortened), systemImage: "clock")
             if let venue = plan.venue {
                 Label(venue.name, systemImage: "mappin.and.ellipse").font(.headline)
-                if let address = venue.address { Text(address).font(.subheadline).foregroundStyle(.secondary) }
+                if let address = venue.address { Text(address).font(.subheadline).foregroundStyle(Color.questSecondary) }
                 Button("Open in Apple Maps") { venue.mapItem.openInMaps() }
-                    .buttonStyle(.bordered).accessibilityIdentifier("openMaps-\(plan.id)")
+                    .buttonStyle(QuestSecondaryButtonStyle()).accessibilityIdentifier("openMaps-\(plan.id)")
             } else {
                 Label(plan.area, systemImage: "mappin.and.ellipse")
-                Text("Specific location not found").font(.caption).foregroundStyle(.secondary)
+                Text("Specific location not found").font(.caption).foregroundStyle(Color.questSecondary)
             }
-            Text(plan.explanation).font(.subheadline).foregroundStyle(.secondary)
-            ForEach(plan.concerns, id: \.self) { Text($0).font(.caption).foregroundStyle(.secondary) }
+            Text(plan.explanation).font(.subheadline).foregroundStyle(Color.questSecondary)
+            ForEach(plan.concerns, id: \.self) { Text($0).font(.caption).foregroundStyle(Color.questSecondary) }
         }.questCard()
     }
 }
