@@ -2,7 +2,7 @@ name: Deploy website
 
 on:
   push:
-    branches: [codex/native-ios-sidequest]
+    branches: [sidequestwebsite]
     paths: ["site/**", ".github/workflows/pages.yml"]
   workflow_dispatch:
 
