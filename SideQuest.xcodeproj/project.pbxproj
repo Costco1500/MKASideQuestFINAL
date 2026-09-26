@@ -42,6 +42,7 @@
 		CD9C11E9F6CE1F2BFC234725 /* SessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAAC255185CA48773439E49 /* SessionTests.swift */; };
 		DF60F58BD6D91FAE4DDB5A56 /* SideQuestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28828CDE2FDFE993EC3EBB28 /* SideQuestUITests.swift */; };
 		E05447FB98C8602AE7975A82 /* QuestStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03802A902E99D465D1ADCF39 /* QuestStyle.swift */; };
+		E2BC323A04C3869149B39CA8 /* ClientAndStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE33B095D16EAEEABB2EC5A0 /* ClientAndStoreTests.swift */; };
 		E5441727E63290CA856F829B /* ShellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CCAAEFE789C7C9C6499AE1 /* ShellTests.swift */; };
 		EFE46681FBD80CBF19747C09 /* CalendarEventEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679194ADE9B4CC3EFB31FCD0 /* CalendarEventEditor.swift */; };
 		F1D362FD2EFC4754A6B16177 /* ProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FCE718858D266564E40E51 /* ProfileTests.swift */; };
@@ -139,6 +140,7 @@
 		D33E659C8D6B3FD3FEBF8CEC /* MessageTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MessageTests.swift; path = iOS/Tests/MessageTests.swift; sourceTree = "<group>"; };
 		D34B4756536541930DF95D54 /* MessageImportView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MessageImportView.swift; path = iOS/Shared/MessageImportView.swift; sourceTree = "<group>"; };
 		D47B3EF8054A16C74D732F86 /* PlanningTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlanningTests.swift; path = iOS/Tests/PlanningTests.swift; sourceTree = "<group>"; };
+		DE33B095D16EAEEABB2EC5A0 /* ClientAndStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ClientAndStoreTests.swift; path = iOS/Tests/ClientAndStoreTests.swift; sourceTree = "<group>"; };
 		E8453011D7D7A341A706D607 /* SideQuestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SideQuestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F768863AB9C72A84EE0E4828 /* Planning.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Planning.swift; path = iOS/Core/Planning.swift; sourceTree = "<group>"; };
 		FCA69AFF2378409BBE288CE1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -215,6 +217,7 @@
 				93334DE91AF5F9B49BCB79EB /* AvailabilityTests.swift */,
 				D47B3EF8054A16C74D732F86 /* PlanningTests.swift */,
 				4EAAC255185CA48773439E49 /* SessionTests.swift */,
+				DE33B095D16EAEEABB2EC5A0 /* ClientAndStoreTests.swift */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -534,6 +537,7 @@
 				6518B96F16447A4B055DF32B /* AvailabilityTests.swift in Sources */,
 				B8BAB5A1F4E19E1136FB77B4 /* PlanningTests.swift in Sources */,
 				CD9C11E9F6CE1F2BFC234725 /* SessionTests.swift in Sources */,
+				E2BC323A04C3869149B39CA8 /* ClientAndStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
