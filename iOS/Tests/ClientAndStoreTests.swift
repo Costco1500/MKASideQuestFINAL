@@ -38,11 +38,11 @@ final class StubProtocol: URLProtocol {
         QuestPreferences.demoChatScript = nil
         let store = QuestStore(); store.startDemo()
         XCTAssertTrue(store.messages.isEmpty)
-        store.readChat(); XCTAssertTrue(store.isReading)
-        for _ in 0..<100 where store.isReading { try await Task.sleep(for: .milliseconds(20)) }
+        XCTAssertTrue(store.isReading)
+        for _ in 0..<500 where store.isReading { try await Task.sleep(for: .milliseconds(20)) }
         XCTAssertEqual(store.messages.count, 8)
         XCTAssertTrue(store.messages.allSatisfy(\.isSelected))
-        XCTAssertEqual(store.status, "Found 8 messages in this chat.")
+        XCTAssertEqual(store.status, "Found 8 messages. Check the text and senders before analyzing.")
         store.generate(); try await idle(store)
         XCTAssertTrue(store.messages.isEmpty)
         let plan = try XCTUnwrap(store.session?.planOptions.first)
@@ -60,8 +60,7 @@ final class StubProtocol: URLProtocol {
     }
     func testReadingChatStopsWhenExtensionCloses() async throws {
         QuestPreferences.demoChatScript = nil
-        let store = QuestStore(); store.startDemo(); store.readChat()
-        try await Task.sleep(for: .milliseconds(300))
+        let store = QuestStore(); store.startDemo()
         store.stopReading(); let partial = store.messages.count
         XCTAssertFalse(store.isReading)
         XCTAssertLessThan(partial, 8)
@@ -119,7 +118,7 @@ final class StubProtocol: URLProtocol {
         QuestPreferences.server = "https://mock.sidequest.test"
         let fixture = member(try SideQuestSession.demo())
         StubProtocol.response = { _ in (200, try APIJSON.encoder.encode(fixture)) }
-        let store = QuestStore(); store.saveProfile(fixture.session.participants[0]); try await idle(store)
+        let store = QuestStore(); store.startSession(expectedParticipantCount: 4); try await idle(store)
         XCTAssertEqual(store.membership?.participantId, fixture.participantId)
         let link = try XCTUnwrap(store.link)
         SecItemDelete(MembershipVault.key(link) as CFDictionary)

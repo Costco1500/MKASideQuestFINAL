@@ -25,9 +25,10 @@ final class SideQuestUITests: XCTestCase {
         let start = messages.buttons["Start SideQuest"]
         for _ in 0..<3 where !start.isHittable { messages.swipeUp() }
         waitForStableFrame(start); start.tap()
-        XCTAssertTrue(messages.textFields["Display name"].waitForExistence(timeout: 8))
-        XCTAssertTrue(messages.staticTexts["Only your own information"].exists)
-        messages.buttons["Cancel"].tap()
+        XCTAssertTrue(messages.buttons["Send"].waitForExistence(timeout: 10))
+        messages.buttons["Remove app from message"].tap()
+        // Creation inserts an invitation before the host has supplied a profile.
+        messages.terminate()
     }
     func testDemoGeneratesPlansAndAcceptsVote() {
         let app = XCUIApplication(); app.launch()
@@ -108,12 +109,31 @@ final class SideQuestUITests: XCTestCase {
     private func readDemoChat(in app: XCUIApplication) {
         let analyze = app.buttons["generatePlans"]
         XCTAssertTrue(analyze.waitForExistence(timeout: 8))
-        XCTAssertFalse(analyze.isEnabled, "Demo starts with no messages until the chat is read")
-        let read = app.buttons["readChat"]
-        for _ in 0..<3 where !read.isHittable { app.swipeUp() }
-        waitForStableFrame(read); read.tap()
-        let loaded = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@ AND enabled == true", "Analyze 8 selected messages"), object: analyze)
-        XCTAssertEqual(XCTWaiter.wait(for: [loaded], timeout: 8), .completed)
+        let loaded = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@ AND enabled == true", "Analyze 8 Messages"), object: analyze)
+        XCTAssertEqual(XCTWaiter.wait(for: [loaded], timeout: 20), .completed)
+    }
+    func testScreenshotReviewSelectionAndSenderCorrection() {
+        let app = XCUIApplication(); app.launch()
+        app.buttons["Try Demo"].tap()
+        readDemoChat(in: app)
+        let clear = app.buttons["Clear"]
+        for _ in 0..<5 where !clear.isHittable { app.swipeUp() }
+        waitForStableFrame(clear); clear.tap()
+        XCTAssertFalse(app.buttons["generatePlans"].isEnabled)
+        app.buttons["Last 10"].tap()
+        XCTAssertTrue(app.buttons["generatePlans"].isEnabled)
+        let sender = app.buttons.matching(identifier: "messageSender").firstMatch
+        for _ in 0..<3 where !sender.isHittable { app.swipeUp() }
+        waitForStableFrame(sender); sender.tap()
+        let unknown = app.buttons["Unknown"].firstMatch
+        XCTAssertTrue(unknown.waitForExistence(timeout: 5)); unknown.tap()
+        XCTAssertEqual(sender.label, "Unknown")
+        let scan = app.buttons["Scan Recent Chat"]
+        for _ in 0..<5 where !scan.isHittable { app.swipeDown() }
+        waitForStableFrame(scan); scan.tap()
+        XCTAssertTrue(app.buttons["Cancel"].waitForExistence(timeout: 10))
+        app.buttons["Cancel"].tap()
+        XCTAssertTrue(app.buttons["generatePlans"].isEnabled, "Cancel retains the reviewed selection")
     }
     private func waitForStableFrame(_ element: XCUIElement) {
         var previous = CGRect.null
