@@ -39,14 +39,22 @@ public struct VenueResolver {
     }
     private static func searchMapKit(query: String, center: ParticipantLocation?, area: String) async -> PlanVenue? {
         let request = MKLocalSearch.Request()
-        request.naturalLanguageQuery = query + " near " + area
+        request.naturalLanguageQuery = center == nil ? query + " near " + area : query
         request.resultTypes = .pointOfInterest
         if let center {
             request.region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: center.latitude, longitude: center.longitude),
                                                latitudinalMeters: 24_000, longitudinalMeters: 24_000)
         }
-        guard let response = try? await MKLocalSearch(request: request).start(),
-              let item = response.mapItems.first(where: { $0.name != nil && CLLocationCoordinate2DIsValid($0.placemark.coordinate) }) else { return nil }
+        guard let response = try? await MKLocalSearch(request: request).start() else { return nil }
+        return venue(from: response.mapItems, query: query)
+    }
+    static func venue(from items: [MKMapItem], query: String) -> PlanVenue? {
+        let seeksParking = query.localizedCaseInsensitiveContains("parking")
+        guard let item = items.first(where: {
+            let parking = $0.pointOfInterestCategory == .parking || ($0.name?.localizedCaseInsensitiveContains("parking") == true)
+            return $0.name?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false &&
+                CLLocationCoordinate2DIsValid($0.placemark.coordinate) && (!parking || seeksParking)
+        }) else { return nil }
         let place = item.placemark
         let street = [place.subThoroughfare, place.thoroughfare].compactMap { $0 }.joined(separator: " ")
         let address = [street, place.locality, place.administrativeArea].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: ", ")
