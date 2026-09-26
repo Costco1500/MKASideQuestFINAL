@@ -19,6 +19,7 @@
 		498B0338ED66DE95D594083A /* SideQuestMessages.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1662FB1CF3A462EEE817D041 /* SideQuestMessages.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4F2C199F7F601ECBE0B193FE /* SideQuestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B98A8FE4AD8A60E2C0E8D5B /* SideQuestApp.swift */; };
 		614E515D7FD295B193BDB116 /* MessageImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34B4756536541930DF95D54 /* MessageImportView.swift */; };
+		6518B96F16447A4B055DF32B /* AvailabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93334DE91AF5F9B49BCB79EB /* AvailabilityTests.swift */; };
 		773EB96AB2FC602E1F80FF0F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
 		856D96115F1EB731E2D133FC /* MessageImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34B4756536541930DF95D54 /* MessageImportView.swift */; };
 		922E56DB188D0432795B1480 /* SideQuestCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448BC1702DE5EFF917FD7781 /* SideQuestCore.framework */; };
@@ -108,6 +109,7 @@
 		6D34554072CC368FC93400D5 /* Participant.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Participant.swift; path = iOS/Core/Participant.swift; sourceTree = "<group>"; };
 		7B716BE670DE5A28A64A0DF4 /* MainInterface.storyboard */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file.storyboard; name = MainInterface.storyboard; path = iOS/MessagesExtension/MainInterface.storyboard; sourceTree = "<group>"; };
 		7B98A8FE4AD8A60E2C0E8D5B /* SideQuestApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SideQuestApp.swift; path = iOS/App/SideQuestApp.swift; sourceTree = "<group>"; };
+		93334DE91AF5F9B49BCB79EB /* AvailabilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AvailabilityTests.swift; path = iOS/Tests/AvailabilityTests.swift; sourceTree = "<group>"; };
 		AF38D753F2D36601675BE136 /* MessageImport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MessageImport.swift; path = iOS/Core/MessageImport.swift; sourceTree = "<group>"; };
 		B33D9F9B5C9604CE45A0CC8B /* ProfileSetupView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProfileSetupView.swift; path = iOS/Shared/ProfileSetupView.swift; sourceTree = "<group>"; };
 		B7CEE04B47375DE4CE98E4D7 /* SideQuestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SideQuestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -182,6 +184,7 @@
 				B8CCAAEFE789C7C9C6499AE1 /* ShellTests.swift */,
 				17FCE718858D266564E40E51 /* ProfileTests.swift */,
 				D33E659C8D6B3FD3FEBF8CEC /* MessageTests.swift */,
+				93334DE91AF5F9B49BCB79EB /* AvailabilityTests.swift */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -486,6 +489,7 @@
 				E5441727E63290CA856F829B /* ShellTests.swift in Sources */,
 				F1D362FD2EFC4754A6B16177 /* ProfileTests.swift in Sources */,
 				A76A77E80B7B61F2B8136EC7 /* MessageTests.swift in Sources */,
+				6518B96F16447A4B055DF32B /* AvailabilityTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
