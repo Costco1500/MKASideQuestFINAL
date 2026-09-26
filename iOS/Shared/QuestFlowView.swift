@@ -30,6 +30,14 @@ struct QuestFlowView: View {
                             }.questCard()
                         }
                         MessageImportView(messages: $messages)
+                        let windows = AvailabilityEngine.sharedFreeWindows(participants, range: participants[0].availability)
+                        VStack(alignment: .leading, spacing: 8) {
+                            Label("Shared free time", systemImage: "calendar").font(.headline)
+                            if windows.isEmpty { Text("No shared 90-minute window. Adjust availability before planning.") }
+                            ForEach(windows.indices, id: \.self) { index in
+                                Text("\(windows[index].start.formatted(date: .abbreviated, time: .shortened)) – \(windows[index].end.formatted(date: .omitted, time: .shortened))")
+                            }
+                        }.questCard()
                     }
                 }.padding(24)
             }.background(Color.questBackground)

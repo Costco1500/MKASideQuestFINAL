@@ -4,6 +4,8 @@ import SideQuestCore
 struct ProfileSetupView: View {
     @State var profile: Participant
     var save: (Participant) -> Void
+    @State private var calendarStatus = ""
+    @State private var loadingCalendar = false
     var body: some View {
         Form {
             Section("Only your own information") {
@@ -26,9 +28,27 @@ struct ProfileSetupView: View {
                 DatePicker("From", selection: $profile.availability.start)
                 DatePicker("Until", selection: $profile.availability.end)
                 Text("Choose at least 90 minutes, within a seven-day range.").font(.caption)
+                Button(loadingCalendar ? "Reading availability…" : "Check my Apple Calendar") {
+                    loadingCalendar = true
+                    Task { @MainActor in
+                        defer { loadingCalendar = false }
+                        do {
+                            let provider = EventKitCalendarProvider()
+                            try await provider.requestAccess()
+                            profile.busyIntervals = try await provider.busyIntervals(from: profile.availability.start, to: profile.availability.end)
+                            profile.calendarConnectionStatus = "connected"
+                            calendarStatus = "Availability loaded. Event titles stay on your device."
+                        } catch { calendarStatus = error.localizedDescription }
+                    }
+                }.disabled(loadingCalendar || profile.availability.duration <= 0)
+                if !calendarStatus.isEmpty { Text(calendarStatus).font(.caption) }
+                Text("Google calendars already in Apple's Calendar app are included.").font(.caption)
             }
             Button("Save my context") { save(profile) }
                 .disabled(!profile.isValid).accessibilityIdentifier("saveProfile")
         }.navigationTitle("Your context")
+            .onChange(of: profile.availability) { _, _ in
+                profile.busyIntervals = []; profile.calendarConnectionStatus = "manual"; calendarStatus = "Time changed. Check your calendar again."
+            }
     }
 }

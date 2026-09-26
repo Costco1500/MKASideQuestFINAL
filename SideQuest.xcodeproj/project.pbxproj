@@ -13,6 +13,7 @@
 		18EC44258FEE5465D7AB84FB /* Participant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D34554072CC368FC93400D5 /* Participant.swift */; };
 		1B2654ADE682A08C27609CF4 /* QuestStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03802A902E99D465D1ADCF39 /* QuestStyle.swift */; };
 		29B5D6160220002B2772F42E /* SideQuestCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448BC1702DE5EFF917FD7781 /* SideQuestCore.framework */; };
+		29DC29B3C664DC3B14CEED75 /* CalendarProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6843BBB5271423246A6913F4 /* CalendarProvider.swift */; };
 		371ED7D82F882E829EDB8F82 /* ProfileSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33D9F9B5C9604CE45A0CC8B /* ProfileSetupView.swift */; };
 		3902F8FB6DD901AD53FDD709 /* SideQuestCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448BC1702DE5EFF917FD7781 /* SideQuestCore.framework */; };
 		45AAD8208D62646C3791D982 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
@@ -22,6 +23,7 @@
 		6518B96F16447A4B055DF32B /* AvailabilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93334DE91AF5F9B49BCB79EB /* AvailabilityTests.swift */; };
 		773EB96AB2FC602E1F80FF0F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
 		856D96115F1EB731E2D133FC /* MessageImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D34B4756536541930DF95D54 /* MessageImportView.swift */; };
+		88A2B69375679EEC46AE8F70 /* CalendarEventEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679194ADE9B4CC3EFB31FCD0 /* CalendarEventEditor.swift */; };
 		922E56DB188D0432795B1480 /* SideQuestCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448BC1702DE5EFF917FD7781 /* SideQuestCore.framework */; };
 		933A4E2167D1543C0D5A4144 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
 		A76A77E80B7B61F2B8136EC7 /* MessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33E659C8D6B3FD3FEBF8CEC /* MessageTests.swift */; };
@@ -32,7 +34,9 @@
 		DF60F58BD6D91FAE4DDB5A56 /* SideQuestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28828CDE2FDFE993EC3EBB28 /* SideQuestUITests.swift */; };
 		E05447FB98C8602AE7975A82 /* QuestStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03802A902E99D465D1ADCF39 /* QuestStyle.swift */; };
 		E5441727E63290CA856F829B /* ShellTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8CCAAEFE789C7C9C6499AE1 /* ShellTests.swift */; };
+		EFE46681FBD80CBF19747C09 /* CalendarEventEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679194ADE9B4CC3EFB31FCD0 /* CalendarEventEditor.swift */; };
 		F1D362FD2EFC4754A6B16177 /* ProfileTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17FCE718858D266564E40E51 /* ProfileTests.swift */; };
+		F742364DDADFAEFF84B59AED /* AvailabilityEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20CB826E037AA45234462646 /* AvailabilityEngine.swift */; };
 		F98B2A5EF6FBD6083D25E593 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484EB1630A1E6DF1F3B559A5 /* MessagesViewController.swift */; };
 		FA8D0C1D909963E9296E8B35 /* ProfileSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33D9F9B5C9604CE45A0CC8B /* ProfileSetupView.swift */; };
 /* End PBXBuildFile section */
@@ -100,12 +104,15 @@
 		03802A902E99D465D1ADCF39 /* QuestStyle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = QuestStyle.swift; path = iOS/Shared/QuestStyle.swift; sourceTree = "<group>"; };
 		1662FB1CF3A462EEE817D041 /* SideQuestMessages.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SideQuestMessages.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		17FCE718858D266564E40E51 /* ProfileTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProfileTests.swift; path = iOS/Tests/ProfileTests.swift; sourceTree = "<group>"; };
+		20CB826E037AA45234462646 /* AvailabilityEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AvailabilityEngine.swift; path = iOS/Core/AvailabilityEngine.swift; sourceTree = "<group>"; };
 		231419ECA1AEF7807520A4ED /* SideQuest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SideQuest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		28828CDE2FDFE993EC3EBB28 /* SideQuestUITests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SideQuestUITests.swift; path = iOS/UITests/SideQuestUITests.swift; sourceTree = "<group>"; };
 		37CBB340F77C8372B1EFE30E /* QuestFlowView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = QuestFlowView.swift; path = iOS/Shared/QuestFlowView.swift; sourceTree = "<group>"; };
 		448BC1702DE5EFF917FD7781 /* SideQuestCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SideQuestCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		484EB1630A1E6DF1F3B559A5 /* MessagesViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MessagesViewController.swift; path = iOS/MessagesExtension/MessagesViewController.swift; sourceTree = "<group>"; };
 		625930BA50A00E3FF2CAAF78 /* OnboardingView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OnboardingView.swift; path = iOS/App/OnboardingView.swift; sourceTree = "<group>"; };
+		679194ADE9B4CC3EFB31FCD0 /* CalendarEventEditor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CalendarEventEditor.swift; path = iOS/Shared/CalendarEventEditor.swift; sourceTree = "<group>"; };
+		6843BBB5271423246A6913F4 /* CalendarProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CalendarProvider.swift; path = iOS/Core/CalendarProvider.swift; sourceTree = "<group>"; };
 		6D34554072CC368FC93400D5 /* Participant.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Participant.swift; path = iOS/Core/Participant.swift; sourceTree = "<group>"; };
 		7B716BE670DE5A28A64A0DF4 /* MainInterface.storyboard */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = file.storyboard; name = MainInterface.storyboard; path = iOS/MessagesExtension/MainInterface.storyboard; sourceTree = "<group>"; };
 		7B98A8FE4AD8A60E2C0E8D5B /* SideQuestApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SideQuestApp.swift; path = iOS/App/SideQuestApp.swift; sourceTree = "<group>"; };
@@ -174,6 +181,7 @@
 				03802A902E99D465D1ADCF39 /* QuestStyle.swift */,
 				B33D9F9B5C9604CE45A0CC8B /* ProfileSetupView.swift */,
 				D34B4756536541930DF95D54 /* MessageImportView.swift */,
+				679194ADE9B4CC3EFB31FCD0 /* CalendarEventEditor.swift */,
 			);
 			name = Shared;
 			sourceTree = "<group>";
@@ -240,6 +248,8 @@
 			children = (
 				6D34554072CC368FC93400D5 /* Participant.swift */,
 				AF38D753F2D36601675BE136 /* MessageImport.swift */,
+				20CB826E037AA45234462646 /* AvailabilityEngine.swift */,
+				6843BBB5271423246A6913F4 /* CalendarProvider.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -459,6 +469,8 @@
 			files = (
 				18EC44258FEE5465D7AB84FB /* Participant.swift in Sources */,
 				005E7614AB44677F347783E6 /* MessageImport.swift in Sources */,
+				F742364DDADFAEFF84B59AED /* AvailabilityEngine.swift in Sources */,
+				29DC29B3C664DC3B14CEED75 /* CalendarProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -471,6 +483,7 @@
 				E05447FB98C8602AE7975A82 /* QuestStyle.swift in Sources */,
 				371ED7D82F882E829EDB8F82 /* ProfileSetupView.swift in Sources */,
 				856D96115F1EB731E2D133FC /* MessageImportView.swift in Sources */,
+				88A2B69375679EEC46AE8F70 /* CalendarEventEditor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -503,6 +516,7 @@
 				1B2654ADE682A08C27609CF4 /* QuestStyle.swift in Sources */,
 				FA8D0C1D909963E9296E8B35 /* ProfileSetupView.swift in Sources */,
 				614E515D7FD295B193BDB116 /* MessageImportView.swift in Sources */,
+				EFE46681FBD80CBF19747C09 /* CalendarEventEditor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
