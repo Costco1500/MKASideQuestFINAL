@@ -100,6 +100,12 @@ final class ScreenshotImportTests: XCTestCase {
     func testDemoFixturesRunActualVisionOCRThenParser() async throws {
         let images = DemoChatScreenshots.images()
         XCTAssertEqual(images.count, 3)
+        for (index, image) in images.enumerated() {
+            let attachment = XCTAttachment(image: image)
+            attachment.name = "sidequest-demo-chat-\(index + 1)"
+            attachment.lifetime = .keepAlways
+            add(attachment)
+        }
         let blocks = try await ChatScreenshotOCRService().recognizeMessages(from: images)
         XCTAssertEqual(Set(blocks.map(\.screenshotIndex)), Set([0, 1, 2]))
         XCTAssertTrue(blocks.allSatisfy { !$0.text.isEmpty && !$0.boundingBox.isEmpty })

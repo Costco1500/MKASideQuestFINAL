@@ -66,6 +66,8 @@ enum MembershipVault {
     @Published var chatSize: Int?
     private var readTask: Task<Void, Never>?
     private var readID = UUID()
+    private var workTask: Task<Void, Never>?
+    private var lifecycleID = UUID()
     var insert: ((SideQuestSession, SessionLink) -> Void)?
     var expand: (() -> Void)?
     var participantID: String { isDemo ? demoParticipantID : membership?.participantId ?? "" }
@@ -84,11 +86,14 @@ enum MembershipVault {
     func work(_ operation: @escaping () async throws -> Void) {
         guard !busy else { return }
         busy = true; status = ""
-        Task { @MainActor in
-            defer { busy = false }
-            do { try await operation() } catch { status = error.localizedDescription }
+        let started = lifecycleID
+        workTask = Task { @MainActor in
+            defer { if lifecycleID == started { busy = false } }
+            do { try Task.checkCancellation(); try await operation() }
+            catch { if lifecycleID == started && !Task.isCancelled { status = error.localizedDescription } }
         }
     }
+    private func cancelWork() { lifecycleID = UUID(); workTask?.cancel(); workTask = nil; busy = false }
     func startSession(expectedParticipantCount: Int) {
         guard (1...12).contains(expectedParticipantCount), session == nil else { return }
         expand?()
@@ -100,7 +105,7 @@ enum MembershipVault {
         }
     }
     func startDemo() {
-        stopReading(); expand?(); isDemo = true; invitation = nil; membership = nil; status = ""
+        cancelWork(); stopReading(); expand?(); isDemo = true; invitation = nil; membership = nil; status = ""
         session = try? SideQuestSession.demo(); session?.planOptions = []; session?.context = nil
         demoParticipantID = "alex"; messages = []
         readChat()
@@ -153,6 +158,7 @@ enum MembershipVault {
     }
     func stopReading() { readTask?.cancel(); readTask = nil; readID = UUID(); isReading = false }
     func accept(_ member: Membership, server: URL) throws {
+        try Task.checkCancellation()
         let link = SessionLink(sessionId: member.session.id, inviteToken: member.inviteToken, serverURL: server, isDemo: false)
         try MembershipVault.save(member, for: link)
         membership = member; invitation = link; session = member.session; isDemo = false
@@ -171,7 +177,10 @@ enum MembershipVault {
         }
     }
     func apply(_ updated: SideQuestSession) {
-        guard session == nil || updated.revision >= session!.revision else { return }
+        guard !Task.isCancelled,
+              session == nil || session?.id == updated.id,
+              invitation == nil || invitation?.sessionId == updated.id,
+              session == nil || updated.revision >= session!.revision else { return }
         session = updated
         if var member = membership, let link {
             member.session = updated; membership = member; try? MembershipVault.save(member, for: link)
@@ -179,14 +188,16 @@ enum MembershipVault {
     }
     func refresh(silent: Bool = false) async {
         guard !isDemo, let invitation, let api else { return }
+        let started = lifecycleID
         do {
             let latest: SideQuestSession = try await api.request("api/sessions/\(invitation.sessionId)", method: "GET", body: [String: String](), token: membership?.memberToken ?? invitation.inviteToken)
+            guard started == lifecycleID else { return }
             apply(latest)
-        } catch { if !silent { status = "Could not refresh the shared session. Check your connection." } }
+        } catch { if !silent && started == lifecycleID && !Task.isCancelled { status = "Could not refresh the shared session. Check your connection." } }
     }
     func open(_ url: URL) {
         guard let incoming = try? SessionLink.decode(url) else { status = "This is not a valid SideQuest invitation."; return }
-        stopReading(); messages = []; status = ""; invitation = incoming; expand?(); isDemo = incoming.isDemo
+        cancelWork(); stopReading(); messages = []; status = ""; invitation = incoming; expand?(); isDemo = incoming.isDemo
         if incoming.isDemo {
             let data = QuestPreferences.defaults.data(forKey: "demo-" + incoming.sessionId)
             session = data.flatMap { try? APIJSON.decoder.decode(SideQuestSession.self, from: $0) } ?? (try? SideQuestSession.demo())
@@ -203,6 +214,7 @@ enum MembershipVault {
         }
         work { [self] in
             if !isDemo { await refresh() }
+            try Task.checkCancellation()
             guard var current = session, current.everyoneReady else {
                 status = "Waiting for everyone to tap Done on their profile."; return
             }
@@ -212,9 +224,11 @@ enum MembershipVault {
                 guard let api, let membership else { throw PlanningError.invalidServer }
                 let updated: SideQuestSession = try await api.request("api/sessions/\(current.id)/plan", body: SessionPlanBody(request), token: membership.memberToken)
                 guard PlanRules.validate(updated.planOptions, for: request) else { throw PlanningError.invalidResponse }
+                try Task.checkCancellation()
                 apply(updated); messages = []; return
             }
             let result = try await PlanGenerator.generate(request)
+            try Task.checkCancellation()
             current.planOptions = result.plans; current.source = result.source
             var minimized = request; minimized.selectedMessages = []
             current.context = minimized; session = current; messages = []; persistDemo()
@@ -252,7 +266,7 @@ enum MembershipVault {
     func persistDemo() {
         if isDemo, let session { QuestPreferences.defaults.set(try? APIJSON.encoder.encode(session), forKey: "demo-" + session.id) }
     }
-    func reset() { stopReading(); session = nil; membership = nil; invitation = nil; messages = []; status = ""; isDemo = false }
+    func reset() { cancelWork(); stopReading(); session = nil; membership = nil; invitation = nil; messages = []; status = ""; isDemo = false }
 }
 
 private enum ScreenshotImportError: Error { case unreadableImage }
