@@ -60,4 +60,12 @@ extension DemoData {
     Sarah: I can do 5 to 10.
     Alex: After 6:30 works.
     """
+
+    /// Messages the demo "reads" from the chat: the organizer's custom script, or the default conversation.
+    public static func chatScript(_ custom: String?) -> [ImportedMessage] {
+        var messages = MessageImport.parse(custom ?? "")
+        if messages.isEmpty { messages = MessageImport.parse(conversation) }
+        MessageImport.select(.latest50, in: &messages)
+        return messages
+    }
 }

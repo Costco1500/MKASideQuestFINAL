@@ -20,6 +20,10 @@ enum QuestPreferences {
         }
         set { defaults.set(try? APIJSON.encoder.encode(newValue), forKey: "profile") }
     }
+    static var demoChatScript: String? {
+        get { defaults.string(forKey: "demo-chat-script") }
+        set { defaults.set(newValue, forKey: "demo-chat-script") }
+    }
 }
 
 enum MembershipVault {
@@ -55,6 +59,10 @@ enum MembershipVault {
     @Published var invitation: SessionLink?
     @Published var demoParticipantID = "alex"
     @Published var membership: Membership?
+    @Published var isReading = false
+    /// People in the active Messages conversation; nil outside Messages.
+    @Published var chatSize: Int?
+    private var readTask: Task<Void, Never>?
     var insert: ((SideQuestSession, SessionLink) -> Void)?
     var expand: (() -> Void)?
     var participantID: String { isDemo ? demoParticipantID : membership?.participantId ?? "" }
@@ -75,11 +83,26 @@ enum MembershipVault {
         }
     }
     func startDemo() {
-        expand?(); isDemo = true; invitation = nil; membership = nil; status = ""
+        stopReading(); expand?(); isDemo = true; invitation = nil; membership = nil; status = ""
         session = try? SideQuestSession.demo(); session?.planOptions = []; session?.context = nil
         demoParticipantID = "alex"
-        messages = MessageImport.parse(DemoData.conversation); MessageImport.select(.all, in: &messages)
+        messages = []
     }
+    /// Demo only: simulates reading the conversation by revealing the scripted chat one message at a time.
+    func readChat() {
+        guard isDemo, !isReading else { return }
+        let script = DemoData.chatScript(QuestPreferences.demoChatScript)
+        messages = []; status = ""; isReading = true
+        readTask = Task { @MainActor [weak self] in
+            for message in script {
+                do { try await Task.sleep(for: .milliseconds(120)) } catch { return }
+                withAnimation(.easeOut(duration: 0.2)) { self?.messages.append(message) }
+            }
+            self?.isReading = false
+            self?.status = "Found \(script.count) messages in this chat."
+        }
+    }
+    func stopReading() { readTask?.cancel(); readTask = nil; isReading = false }
     func accept(_ member: Membership, server: URL) throws {
         let link = SessionLink(sessionId: member.session.id, inviteToken: member.inviteToken, serverURL: server, isDemo: false)
         try MembershipVault.save(member, for: link)
@@ -117,7 +140,7 @@ enum MembershipVault {
     }
     func open(_ url: URL) {
         guard let incoming = try? SessionLink.decode(url) else { status = "This is not a valid SideQuest invitation."; return }
-        messages = []; status = ""; invitation = incoming; expand?(); isDemo = incoming.isDemo
+        stopReading(); messages = []; status = ""; invitation = incoming; expand?(); isDemo = incoming.isDemo
         if incoming.isDemo {
             let data = QuestPreferences.defaults.data(forKey: "demo-" + incoming.sessionId)
             session = data.flatMap { try? APIJSON.decoder.decode(SideQuestSession.self, from: $0) } ?? (try? SideQuestSession.demo())
@@ -182,5 +205,5 @@ enum MembershipVault {
     func persistDemo() {
         if isDemo, let session { QuestPreferences.defaults.set(try? APIJSON.encoder.encode(session), forKey: "demo-" + session.id) }
     }
-    func reset() { session = nil; membership = nil; invitation = nil; messages = []; status = ""; isDemo = false }
+    func reset() { stopReading(); session = nil; membership = nil; invitation = nil; messages = []; status = ""; isDemo = false }
 }

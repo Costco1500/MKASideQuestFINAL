@@ -23,13 +23,14 @@ final class MessagesViewController: MSMessagesAppViewController {
 
     override func willBecomeActive(with conversation: MSConversation) {
         super.willBecomeActive(with: conversation)
+        store.chatSize = conversation.remoteParticipantIdentifiers.count + 1
         if let url = conversation.selectedMessage?.url { store.open(url) }
     }
     override func didSelect(_ message: MSMessage, conversation: MSConversation) {
         if let url = message.url { store.open(url) }
     }
     override func willResignActive(with conversation: MSConversation) {
-        store.messages = []
+        store.stopReading(); store.messages = []
         super.willResignActive(with: conversation)
     }
     private func insert(_ session: SideQuestSession, link: SessionLink) {

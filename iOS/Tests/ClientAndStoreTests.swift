@@ -35,8 +35,14 @@ final class StubProtocol: URLProtocol {
         Membership(session: session, participantId: session.participants[0].id, memberToken: String(repeating: "m", count: 43), inviteToken: String(repeating: "i", count: 43), isOwner: owner)
     }
     func testOfflineJourneyClearsChatVotesFinalizesAndReopens() async throws {
+        QuestPreferences.demoChatScript = nil
         let store = QuestStore(); store.startDemo()
+        XCTAssertTrue(store.messages.isEmpty)
+        store.readChat(); XCTAssertTrue(store.isReading)
+        for _ in 0..<100 where store.isReading { try await Task.sleep(for: .milliseconds(20)) }
         XCTAssertEqual(store.messages.count, 8)
+        XCTAssertTrue(store.messages.allSatisfy(\.isSelected))
+        XCTAssertEqual(store.status, "Found 8 messages in this chat.")
         store.generate(); try await idle(store)
         XCTAssertTrue(store.messages.isEmpty)
         let plan = try XCTUnwrap(store.session?.planOptions.first)
@@ -51,6 +57,17 @@ final class StubProtocol: URLProtocol {
         store.reset(); XCTAssertNil(store.session)
         store.open(URL(string: "https://invalid.example")!)
         XCTAssertFalse(store.status.isEmpty)
+    }
+    func testReadingChatStopsWhenExtensionCloses() async throws {
+        QuestPreferences.demoChatScript = nil
+        let store = QuestStore(); store.startDemo(); store.readChat()
+        try await Task.sleep(for: .milliseconds(300))
+        store.stopReading(); let partial = store.messages.count
+        XCTAssertFalse(store.isReading)
+        XCTAssertLessThan(partial, 8)
+        try await Task.sleep(for: .milliseconds(400))
+        XCTAssertEqual(store.messages.count, partial)
+        XCTAssertTrue(store.status.isEmpty)
     }
     func testAPIClientEncodesAuthorizationAndDecodesPlans() async throws {
         let input = PlanningRequest(participants: DemoData.participants(), messages: [])

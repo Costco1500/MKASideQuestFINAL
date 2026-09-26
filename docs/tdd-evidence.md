@@ -12,6 +12,7 @@ Source: the supplied SideQuest native iOS brief. Workflow: ECC `tdd-workflow`, t
 | Shared joins, own-context updates, votes, deterministic winner | `c55d147`: missing session models and storage implementation | `8920a60`: 25 unit tests, Messages launch/vote/card UI flows, backend persistence/concurrency tests passed |
 | Winning event opens a confirmation editor; invalid winner blocked | `6069270`: missing Add to Calendar UI; over-budget received winner was incorrectly accepted | Full simulator run passed 26 unit + 4 UI tests; calendar editor opened and canceled |
 | Native HTTP/member persistence integration | `ae26fd1`: unsigned simulator failed Keychain storage; 3 assertions failed | Same 4 client/store tests passed with local ad-hoc simulator signing |
+| Demo "Read this chat" reveals an editable script, pre-selected, and stops when Messages closes | `0818747`: missing `DemoData.chatScript` compile failures | 33 unit tests passed (2 new MessageTests, updated offline journey, new stop-reading store test); app demo UI test reads the chat before planning. See note below |
 
 Actual commands: `bash scripts/xcode.sh test`, focused runs using `-only-testing:SideQuestTests/<class>` or `-only-testing:SideQuestUITests`, and `python3 -m unittest discover -s backend -v`. Runtime RED was used for the shell, winning event, received-winner constraints, and Keychain regression. Other initial REDs were compile/import failures directly caused by missing feature implementations. Early test harness setup failures and a zero-test discovery run were not counted as evidence.
 
@@ -33,3 +34,8 @@ No checkpoint commits were squashed or rewritten. Logs and `.xcresult` bundles r
 - Final Xcode result: `build/DerivedData/Logs/Test/Test-SideQuest-2026.09.26_00-06-57--0400.xcresult`.
 
 Remaining unexecuted paths are live OpenAI service behavior, real EventKit permission grants and saved events, physical-device signing/install, and actual message delivery between devices. Mocked OpenAI wire-format, native HTTP/Keychain integration, two-member HTTP sessions, and local SQLite restart behavior are tested. Direct Google OAuth remains deferred as requested.
+
+## Demo "Read this chat" — 2026-09-26
+
+- `xcodebuild … -destination 'platform=iOS Simulator,name=iPhone 17' test -only-testing:SideQuestTests`: **33 unit tests passed**.
+- `-only-testing:SideQuestUITests` on the same simulator: the 3 containing-app UI tests passed, including the updated demo journey (Load demo chat → 8 selected → plans → vote → calendar editor). The 4 Messages-extension UI tests failed at the first extension element. The unchanged baseline `3dc430c` fails `testMessagesExtensionOpens` identically on this machine (Xcode 27.0, iOS 27 "iPhone 17"; no "iPhone 17 Pro" simulator installed), so these are environment failures, not regressions. Re-run on the original iPhone 17 Pro setup before relying on them.

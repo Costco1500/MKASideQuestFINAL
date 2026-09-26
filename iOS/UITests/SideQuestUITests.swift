@@ -32,6 +32,7 @@ final class SideQuestUITests: XCTestCase {
     func testDemoGeneratesPlansAndAcceptsVote() {
         let app = XCUIApplication(); app.launch()
         app.buttons["Try Demo"].tap()
+        readDemoChat(in: app)
         app.buttons["generatePlans"].tap()
         XCTAssertTrue(app.staticTexts["Make it a group yes."].waitForExistence(timeout: 10))
         let vote = app.buttons["vote-plan-1-down"]
@@ -58,6 +59,7 @@ final class SideQuestUITests: XCTestCase {
         let messages = openMessagesExtension()
         waitForStableFrame(messages.buttons["Try Demo"])
         messages.buttons["Try Demo"].tap()
+        readDemoChat(in: messages)
         waitForStableFrame(messages.buttons["generatePlans"])
         messages.buttons["generatePlans"].tap()
         XCTAssertTrue(messages.staticTexts["Make it a group yes."].waitForExistence(timeout: 10))
@@ -83,6 +85,7 @@ final class SideQuestUITests: XCTestCase {
     func testMessagesWinnerOffersCalendarAndShare() {
         let messages = openMessagesExtension()
         waitForStableFrame(messages.buttons["Try Demo"]); messages.buttons["Try Demo"].tap()
+        readDemoChat(in: messages)
         waitForStableFrame(messages.buttons["generatePlans"]); messages.buttons["generatePlans"].tap()
         XCTAssertTrue(messages.staticTexts["Make it a group yes."].waitForExistence(timeout: 8))
         let vote = messages.buttons["vote-plan-1-down"]
@@ -101,6 +104,16 @@ final class SideQuestUITests: XCTestCase {
         waitForStableFrame(share); share.tap()
         XCTAssertTrue(messages.buttons["Send"].waitForExistence(timeout: 8))
         messages.buttons["Remove app from message"].tap()
+    }
+    private func readDemoChat(in app: XCUIApplication) {
+        let analyze = app.buttons["generatePlans"]
+        XCTAssertTrue(analyze.waitForExistence(timeout: 8))
+        XCTAssertFalse(analyze.isEnabled, "Demo starts with no messages until the chat is read")
+        let read = app.buttons["readChat"]
+        for _ in 0..<3 where !read.isHittable { app.swipeUp() }
+        waitForStableFrame(read); read.tap()
+        let loaded = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@ AND enabled == true", "Analyze 8 selected messages"), object: analyze)
+        XCTAssertEqual(XCTWaiter.wait(for: [loaded], timeout: 8), .completed)
     }
     private func waitForStableFrame(_ element: XCUIElement) {
         var previous = CGRect.null

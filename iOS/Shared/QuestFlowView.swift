@@ -32,7 +32,7 @@ struct QuestFlowView: View {
                     if let session = store.session, session.planOptions.isEmpty, store.isOwner {
                         Button(store.busy ? "Finding your next SideQuest…" : "Analyze \(MessageImport.analysisMessages(store.messages).count) selected messages") { store.generate() }
                             .buttonStyle(.borderedProminent).controlSize(.large)
-                            .disabled(store.busy || MessageImport.analysisMessages(store.messages).isEmpty).accessibilityIdentifier("generatePlans")
+                            .disabled(store.busy || store.isReading || MessageImport.analysisMessages(store.messages).isEmpty).accessibilityIdentifier("generatePlans")
                             .padding().frame(maxWidth: .infinity).background(.ultraThinMaterial)
                     }
                 }
@@ -64,7 +64,7 @@ struct QuestFlowView: View {
     }
     private var ownProfile: Participant { store.session?.participants.first { $0.id == store.participantID } ?? QuestPreferences.profile }
     @ViewBuilder private func sessionContent(_ session: SideQuestSession) -> some View {
-        if store.isDemo { Label("Offline demo · votes stay on this device", systemImage: "airplane").font(.caption).foregroundStyle(.secondary) }
+        if store.isDemo { Label("Demo", systemImage: "sparkles").font(.caption2).foregroundStyle(.secondary) }
         else {
             Label("Shared session · \(session.participants.count) joined", systemImage: "person.2.fill").font(.caption)
             Button("Refresh session") { Task { await store.refresh() } }
@@ -118,7 +118,7 @@ struct QuestFlowView: View {
                 Button("Edit my context") { showingProfile = true }
                 Text("Each person joins with their own information. Wait for everyone before generating.").font(.caption)
             }
-            if store.isOwner { MessageImportView(messages: $store.messages) }
+            if store.isOwner { MessageImportView(store: store) }
             else { Text("Your context is shared. The organizer will generate plans when everyone has joined.") }
             let request = PlanningRequest(participants: session.participants, messages: [])
             VStack(alignment: .leading, spacing: 8) {
