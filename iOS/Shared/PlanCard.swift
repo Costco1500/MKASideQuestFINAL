@@ -4,6 +4,7 @@ import SideQuestCore
 
 struct PlanCard: View {
     let plan: PlanOption
+    var onOpenMaps: (() -> Void)? = nil
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .top) {
@@ -17,7 +18,7 @@ struct PlanCard: View {
             if let venue = plan.venue {
                 Label(venue.name, systemImage: "mappin.and.ellipse").font(.headline)
                 if let address = venue.address { Text(address).font(.subheadline).foregroundStyle(Color.questSecondary) }
-                Button("Open in Apple Maps") { venue.mapItem.openInMaps() }
+                Button("Open in Apple Maps") { onOpenMaps?(); venue.mapItem.openInMaps() }
                     .buttonStyle(QuestSecondaryButtonStyle()).accessibilityIdentifier("openMaps-\(plan.id)")
             } else {
                 Label(plan.area, systemImage: "mappin.and.ellipse")

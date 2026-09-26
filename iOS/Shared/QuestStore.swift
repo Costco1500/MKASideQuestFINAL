@@ -236,6 +236,7 @@ enum MembershipVault {
     }
     func open(_ url: URL) {
         guard let incoming = try? SessionLink.decode(url) else { status = "This is not a valid SideQuest invitation."; return }
+        QuestPreferences.defaults.removeObject(forKey: "maps-return")
         cancelWork(); stopReading(); isPreloadedConversation = false; choosingMessages = false; messages = []; status = ""; invitation = incoming; expand?(); isDemo = incoming.isDemo
         if incoming.isDemo {
             let data = QuestPreferences.defaults.data(forKey: "demo-" + incoming.sessionId)
@@ -333,10 +334,32 @@ enum MembershipVault {
         persistDemo()
         if let insert { insert(session, link) } else { status = "Open SideQuest in Messages to insert this card." }
     }
+    /// A one-time return from Maps, containing no messages, coordinates, or access tokens.
+    func rememberMapsReturn(now: Date = Date()) {
+        guard insert != nil, let link else { return }
+        persistDemo()
+        QuestPreferences.defaults.set(["id": link.sessionId, "server": link.serverURL.absoluteString,
+                                      "demo": link.isDemo, "created": now.timeIntervalSince1970], forKey: "maps-return")
+    }
+    @discardableResult func resumeAfterMaps(now: Date = Date()) -> Bool {
+        guard let marker = QuestPreferences.defaults.dictionary(forKey: "maps-return") else { return false }
+        QuestPreferences.defaults.removeObject(forKey: "maps-return")
+        guard let created = marker["created"] as? Double, (0...600).contains(now.timeIntervalSince1970 - created),
+              let id = marker["id"] as? String, let server = marker["server"] as? String, let url = URL(string: server),
+              let demo = marker["demo"] as? Bool else { return false }
+        var link = SessionLink(sessionId: id, inviteToken: String(repeating: "d", count: 43), serverURL: url, isDemo: demo)
+        if !demo {
+            guard let member = MembershipVault.load(link) else { return false }
+            link.inviteToken = member.inviteToken
+        }
+        guard let destination = try? link.url() else { return false }
+        open(destination)
+        return session != nil
+    }
     func persistDemo() {
         if isDemo, let session { QuestPreferences.defaults.set(try? APIJSON.encoder.encode(session), forKey: "demo-" + session.id) }
     }
-    func reset() { cancelWork(); stopReading(); isPreloadedConversation = false; choosingMessages = false; session = nil; membership = nil; invitation = nil; messages = []; status = ""; isDemo = false }
+    func reset() { QuestPreferences.defaults.removeObject(forKey: "maps-return"); cancelWork(); stopReading(); isPreloadedConversation = false; choosingMessages = false; session = nil; membership = nil; invitation = nil; messages = []; status = ""; isDemo = false }
 }
 
 private enum ScreenshotImportError: Error { case unreadableImage }

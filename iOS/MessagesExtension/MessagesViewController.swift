@@ -25,6 +25,7 @@ final class MessagesViewController: MSMessagesAppViewController {
         super.willBecomeActive(with: conversation)
         store.chatSize = conversation.remoteParticipantIdentifiers.count + 1
         if let url = conversation.selectedMessage?.url { store.open(url) }
+        else { store.resumeAfterMaps() }
         store.checkPendingImport()
         if DemoConfiguration.preloadConversation, store.session == nil, store.invitation == nil,
            store.pendingImportCount == 0, store.messages.isEmpty { store.startDemo() }
