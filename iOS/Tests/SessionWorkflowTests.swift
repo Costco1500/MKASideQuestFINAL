@@ -78,4 +78,33 @@ import Security
         XCTAssertTrue(store.messages.isEmpty)
         XCTAssertFalse(store.canGenerate)
     }
+    func testResetCancelsPendingInvitationAndDoesNotInsertIt() async throws {
+        let previous = QuestPreferences.server
+        QuestPreferences.server = "https://mock.sidequest.test"
+        defer { QuestPreferences.server = previous; URLProtocol.unregisterClass(StubProtocol.self) }
+        URLProtocol.registerClass(StubProtocol.self)
+        let session = try SideQuestSession.demo()
+        let member = Membership(session: session, participantId: "alex", memberToken: String(repeating: "m", count: 43), inviteToken: String(repeating: "i", count: 43), isOwner: true)
+        StubProtocol.response = { _ in (200, try APIJSON.encoder.encode(member)) }
+        let store = QuestStore()
+        var insertions = 0
+        store.insert = { _, _ in insertions += 1 }
+        store.startSession(expectedParticipantCount: 4)
+        store.reset()
+        try await Task.sleep(for: .milliseconds(150))
+        XCTAssertNil(store.session)
+        XCTAssertNil(store.membership)
+        XCTAssertEqual(insertions, 0)
+        if let link = store.link { SecItemDelete(MembershipVault.key(link) as CFDictionary) }
+    }
+
+    func testResponseForDifferentSessionCannotReplaceCurrentSession() throws {
+        let store = QuestStore()
+        let current = try SideQuestSession.demo()
+        store.session = current
+        var stale = try SideQuestSession.demo(); stale.revision = 999
+        store.apply(stale)
+        XCTAssertEqual(store.session?.id, current.id)
+    }
+
 }
