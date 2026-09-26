@@ -19,6 +19,7 @@
 		329D7B57FA205537C0E3A076 /* ScreenshotImportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F009BD59C081650C4C67C89 /* ScreenshotImportTests.swift */; };
 		371ED7D82F882E829EDB8F82 /* ProfileSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33D9F9B5C9604CE45A0CC8B /* ProfileSetupView.swift */; };
 		3902F8FB6DD901AD53FDD709 /* SideQuestCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448BC1702DE5EFF917FD7781 /* SideQuestCore.framework */; };
+		4412282E93ECCE51FECD1C1D /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F2FE737C92F80F64E06EA76 /* LocationService.swift */; };
 		45AAD8208D62646C3791D982 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
 		498B0338ED66DE95D594083A /* SideQuestMessages.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1662FB1CF3A462EEE817D041 /* SideQuestMessages.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4F2C199F7F601ECBE0B193FE /* SideQuestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B98A8FE4AD8A60E2C0E8D5B /* SideQuestApp.swift */; };
@@ -51,6 +52,7 @@
 		C21DE472F18D324ABDDADA2A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
 		C26390FA673A91B1956FB4E6 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B716BE670DE5A28A64A0DF4 /* MainInterface.storyboard */; };
 		CD9C11E9F6CE1F2BFC234725 /* SessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAAC255185CA48773439E49 /* SessionTests.swift */; };
+		D9D46ED4CBE2D7F22FD54529 /* VenueResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6516EB8711BA5DA52583AFA /* VenueResolver.swift */; };
 		DF60F58BD6D91FAE4DDB5A56 /* SideQuestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28828CDE2FDFE993EC3EBB28 /* SideQuestUITests.swift */; };
 		E05447FB98C8602AE7975A82 /* QuestStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03802A902E99D465D1ADCF39 /* QuestStyle.swift */; };
 		E2BC323A04C3869149B39CA8 /* ClientAndStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE33B095D16EAEEABB2EC5A0 /* ClientAndStoreTests.swift */; };
@@ -167,6 +169,7 @@
 		809C0AE43BD4D5AD20C5DA7B /* ScreenshotMessageParser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ScreenshotMessageParser.swift; path = iOS/Core/ScreenshotMessageParser.swift; sourceTree = "<group>"; };
 		8D4244FA07F5EDB013EDB71A /* SessionWorkflowTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionWorkflowTests.swift; path = iOS/Tests/SessionWorkflowTests.swift; sourceTree = "<group>"; };
 		93334DE91AF5F9B49BCB79EB /* AvailabilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AvailabilityTests.swift; path = iOS/Tests/AvailabilityTests.swift; sourceTree = "<group>"; };
+		9F2FE737C92F80F64E06EA76 /* LocationService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LocationService.swift; path = iOS/Core/LocationService.swift; sourceTree = "<group>"; };
 		AF38D753F2D36601675BE136 /* MessageImport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MessageImport.swift; path = iOS/Core/MessageImport.swift; sourceTree = "<group>"; };
 		B33D9F9B5C9604CE45A0CC8B /* ProfileSetupView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProfileSetupView.swift; path = iOS/Shared/ProfileSetupView.swift; sourceTree = "<group>"; };
 		B4312BBF722CDE2CE8D181C4 /* ChatScreenshotOCRService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ChatScreenshotOCRService.swift; path = iOS/Core/ChatScreenshotOCRService.swift; sourceTree = "<group>"; };
@@ -177,6 +180,7 @@
 		D34B4756536541930DF95D54 /* MessageImportView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MessageImportView.swift; path = iOS/Shared/MessageImportView.swift; sourceTree = "<group>"; };
 		D47B3EF8054A16C74D732F86 /* PlanningTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlanningTests.swift; path = iOS/Tests/PlanningTests.swift; sourceTree = "<group>"; };
 		DE33B095D16EAEEABB2EC5A0 /* ClientAndStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ClientAndStoreTests.swift; path = iOS/Tests/ClientAndStoreTests.swift; sourceTree = "<group>"; };
+		E6516EB8711BA5DA52583AFA /* VenueResolver.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VenueResolver.swift; path = iOS/Core/VenueResolver.swift; sourceTree = "<group>"; };
 		E8453011D7D7A341A706D607 /* SideQuestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SideQuestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F768863AB9C72A84EE0E4828 /* Planning.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Planning.swift; path = iOS/Core/Planning.swift; sourceTree = "<group>"; };
 		FCA69AFF2378409BBE288CE1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
@@ -338,6 +342,8 @@
 				B4312BBF722CDE2CE8D181C4 /* ChatScreenshotOCRService.swift */,
 				809C0AE43BD4D5AD20C5DA7B /* ScreenshotMessageParser.swift */,
 				7B34D495DBBDFF421985E9C6 /* SharedImportStore.swift */,
+				9F2FE737C92F80F64E06EA76 /* LocationService.swift */,
+				E6516EB8711BA5DA52583AFA /* VenueResolver.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -592,6 +598,8 @@
 				BC29E1AB4CED95E0DE50D481 /* ChatScreenshotOCRService.swift in Sources */,
 				8FC5B7BCB65902F4AD3F5EB2 /* ScreenshotMessageParser.swift in Sources */,
 				899E5491E4943872662EF301 /* SharedImportStore.swift in Sources */,
+				4412282E93ECCE51FECD1C1D /* LocationService.swift in Sources */,
+				D9D46ED4CBE2D7F22FD54529 /* VenueResolver.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -730,6 +738,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sidequest.uitests;
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -828,6 +837,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sidequest.app.share;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -850,6 +860,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.sidequest.app.messages;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -905,6 +916,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1034,6 +1046,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sidequest.tests;
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1082,6 +1095,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sidequest.app;
 				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;

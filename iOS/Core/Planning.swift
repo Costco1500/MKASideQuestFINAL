@@ -46,6 +46,12 @@ public struct PlanOption: Codable, Equatable, Identifiable, Sendable {
     public var concerns: [String]
     public var minimumAge: Int
     public var groupFitScore: Double
+    public var venueSearchQuery: String? = nil
+    public var venue: PlanVenue? = nil
+    public var calendarLocation: String {
+        guard let venue else { return area }
+        return [venue.name, venue.address].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: ", ")
+    }
 }
 
 public struct PlanResponse: Codable, Equatable, Sendable {
@@ -59,7 +65,7 @@ public enum PlanRules {
         guard !request.participants.isEmpty, !plan.id.isEmpty, !plan.title.isEmpty, !plan.activity.isEmpty,
               !plan.explanation.isEmpty, plan.end.timeIntervalSince(plan.start) >= 5400,
               plan.estimatedCostPerPerson.isFinite, plan.estimatedCostPerPerson >= 0,
-              plan.groupFitScore.isFinite, (0...100).contains(plan.groupFitScore), plan.minimumAge >= 0,
+              (plan.venue?.isValid ?? true), plan.groupFitScore.isFinite, (0...100).contains(plan.groupFitScore), plan.minimumAge >= 0,
               request.participants.contains(where: { $0.approximateArea == plan.area }),
               request.candidateTimeWindows.contains(where: { $0.start <= plan.start && $0.end >= plan.end }) else { return false }
         return request.participants.allSatisfy { person in
@@ -96,7 +102,8 @@ public enum DemoPlanner {
                        estimatedCostPerPerson: budget < 10 ? 0 : [12.0, 8, 10][index],
                        explanation: "A relaxed option within the group's budget and shared free time.",
                        whyItWorks: Dictionary(uniqueKeysWithValues: request.participants.map { ($0.id, "Fits your available time and comfortable budget.") }),
-                       concerns: ["Demo suggestion. Check opening hours, access, weather, and prices before going."], minimumAge: 0, groupFitScore: Double(90 - index))
+                       concerns: ["Demo suggestion. Check opening hours, access, weather, and prices before going."], minimumAge: 0, groupFitScore: Double(90 - index),
+                       venueSearchQuery: ["art supply store", "public park", "art gallery"][index])
         }
     }
 }

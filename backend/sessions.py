@@ -16,7 +16,7 @@ def digest(token): return hashlib.sha256(token.encode()).hexdigest()
 def profile(value, participant_id):
     try:
         keys = {"id", "displayName", "ageRange", "maxBudget", "approximateArea", "availability", "busyIntervals", "calendarConnectionStatus"}
-        if set(value) != keys or not text(value["displayName"], 60) or not text(value["approximateArea"], 120): raise ValueError()
+        if set(value) not in [keys, keys | {"location"}] or not text(value["displayName"], 60) or not text(value["approximateArea"], 120): raise ValueError()
         eligibility(value["ageRange"])
         if not number(value["maxBudget"], 0, 500): raise ValueError()
         start, end = instant(value["availability"]["start"]), instant(value["availability"]["end"])
@@ -24,7 +24,13 @@ def profile(value, participant_id):
         for interval in value["busyIntervals"]:
             if instant(interval["start"]) >= instant(interval["end"]): raise ValueError()
         if value["calendarConnectionStatus"] not in ["manual", "connected", "demo"]: raise ValueError()
-        return dict(value, id=participant_id)
+        result = dict(value, id=participant_id)
+        if value.get("location") is not None:
+            location = value["location"]
+            if set(location) - {"latitude", "longitude", "displayArea"} or not number(location["latitude"], -90, 90) or not number(location["longitude"], -180, 180): raise ValueError()
+            if location.get("displayArea") is not None and not text(location["displayArea"], 120): raise ValueError()
+            result["location"] = dict(location, latitude=round(location["latitude"], 2), longitude=round(location["longitude"], 2))
+        return result
     except (KeyError, TypeError, ValueError, AttributeError): raise APIError(400, "Invalid participant context") from None
 
 def free_intervals(person):
@@ -127,6 +133,23 @@ class Service:
                 if pid not in session["readyParticipantIds"]:
                     session["readyParticipantIds"].append(pid)
                 self.reset(session)
+                return self.save(session)
+            if action == "venues":
+                if not owner: raise APIError(403, "Only the organizer may attach resolved venues")
+                if set(body) != {"revision", "venues"} or body["revision"] != session["revision"] or not session["planOptions"]:
+                    raise APIError(409, "Plans changed; refresh before attaching venues")
+                items = body["venues"]
+                if not isinstance(items, list) or len(items) != 3 or {v.get("planId") for v in items} != {p["id"] for p in session["planOptions"]}:
+                    raise APIError(400, "Provide a venue result for each plan")
+                for item in items:
+                    if set(item) != {"planId", "venue"}: raise APIError(400, "Invalid venue result")
+                    venue = item["venue"]
+                    if venue is not None and (set(venue) - {"name", "address", "latitude", "longitude"} or not text(venue.get("name"), 200)
+                        or not number(venue.get("latitude"), -90, 90) or not number(venue.get("longitude"), -180, 180)
+                        or (venue.get("address") is not None and not text(venue["address"], 500))):
+                        raise APIError(400, "Invalid venue result")
+                resolved = {v["planId"]: v["venue"] for v in items}
+                session["planOptions"] = [dict(p, venue=resolved[p["id"]]) for p in session["planOptions"]]
                 return self.save(session)
             if action == "vote":
                 if set(body) != {"planId", "value"} or body["value"] not in ["down", "maybe", "pass"]: raise APIError(400, "Invalid vote")

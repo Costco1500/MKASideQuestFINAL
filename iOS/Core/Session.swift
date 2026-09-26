@@ -98,7 +98,9 @@ public struct SessionLink: Equatable, Sendable {
 
 public struct ParticipantBody: Encodable {
     public var participant: Participant
-    public init(_ participant: Participant) { self.participant = participant }
+    public init(_ participant: Participant) {
+        self.participant = participant; self.participant.location = participant.location?.coarse
+    }
 }
 public struct VoteBody: Encodable {
     public var planId: String
