@@ -36,7 +36,7 @@ final class StubProtocol: URLProtocol {
     }
     func testOfflineJourneyClearsChatVotesFinalizesAndReopens() async throws {
         QuestPreferences.demoChatScript = nil
-        let store = QuestStore(); store.startDemo()
+        let store = QuestStore(useLiveServices: false); store.startDemo()
         XCTAssertTrue(store.messages.isEmpty)
         XCTAssertTrue(store.isReading)
         for _ in 0..<500 where store.isReading { try await Task.sleep(for: .milliseconds(20)) }
@@ -52,7 +52,7 @@ final class StubProtocol: URLProtocol {
         var inserted: URL?
         store.insert = { _, link in inserted = try? link.url() }
         store.share(); XCTAssertNotNil(inserted)
-        let reopened = QuestStore(); reopened.open(try XCTUnwrap(inserted))
+        let reopened = QuestStore(useLiveServices: false); reopened.open(try XCTUnwrap(inserted))
         XCTAssertEqual(reopened.session?.winningPlan?.id, plan.id)
         store.reset(); XCTAssertNil(store.session)
         store.open(URL(string: "https://invalid.example")!)
@@ -60,7 +60,7 @@ final class StubProtocol: URLProtocol {
     }
     func testReadingChatStopsWhenExtensionCloses() async throws {
         QuestPreferences.demoChatScript = nil
-        let store = QuestStore(); store.startDemo()
+        let store = QuestStore(useLiveServices: false); store.startDemo()
         store.stopReading(); let partial = store.messages.count
         XCTAssertFalse(store.isReading)
         XCTAssertLessThan(partial, 8)
@@ -85,7 +85,7 @@ final class StubProtocol: URLProtocol {
         do { let _: PlanResponse = try await client.plan(input); XCTFail("Must reject invalid JSON") } catch { }
     }
     func testSharedMemberRefreshVoteFinalizeAndOwnContext() async throws {
-        let store = QuestStore()
+        let store = QuestStore(useLiveServices: false)
         var session = try SideQuestSession.demo()
         let membership = member(session)
         let server = URL(string: "https://mock.sidequest.test")!
@@ -107,7 +107,7 @@ final class StubProtocol: URLProtocol {
         session.planOptions = []; session.votes = []; session.winningPlanId = nil; session.revision = 4
         store.saveProfile(session.participants[0]); try await idle(store)
         XCTAssertEqual(store.session?.planOptions.count, 0)
-        let reopened = QuestStore(); reopened.open(try link.url())
+        let reopened = QuestStore(useLiveServices: false); reopened.open(try link.url())
         XCTAssertEqual(reopened.membership?.participantId, membership.participantId)
         StubProtocol.response = { _ in throw URLError(.notConnectedToInternet) }
         await store.refresh(); XCTAssertFalse(store.status.isEmpty)
@@ -118,11 +118,11 @@ final class StubProtocol: URLProtocol {
         QuestPreferences.server = "https://mock.sidequest.test"
         let fixture = member(try SideQuestSession.demo())
         StubProtocol.response = { _ in (200, try APIJSON.encoder.encode(fixture)) }
-        let store = QuestStore(); store.startSession(expectedParticipantCount: 4); try await idle(store)
+        let store = QuestStore(useLiveServices: false); store.startSession(expectedParticipantCount: 4); try await idle(store)
         XCTAssertEqual(store.membership?.participantId, fixture.participantId)
         let link = try XCTUnwrap(store.link)
         SecItemDelete(MembershipVault.key(link) as CFDictionary)
-        let guest = QuestStore(); guest.open(try link.url())
+        let guest = QuestStore(useLiveServices: false); guest.open(try link.url())
         XCTAssertNil(guest.membership)
         guest.saveProfile(fixture.session.participants[0]); try await idle(guest)
         XCTAssertNotNil(guest.membership)

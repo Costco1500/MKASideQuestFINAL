@@ -115,3 +115,20 @@ public struct SessionPlanBody: Encodable {
         selectedMessages = request.selectedMessages; candidateTimeWindows = request.candidateTimeWindows; timeZone = request.timeZone
     }
 }
+
+public struct SessionVenueBody: Encodable {
+    private var revision: Int
+    private var venues: [VenueResult]
+    public init(revision: Int, plans: [PlanOption]) {
+        self.revision = revision; venues = plans.map { VenueResult(planId: $0.id, venue: $0.venue) }
+    }
+    private struct VenueResult: Encodable {
+        var planId: String
+        var venue: PlanVenue?
+        enum CodingKeys: CodingKey { case planId, venue }
+        func encode(to encoder: Encoder) throws {
+            var values = encoder.container(keyedBy: CodingKeys.self)
+            try values.encode(planId, forKey: .planId); try values.encode(venue, forKey: .venue)
+        }
+    }
+}

@@ -60,7 +60,7 @@ struct QuestFlowView: View {
                 }
                 .sheet(isPresented: $showingSettings) { NavigationStack { SettingsView() } }
                 .sheet(item: $calendarPlan) { plan in
-                    CalendarEventEditor(title: plan.title, start: plan.start, end: plan.end, area: plan.area) { saved in
+                    CalendarEventEditor(title: plan.title, start: plan.start, end: plan.end, area: plan.calendarLocation) { saved in
                         calendarPlan = nil
                         store.status = saved ? "Added to your calendar." : "Calendar closed without saving."
                     }.ignoresSafeArea()

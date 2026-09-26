@@ -49,7 +49,7 @@ import Security
             XCTAssertEqual(request.url?.path, "/api/sessions")
             return (200, try APIJSON.encoder.encode(member))
         }
-        let store = QuestStore()
+        let store = QuestStore(useLiveServices: false)
         var insertions = 0
         store.insert = { shared, _ in insertions += 1; XCTAssertTrue(shared.participants.isEmpty) }
         store.startSession(expectedParticipantCount: 4)
@@ -65,7 +65,7 @@ import Security
         var session = try SideQuestSession.demo()
         session.planOptions = []; session.context = nil
         session.readyParticipantIds = Array(session.participants.map(\.id).dropLast())
-        let store = QuestStore(); store.isDemo = true; store.session = session
+        let store = QuestStore(useLiveServices: false); store.isDemo = true; store.session = session
         store.messages = DemoData.chatScript(nil)
         XCTAssertFalse(store.canGenerate)
         store.generate(); try await waitUntilIdle(store)
@@ -86,7 +86,7 @@ import Security
         let session = try SideQuestSession.demo()
         let member = Membership(session: session, participantId: "alex", memberToken: String(repeating: "m", count: 43), inviteToken: String(repeating: "i", count: 43), isOwner: true)
         StubProtocol.response = { _ in (200, try APIJSON.encoder.encode(member)) }
-        let store = QuestStore()
+        let store = QuestStore(useLiveServices: false)
         var insertions = 0
         store.insert = { _, _ in insertions += 1 }
         store.startSession(expectedParticipantCount: 4)
@@ -99,7 +99,7 @@ import Security
     }
 
     func testResponseForDifferentSessionCannotReplaceCurrentSession() throws {
-        let store = QuestStore()
+        let store = QuestStore(useLiveServices: false)
         let current = try SideQuestSession.demo()
         store.session = current
         var stale = try SideQuestSession.demo(); stale.revision = 999

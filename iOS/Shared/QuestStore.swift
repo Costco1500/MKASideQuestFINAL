@@ -69,6 +69,12 @@ enum MembershipVault {
     private var readID = UUID()
     private var workTask: Task<Void, Never>?
     private var lifecycleID = UUID()
+    private let useLiveServices: Bool
+    var venueResolver: VenueResolver?
+    init(useLiveServices: Bool = true) {
+        self.useLiveServices = useLiveServices
+        venueResolver = useLiveServices ? VenueResolver() : nil
+    }
     var insert: ((SideQuestSession, SessionLink) -> Void)?
     var expand: (() -> Void)?
     var participantID: String { isDemo ? demoParticipantID : membership?.participantId ?? "" }
@@ -249,14 +255,45 @@ enum MembershipVault {
                 let updated: SideQuestSession = try await api.request("api/sessions/\(current.id)/plan", body: SessionPlanBody(request), token: membership.memberToken)
                 guard PlanRules.validate(updated.planOptions, for: request) else { throw PlanningError.invalidResponse }
                 try Task.checkCancellation()
-                apply(updated); messages = []; return
+                let plans = await ground(updated.planOptions, participants: updated.participants)
+                try Task.checkCancellation()
+                var resolved = updated
+                if plans.contains(where: { $0.venue != nil }) {
+                    do {
+                        resolved = try await api.request("api/sessions/\(current.id)/venues", body: SessionVenueBody(revision: updated.revision, plans: plans), token: membership.memberToken)
+                    } catch {
+                        status = "Plans are ready. Place details could not sync; refresh and try again."
+                    }
+                }
+                try Task.checkCancellation()
+                apply(resolved); messages = []; return
             }
-            let result = try await PlanGenerator.generate(request)
+            var remote: ((PlanningRequest) async throws -> PlanResponse)?
+            if useLiveServices {
+                var server = QuestPreferences.server
+                #if DEBUG && targetEnvironment(simulator)
+                if server.isEmpty { server = "http://127.0.0.1:8787" }
+                #endif
+                if let url = URL(string: server), let client = try? APIClient(baseURL: url) {
+                    remote = { try await client.plan($0) }
+                }
+            }
+            let result = try await PlanGenerator.generate(request, remote: remote)
             try Task.checkCancellation()
-            current.planOptions = result.plans; current.source = result.source
+            current.planOptions = await ground(result.plans, participants: current.participants)
+            try Task.checkCancellation()
+            current.source = result.source
             var minimized = request; minimized.selectedMessages = []
             current.context = minimized; session = current; messages = []; persistDemo()
         }
+    }
+    private func ground(_ plans: [PlanOption], participants: [Participant]) async -> [PlanOption] {
+        guard let venueResolver else { return plans }
+        var people = participants
+        if let index = people.firstIndex(where: { $0.id == participantID }), let exact = QuestPreferences.profile.location {
+            people[index].location = exact
+        }
+        return await venueResolver.resolve(plans, participants: people)
     }
     func vote(_ plan: PlanOption, value: VoteValue) {
         guard var current = session else { return }
