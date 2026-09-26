@@ -74,7 +74,13 @@ final class SideQuestUITests: XCTestCase {
         let screenshot = XCTAttachment(screenshot: messages.screenshot()); screenshot.lifetime = .keepAlways; add(screenshot)
         messages.buttons["Remove app from message"].tap()
     }
-    private func openMessagesExtension() -> XCUIApplication {
+    func testMessagesPreloadsRecentGroupChat() {
+        let messages = openMessagesExtension(resetSession: false)
+        XCTAssertTrue(messages.staticTexts["Recent group chat"].waitForExistence(timeout: 10))
+        XCTAssertTrue(messages.buttons["Analyze Recent Chat"].isEnabled)
+        XCTAssertTrue(messages.buttons["Choose Messages"].exists)
+    }
+    private func openMessagesExtension(resetSession: Bool = true) -> XCUIApplication {
         let messages = XCUIApplication(bundleIdentifier: "com.apple.MobileSMS")
         messages.launch()
         if !messages.buttons["add"].exists, messages.cells.firstMatch.waitForExistence(timeout: 8) { messages.cells.firstMatch.tap() }

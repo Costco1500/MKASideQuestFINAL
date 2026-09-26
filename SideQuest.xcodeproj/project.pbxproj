@@ -10,6 +10,7 @@
 		005E7614AB44677F347783E6 /* MessageImport.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF38D753F2D36601675BE136 /* MessageImport.swift */; };
 		019F8D95174FD5AB0E462733 /* QuestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B01FE8DD73520E2CBD60A1 /* QuestStore.swift */; };
 		112BBD6645CF79AF546C00DA /* QuestFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37CBB340F77C8372B1EFE30E /* QuestFlowView.swift */; };
+		1204C74F62B91BADC8AA014A /* WarmDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1B7143A57DD0C1482AE96D /* WarmDemoTests.swift */; };
 		124DAB883EE988CDFEDABD1F /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 625930BA50A00E3FF2CAAF78 /* OnboardingView.swift */; };
 		12FB93A2066D1C1DFD4B84CE /* SideQuestShare.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 34494685C52E7100B818D4F6 /* SideQuestShare.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		18EC44258FEE5465D7AB84FB /* Participant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D34554072CC368FC93400D5 /* Participant.swift */; };
@@ -154,6 +155,7 @@
 		37CBB340F77C8372B1EFE30E /* QuestFlowView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = QuestFlowView.swift; path = iOS/Shared/QuestFlowView.swift; sourceTree = "<group>"; };
 		3834D6081C12D2BE3014CDF9 /* LocationVenueTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LocationVenueTests.swift; path = iOS/Tests/LocationVenueTests.swift; sourceTree = "<group>"; };
 		3A705CE70EB09B71EE680584 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsView.swift; path = iOS/Shared/SettingsView.swift; sourceTree = "<group>"; };
+		3E1B7143A57DD0C1482AE96D /* WarmDemoTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WarmDemoTests.swift; path = iOS/Tests/WarmDemoTests.swift; sourceTree = "<group>"; };
 		448BC1702DE5EFF917FD7781 /* SideQuestCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SideQuestCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		484EB1630A1E6DF1F3B559A5 /* MessagesViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MessagesViewController.swift; path = iOS/MessagesExtension/MessagesViewController.swift; sourceTree = "<group>"; };
 		4EAAC255185CA48773439E49 /* SessionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionTests.swift; path = iOS/Tests/SessionTests.swift; sourceTree = "<group>"; };
@@ -271,6 +273,7 @@
 				0F009BD59C081650C4C67C89 /* ScreenshotImportTests.swift */,
 				514CD008A0FBEED13FD8FCBF /* SharedImportTests.swift */,
 				3834D6081C12D2BE3014CDF9 /* LocationVenueTests.swift */,
+				3E1B7143A57DD0C1482AE96D /* WarmDemoTests.swift */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -651,6 +654,7 @@
 				329D7B57FA205537C0E3A076 /* ScreenshotImportTests.swift in Sources */,
 				9D532E7BAAC33A7C445CA0C9 /* SharedImportTests.swift in Sources */,
 				A2A19C9C167C2E5C4BC56047 /* LocationVenueTests.swift in Sources */,
+				1204C74F62B91BADC8AA014A /* WarmDemoTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
