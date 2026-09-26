@@ -139,12 +139,14 @@ class Service:
                 if set(body) != {"revision", "venues"} or body["revision"] != session["revision"] or not session["planOptions"]:
                     raise APIError(409, "Plans changed; refresh before attaching venues")
                 items = body["venues"]
-                if not isinstance(items, list) or len(items) != 3 or {v.get("planId") for v in items} != {p["id"] for p in session["planOptions"]}:
+                if (not isinstance(items, list) or len(items) != 3
+                    or any(not isinstance(v, dict) or not isinstance(v.get("planId"), str) for v in items)
+                    or {v["planId"] for v in items} != {p["id"] for p in session["planOptions"]}):
                     raise APIError(400, "Provide a venue result for each plan")
                 for item in items:
                     if set(item) != {"planId", "venue"}: raise APIError(400, "Invalid venue result")
                     venue = item["venue"]
-                    if venue is not None and (set(venue) - {"name", "address", "latitude", "longitude"} or not text(venue.get("name"), 200)
+                    if venue is not None and (not isinstance(venue, dict) or set(venue) - {"name", "address", "latitude", "longitude"} or not text(venue.get("name"), 200)
                         or not number(venue.get("latitude"), -90, 90) or not number(venue.get("longitude"), -180, 180)
                         or (venue.get("address") is not None and not text(venue["address"], 500))):
                         raise APIError(400, "Invalid venue result")
