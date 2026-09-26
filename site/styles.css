@@ -16,8 +16,10 @@
   --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
+/* Dark tokens apply when the system prefers dark (unless the visitor chose light) or when they chose dark. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
     --bg: #121010;
     --band: #1b1714;
     --surface: #27211d;
@@ -33,6 +35,25 @@
     --phone: #000000;
   }
 }
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #121010;
+  --band: #1b1714;
+  --surface: #27211d;
+  --text: #f3e9dd;
+  --muted: #b9aa9d;
+  --line: rgba(243, 233, 221, 0.12);
+  --accent: #e9b87e;
+  --pill: #d98a64;
+  --pill-text: #2c2520;
+  --bubble: #2c2521;
+  --tint: rgba(217, 138, 100, 0.16);
+  --nav: rgba(18, 16, 16, 0.72);
+  --phone: #000000;
+}
+
+:root[data-theme="light"] { color-scheme: light; }
 
 * { box-sizing: border-box; }
 
@@ -109,6 +130,38 @@ a:focus-visible {
 }
 
 .nav nav a:hover { opacity: 1; text-decoration: none; }
+
+.nav-right { display: flex; align-items: center; gap: 20px; }
+
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-right: -6px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text);
+  opacity: 0.8;
+  cursor: pointer;
+}
+
+.theme-toggle:hover { opacity: 1; background: var(--tint); }
+
+.theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Show the moon in light mode (switch to dark) and the sun in dark mode. */
+.theme-toggle .sun { display: none; }
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle .sun { display: block; }
+  :root:not([data-theme="light"]) .theme-toggle .moon { display: none; }
+}
+
+:root[data-theme="dark"] .theme-toggle .sun { display: block; }
+:root[data-theme="dark"] .theme-toggle .moon { display: none; }
 
 /* Hero */
 .hero {

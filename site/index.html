@@ -10,7 +10,14 @@
   <meta property="og:description" content="Turn the group chat into your next good memory. An iMessage app built at HackGT 13.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
-  <script>document.documentElement.classList.add("js");</script>
+  <script>
+    document.documentElement.classList.add("js");
+    // Apply a saved theme before first paint to avoid a flash. No saved choice = follow the system.
+    try {
+      var savedTheme = localStorage.getItem("sidequest-theme");
+      if (savedTheme === "light" || savedTheme === "dark") document.documentElement.setAttribute("data-theme", savedTheme);
+    } catch (e) {}
+  </script>
 </head>
 <body>
   <header class="nav">
@@ -19,10 +26,16 @@
         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M10 2.5l1.8 5.2 5.2 1.8-5.2 1.8L10 16.5l-1.8-5.2L3 9.5l5.2-1.8zM18.5 14l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/></svg>
         SideQuest
       </a>
-      <nav aria-label="Sections">
-        <a href="#how">How it works</a>
-        <a href="#demo">Demo</a>
-      </nav>
+      <div class="nav-right">
+        <nav aria-label="Sections">
+          <a href="#how">How it works</a>
+          <a href="#demo">Demo</a>
+        </nav>
+        <button class="theme-toggle" type="button" aria-label="Switch to dark mode">
+          <svg class="moon" viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path fill="currentColor" d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a8.5 8.5 0 1 0 11.1 11.1z"/></svg>
+          <svg class="sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2" fill="currentColor" stroke="none"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></g></svg>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -121,6 +134,25 @@
 
   <script>
     (function () {
+      // Light/dark toggle: follows the system until clicked, then remembers the choice.
+      var root = document.documentElement;
+      var toggle = document.querySelector(".theme-toggle");
+      var systemDark = matchMedia("(prefers-color-scheme: dark)");
+      function currentTheme() {
+        return root.getAttribute("data-theme") || (systemDark.matches ? "dark" : "light");
+      }
+      function syncToggle() {
+        toggle.setAttribute("aria-label", currentTheme() === "dark" ? "Switch to light mode" : "Switch to dark mode");
+      }
+      toggle.addEventListener("click", function () {
+        var next = currentTheme() === "dark" ? "light" : "dark";
+        root.setAttribute("data-theme", next);
+        try { localStorage.setItem("sidequest-theme", next); } catch (e) {}
+        syncToggle();
+      });
+      systemDark.addEventListener("change", syncToggle);
+      syncToggle();
+
       var box = document.querySelector("[data-youtube-id]");
       var id = (box.getAttribute("data-youtube-id") || "").trim();
       if (/^[A-Za-z0-9_-]{11}$/.test(id)) {
