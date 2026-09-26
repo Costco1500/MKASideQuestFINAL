@@ -146,9 +146,10 @@ class Service:
                 for item in items:
                     if set(item) != {"planId", "venue"}: raise APIError(400, "Invalid venue result")
                     venue = item["venue"]
-                    if venue is not None and (not isinstance(venue, dict) or set(venue) - {"name", "address", "latitude", "longitude"} or not text(venue.get("name"), 200)
+                    if venue is not None and (not isinstance(venue, dict) or set(venue) - {"name", "address", "latitude", "longitude", "openingHours"} or not text(venue.get("name"), 200)
                         or not number(venue.get("latitude"), -90, 90) or not number(venue.get("longitude"), -180, 180)
-                        or (venue.get("address") is not None and not text(venue["address"], 500))):
+                        or (venue.get("address") is not None and not text(venue["address"], 500))
+                        or (venue.get("openingHours") is not None and not text(venue["openingHours"], 255))):
                         raise APIError(400, "Invalid venue result")
                 resolved = {v["planId"]: v["venue"] for v in items}
                 session["planOptions"] = [dict(p, venue=resolved[p["id"]]) for p in session["planOptions"]]

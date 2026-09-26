@@ -26,9 +26,25 @@ In the containing app, **Set up my profile → Use My Location** requests locati
 python3 backend/server.py
 ```
 
-In SideQuest's Settings, choose **Use local demo server → Save server** for the simulator. For physical iPhones, run this API behind HTTPS and enter its public HTTPS base URL. This repository does not deploy a public server.
+Debug Simulator builds use `http://127.0.0.1:8787` automatically when no server is saved, so **Start SideQuest** works as soon as the server above is running. You can still choose **Use local demo server → Save server** in Settings.
+
+### Group chat on real iPhones
+
+Phones need an HTTPS address they can reach. From the repository root on the Mac hosting SideQuest:
+
+```sh
+scripts/serve-group.sh
+```
+
+It starts the API (or reuses one already on port 8787), downloads Cloudflare's `cloudflared` into ignored `build/tools/` if needed, and prints a temporary `https://….trycloudflare.com` address. No account is needed, the address changes on every run, and the Mac must stay awake while the group plans. Only the organizer enters it: **Settings → paste → Save server → Test connection**. The invitation card carries the address to everyone else. For an always-on server, run `HOST=0.0.0.0 PORT=… python3 backend/server.py` on any HTTPS host with a persistent disk for `SIDEQUEST_DB`.
 
 Choose the total number of people (including yourself), then **Start SideQuest** inserts an invitation before profile entry. Send it into the group chat. The organizer scans screenshots and reviews the extracted messages. Each person, including the organizer, adds their own profile and availability and taps **Done — share my context**. The app and server block Analyze until every expected person is Done, including people who have not joined yet. Then the organizer analyzes the selection to create three plans inside the app. Members vote; only the organizer finalizes. Joining or updating context clears previous plans and votes so every constraint is reconsidered. Sessions refresh every five seconds while open and also have a Refresh action.
+
+## Best times and opening hours
+
+**Your context → When could you hang out?** defaults to the next 7 days (or pick a window). **Check my Apple Calendar** reads busy blocks only and lists your best times; the group card ranks everyone's shared free time the same way. Ranking favors weeknights around 6–7:30 PM, Friday and Saturday nights, and weekend afternoons, prefers roomier windows, avoids times starting within two hours, and spreads picks across days. The top three slots (each up to four hours, 10 AM–11 PM) become the planner's candidate windows, best first.
+
+After MapKit finds places for each plan, SideQuest looks up listed hours for up to four nearby matches per plan in one OpenStreetMap request, and picks the first one open for the whole plan. If none is known to be open, it takes a place with unknown hours, then a partly open one. Each plan card shows **Open then**, **Closes at…**, **Opens at…**, **Closed at that time**, or **Hours not listed**. **Is it open?** checks any place the group names against a plan or best time. Only place names and map positions are sent to OpenStreetMap. Unsupported hour formats (holidays, seasons, "by appointment") show as not listed rather than guessed.
 
 SQLite stores sessions and votes in `backend/data/sidequest.sqlite`. `SIDEQUEST_DB`, `HOST`, and `PORT` override defaults. Sessions expire after seven days and are pruned on subsequent session requests. Invite tokens authorize joining/viewing; member tokens authorize only that person's changes. Tokens are hashed on the server and member credentials are stored in iOS Keychain.
 
@@ -61,6 +77,6 @@ Use the committed Xcode project directly. The legacy generator predates the Shar
 - Calendar data becomes busy intervals immediately; titles, notes, and attendees are not transmitted. Availability and winner selection are deterministic.
 - Location is requested once; exact user coordinates stay on-device. Shared profiles send coordinates rounded to two decimals; LLM context contains approximate area only. Age ranges are only activity eligibility constraints. Budget uses everyone's lowest comfortable maximum.
 - Apple’s calendar editor requires the user to confirm saving. Google calendars already configured in Apple Calendar work through EventKit; direct Google OAuth is intentionally deferred.
-- MapKit confirms a place exists, not its prices, hours, availability, or suitability. No bookings or production authentication. An invitation grants access to that session's explicitly shared constraints.
+- MapKit confirms a place exists, not its prices, availability, or suitability. Hours come from OpenStreetMap where listed and can be missing or out of date. No bookings or production authentication. An invitation grants access to that session's explicitly shared constraints.
 
 See [Share/location/design milestone evidence](docs/share-location-tdd.md), [TDD evidence](docs/tdd-evidence.md) and [OCR/session milestone evidence](docs/ocr-session-tdd.md). Framework references: [Messages](https://developer.apple.com/documentation/messages/msmessagesappviewcontroller), [EventKit access](https://developer.apple.com/documentation/eventkit/accessing-the-event-store), [structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs).

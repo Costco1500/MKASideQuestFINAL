@@ -48,15 +48,23 @@ final class MessagesViewController: MSMessagesAppViewController {
             let subtitle = session.winningPlan?.title ?? (session.planOptions.isEmpty ? "Add your context to plan together" : "Tap to vote · Down / Maybe / Pass")
             layout.caption = title; layout.subcaption = subtitle
             layout.image = UIGraphicsImageRenderer(size: CGSize(width: 600, height: 300)).image { context in
-                QuestPalette.surface.setFill()
-                context.fill(CGRect(x: 0, y: 0, width: 600, height: 300))
-                ("✦ SIDEQUEST" as NSString).draw(at: CGPoint(x: 30, y: 26), withAttributes: [.font: UIFont.boldSystemFont(ofSize: 26), .foregroundColor: QuestPalette.text])
+                let canvas = context.cgContext
+                if let sunset = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: QuestPalette.sunset.map(\.cgColor) as CFArray, locations: [0, 0.55, 1]) {
+                    canvas.drawLinearGradient(sunset, start: .zero, end: CGPoint(x: 600, y: 300), options: [])
+                }
+                UIColor.white.withAlphaComponent(0.13).setFill()
+                canvas.fillEllipse(in: CGRect(x: 440, y: -110, width: 280, height: 280))
+                UIColor.white.withAlphaComponent(0.07).setFill()
+                canvas.fillEllipse(in: CGRect(x: -60, y: 210, width: 180, height: 180))
+                // Messages overlays the app icon on the top-left corner, so the wordmark starts after it.
+                ("✦ SIDEQUEST" as NSString).draw(at: CGPoint(x: 100, y: 28), withAttributes: [.font: UIFont.systemFont(ofSize: 24, weight: .heavy), .foregroundColor: UIColor.white])
                 let summary: String
                 if let winner = session.winningPlan {
-                    summary = winner.title + "\n" + winner.start.formatted(date: .abbreviated, time: .shortened) + " – " + winner.end.formatted(date: .omitted, time: .shortened) + "\n" + (winner.venue?.name ?? winner.area) + "\n~$\(Int(winner.estimatedCostPerPerson))/person · \(session.participants.count) people"
+                    let hours = winner.venue.map { HoursBadge(status: $0.hoursStatus(from: winner.start, to: winner.end)).text }
+                    summary = winner.title + "\n" + winner.start.formatted(date: .abbreviated, time: .shortened) + " – " + winner.end.formatted(date: .omitted, time: .shortened) + "\n" + (winner.venue?.name ?? winner.area) + "\n" + (hours ?? "~$\(Int(winner.estimatedCostPerPerson))/person · \(session.participants.count) people")
                 } else if session.planOptions.isEmpty { summary = "Good plans start\nwith everyone's input.\nTap to join." }
                 else { summary = session.planOptions.enumerated().map { "\($0.offset + 1). \($0.element.title)" }.joined(separator: "\n") }
-                (summary as NSString).draw(in: CGRect(x: 30, y: 90, width: 540, height: 190), withAttributes: [.font: UIFont.systemFont(ofSize: 25, weight: .semibold), .foregroundColor: QuestPalette.text])
+                (summary as NSString).draw(in: CGRect(x: 30, y: 92, width: 540, height: 196), withAttributes: [.font: UIFont.systemFont(ofSize: 25, weight: .bold), .foregroundColor: UIColor.white])
             }
             message.layout = layout; message.url = try link.url(); message.summaryText = "SideQuest: " + subtitle
             conversation.insert(message) { [weak self] error in

@@ -7,19 +7,45 @@ struct SettingsView: View {
     @State private var status = ""
     @State private var chatScript = QuestPreferences.demoChatScript ?? DemoData.conversation
     @State private var chatScriptStatus = ""
+    @State private var testing = false
+    @State private var connection = ""
+    @State private var connected = false
+    private func testConnection() {
+        guard let url = URL(string: server.trimmingCharacters(in: .whitespaces)), let client = try? APIClient(baseURL: url) else {
+            connected = false; connection = "Enter a valid HTTPS URL."; return
+        }
+        testing = true; connection = ""
+        Task { @MainActor in
+            defer { testing = false }
+            do {
+                let health: [String: String] = try await client.request("health", method: "GET", body: [String: String]())
+                connected = health["status"] == "ok"
+                connection = connected ? "Connected. Your group can use this server." : "That address answered, but it isn't a SideQuest server."
+            } catch {
+                connected = false; connection = "Couldn't reach \(url.host ?? "that server"). Check it's running and the address is right."
+            }
+        }
+    }
     var body: some View {
         Form {
             Section("Shared-session server") {
                 TextField("https://your-sidequest-api.example", text: $server).textInputAutocapitalization(.never).autocorrectionDisabled().keyboardType(.URL)
                 Text("Everyone in a shared session uses the same HTTPS backend. The API key stays on that server.").font(.caption)
                 #if targetEnvironment(simulator)
-                Button("Use local demo server") { server = "http://127.0.0.1:8787" }
+                Button("Use local demo server") { server = QuestPreferences.localDemoServer }
                 #endif
                 Button("Save server") {
                     guard let url = URL(string: server), (try? APIClient(baseURL: url)) != nil else { status = "Enter a valid HTTPS URL."; return }
                     QuestPreferences.server = server; status = "Server saved."
                 }
+                Button(testing ? "Testing…" : "Test connection") { testConnection() }.disabled(testing || server.isEmpty)
                 if !status.isEmpty { Text(status).font(.caption) }
+                if !connection.isEmpty {
+                    Label(connection, systemImage: connected ? "checkmark.circle.fill" : "exclamationmark.triangle.fill")
+                        .font(.caption).foregroundStyle(connected ? Color.questSuccess : .questDestructive)
+                }
+                Text("To share with friends' phones, run scripts/serve-group.sh on the Mac hosting SideQuest and paste the https address it prints.")
+                    .font(.caption).foregroundStyle(Color.questSecondary)
             }.listRowBackground(Color.questSurface)
             Section("Demo chat script") {
                 TextEditor(text: $chatScript).scrollContentBackground(.hidden).frame(minHeight: 160).font(.callout).autocorrectionDisabled()

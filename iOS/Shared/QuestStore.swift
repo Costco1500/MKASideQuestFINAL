@@ -15,10 +15,19 @@ enum QuestPreferences {
         get { defaults.string(forKey: "server") ?? "" }
         set { defaults.set(newValue, forKey: "server") }
     }
+    /// Simulator debug builds fall back to the local demo server so Start SideQuest works out of the box.
+    static var effectiveServer: String {
+        let saved = server.trimmingCharacters(in: .whitespacesAndNewlines)
+        #if DEBUG && targetEnvironment(simulator)
+        if saved.isEmpty { return localDemoServer }
+        #endif
+        return saved
+    }
+    static let localDemoServer = "http://127.0.0.1:8787"
     static var profile: Participant {
         get {
             if let data = defaults.data(forKey: "profile"), let value = try? APIJSON.decoder.decode(Participant.self, from: data) { return value }
-            return Participant(availability: DemoData.range())
+            return Participant(availability: .upcomingWeek())
         }
         set { defaults.set(try? APIJSON.encoder.encode(newValue), forKey: "profile") }
     }
@@ -67,6 +76,8 @@ enum MembershipVault {
     @Published var choosingMessages = false
     /// People in the active Messages conversation; nil outside Messages.
     @Published var chatSize: Int?
+    /// Set when a shared session was requested but no server address is configured.
+    @Published var needsServer = false
     private var readTask: Task<Void, Never>?
     private var readID = UUID()
     private var workTask: Task<Void, Never>?
@@ -91,7 +102,7 @@ enum MembershipVault {
         }
         return invitation
     }
-    var api: APIClient? { try? APIClient(baseURL: invitation?.serverURL ?? URL(string: QuestPreferences.server) ?? URL(string: "invalid:")!) }
+    var api: APIClient? { try? APIClient(baseURL: invitation?.serverURL ?? URL(string: QuestPreferences.effectiveServer) ?? URL(string: "invalid:")!) }
     func work(_ operation: @escaping () async throws -> Void) {
         guard !busy else { return }
         busy = true; status = ""
@@ -99,8 +110,16 @@ enum MembershipVault {
         workTask = Task { @MainActor in
             defer { if lifecycleID == started { busy = false } }
             do { try Task.checkCancellation(); try await operation() }
-            catch { if lifecycleID == started && !Task.isCancelled { status = error.localizedDescription } }
+            catch { if lifecycleID == started && !Task.isCancelled { status = describe(error) } }
         }
+    }
+    private func describe(_ error: Error) -> String {
+        guard error is URLError else { return error.localizedDescription }
+        let host = api?.baseURL.host ?? "your server"
+        if ["127.0.0.1", "localhost"].contains(host) {
+            return "Couldn't reach the local SideQuest server. Start it with python3 backend/server.py, then try again."
+        }
+        return "Couldn't reach the SideQuest server at \(host). Check that it's running and try again."
     }
     private func cancelWork() { lifecycleID = UUID(); workTask?.cancel(); workTask = nil; busy = false }
     func checkPendingImport() {
@@ -125,6 +144,12 @@ enum MembershipVault {
     func startSession(expectedParticipantCount: Int) {
         guard (1...12).contains(expectedParticipantCount), session == nil else { return }
         expand?()
+        guard api != nil else {
+            needsServer = true
+            status = "Add your group's server in Settings to start a shared SideQuest. Try Demo works offline."
+            return
+        }
+        needsServer = false
         work { [self] in
             guard let api else { throw PlanningError.invalidServer }
             let member: Membership = try await api.request("api/sessions", body: ["expectedParticipantCount": expectedParticipantCount])
@@ -280,11 +305,7 @@ enum MembershipVault {
             }
             var remote: ((PlanningRequest) async throws -> PlanResponse)?
             if useLiveServices {
-                var server = QuestPreferences.server
-                #if DEBUG && targetEnvironment(simulator)
-                if server.isEmpty { server = "http://127.0.0.1:8787" }
-                #endif
-                if let url = URL(string: server), let client = try? APIClient(baseURL: url) {
+                if let url = URL(string: QuestPreferences.effectiveServer), let client = try? APIClient(baseURL: url) {
                     remote = { try await client.plan($0) }
                 }
             }
@@ -359,7 +380,7 @@ enum MembershipVault {
     func persistDemo() {
         if isDemo, let session { QuestPreferences.defaults.set(try? APIJSON.encoder.encode(session), forKey: "demo-" + session.id) }
     }
-    func reset() { QuestPreferences.defaults.removeObject(forKey: "maps-return"); cancelWork(); stopReading(); isPreloadedConversation = false; choosingMessages = false; session = nil; membership = nil; invitation = nil; messages = []; status = ""; isDemo = false }
+    func reset() { QuestPreferences.defaults.removeObject(forKey: "maps-return"); cancelWork(); stopReading(); isPreloadedConversation = false; choosingMessages = false; session = nil; membership = nil; invitation = nil; messages = []; status = ""; isDemo = false; needsServer = false }
 }
 
 private enum ScreenshotImportError: Error { case unreadableImage }

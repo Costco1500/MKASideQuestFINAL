@@ -91,14 +91,28 @@ final class SideQuestUITests: XCTestCase {
         XCTAssertTrue(messages.buttons["Analyze Recent Chat"].isEnabled)
         XCTAssertTrue(messages.buttons["Choose Messages"].exists)
     }
+    /// iOS 27 lists Messages apps in a popup menu whose rows aren't static texts, so match any element by label.
+    private func sideQuestDrawerItem(in messages: XCUIApplication) -> XCUIElement {
+        messages.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "SideQuest")).firstMatch
+    }
+    /// Opens the + menu once the conversation has settled. A tap during the conversation's
+    /// transition is ignored, and swiping while the menu animates in scrolls the conversation instead.
+    private func openAppMenu(in messages: XCUIApplication) {
+        let add = messages.buttons["add"]
+        let photos = messages.descendants(matching: .any).matching(NSPredicate(format: "label == %@", "Photos")).firstMatch
+        for _ in 0..<2 {
+            guard add.waitForExistence(timeout: 5) else { return }
+            waitForStableFrame(add); add.tap()
+            if photos.waitForExistence(timeout: 4) { sleep(1); return }
+        }
+    }
     private func openMessagesExtension(resetSession: Bool = true) -> XCUIApplication {
         let messages = XCUIApplication(bundleIdentifier: "com.apple.MobileSMS")
         messages.launch()
         if !messages.buttons["add"].exists, messages.cells.firstMatch.waitForExistence(timeout: 8) { messages.cells.firstMatch.tap() }
-        let add = messages.buttons["add"]
-        if add.exists { add.tap() }
-        let quest = messages.staticTexts["SideQuest"].firstMatch
-        for _ in 0..<3 where !quest.exists { messages.swipeUp() }
+        if messages.buttons["add"].exists { openAppMenu(in: messages) }
+        let quest = sideQuestDrawerItem(in: messages)
+        for _ in 0..<4 where !quest.waitForExistence(timeout: 1) { messages.swipeUp() }
         if quest.waitForExistence(timeout: 4) { quest.tap() }
         if resetSession, messages.buttons["New"].waitForExistence(timeout: 5) {
             waitForStableFrame(messages.buttons["New"]); messages.buttons["New"].tap()
@@ -137,10 +151,9 @@ final class SideQuestUITests: XCTestCase {
         messages.activate()
         XCTAssertTrue(messages.wait(for: .runningForeground, timeout: 10))
         if messages.buttons["add"].exists {
-            waitForStableFrame(messages.buttons["add"])
-            messages.buttons["add"].tap()
-            let sidequest = messages.staticTexts["SideQuest"].firstMatch
-            for _ in 0..<3 where !sidequest.exists { messages.swipeUp() }
+            openAppMenu(in: messages)
+            let sidequest = sideQuestDrawerItem(in: messages)
+            for _ in 0..<4 where !sidequest.waitForExistence(timeout: 1) { messages.swipeUp() }
             XCTAssertTrue(sidequest.waitForExistence(timeout: 5)); sidequest.tap()
         }
         // iOS restores the Messages extension in its half-height system sheet.

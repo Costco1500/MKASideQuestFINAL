@@ -220,11 +220,19 @@ class SessionTests(unittest.TestCase):
         self.call("/vote", {"planId": "plan-1", "value": "down"})
         self.assertEqual(self.call("/finalize")["winningPlanId"], "plan-1")
 
+    def test_venues_keep_listed_opening_hours_for_every_member(self):
+        guest = self.ready_session(); planned = self.plan()
+        venue = {"name": "Open late", "address": None, "latitude": 33.78, "longitude": -84.39, "openingHours": "Mo-Su 10:00-23:00"}
+        body = {"revision": planned["revision"], "venues": [{"planId": p["id"], "venue": venue} for p in planned["planOptions"]]}
+        self.call("/venues", body)
+        self.assertEqual(self.call("", method="GET", token=guest["memberToken"])["planOptions"][0]["venue"]["openingHours"], "Mo-Su 10:00-23:00")
+
     def test_malformed_venue_payload_is_rejected_without_changing_plans(self):
         self.ready_session(); planned = self.plan()
         valid = [{"planId": p["id"], "venue": None} for p in planned["planOptions"]]
         for malformed in [None, [None] * 3, [dict(v, venue="invented") for v in valid],
-                          [dict(v, planId=[]) for v in valid]]:
+                          [dict(v, planId=[]) for v in valid],
+                          [dict(v, venue={"name": "X", "latitude": 1, "longitude": 1, "openingHours": 7}) for v in valid]]:
             with self.subTest(payload=malformed):
                 with self.assertRaises(APIError) as error:
                     self.call("/venues", {"revision": planned["revision"], "venues": malformed})

@@ -30,6 +30,32 @@ final class AvailabilityTests: XCTestCase {
     func testFreeWindowsClipBusyIntervalsToRange() {
         XCTAssertEqual(AvailabilityEngine.freeWindows(busy: [interval(0, 11), interval(20, 24)], range: interval(10, 23)), [interval(11, 20)])
     }
+    func testBestTimesFavorWeekendAndFridayEveningsOverWeeknights() {
+        // 2026-10-01 is a Thursday; the range covers Thursday through Saturday.
+        let slots = AvailabilityEngine.bestTimes([person([], 0, 72)], range: interval(0, 72), calendar: utc)
+        XCTAssertEqual(slots.map(\.window), [interval(42, 46), interval(66, 70), interval(18, 22)])
+        XCTAssertEqual(slots[0].reasons, ["Friday night", "Wide open"])
+        XCTAssertTrue(slots[0].score >= slots[1].score && slots[1].score > slots[2].score)
+    }
+    func testBestTimesAvoidEveryonesBusyTimeAndPreferDifferentDays() {
+        let busyFridayEvening = [person([interval(41, 47)], 0, 72), person([interval(8, 17)], 0, 72)]
+        let slots = AvailabilityEngine.bestTimes(busyFridayEvening, range: interval(0, 72), calendar: utc)
+        XCTAssertEqual(slots.map(\.window), [interval(66, 70), interval(18, 22), interval(36, 40)])
+        let oneDay = AvailabilityEngine.bestTimes([person([interval(14, 17)])], range: interval(0, 24), calendar: utc)
+        XCTAssertEqual(oneDay.map(\.window), [interval(18, 22), interval(10, 14)])
+    }
+    func testBestTimesGiveNoticeAndNeverStartInThePast() {
+        let slots = AvailabilityEngine.bestTimes([person([])], range: interval(0, 24), now: day.addingTimeInterval(16.75 * 3600), calendar: utc)
+        XCTAssertEqual(slots.map(\.window), [interval(19, 23)])
+        XCTAssertFalse(slots[0].reasons.contains("Starts soon"))
+        let late = AvailabilityEngine.bestTimes([person([])], range: interval(0, 24), now: day.addingTimeInterval(21.75 * 3600), calendar: utc)
+        XCTAssertEqual(late, [])
+    }
+    func testPlanningRequestUsesTheBestTimesAsCandidates() {
+        let people = [person([interval(10, 18)], 10, 22), person([interval(20, 23)], 17, 23)]
+        let request = PlanningRequest(participants: people, messages: [], now: day, calendar: utc)
+        XCTAssertEqual(request.candidateTimeWindows, [interval(18, 20)])
+    }
     func testCalendarPermissionUsageDescriptionIsPresent() {
         XCTAssertNotNil(Bundle.main.object(forInfoDictionaryKey: "NSCalendarsFullAccessUsageDescription"))
     }

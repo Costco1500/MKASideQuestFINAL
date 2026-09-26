@@ -66,6 +66,12 @@
 		F98B2A5EF6FBD6083D25E593 /* MessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 484EB1630A1E6DF1F3B559A5 /* MessagesViewController.swift */; };
 		FA8D0C1D909963E9296E8B35 /* ProfileSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B33D9F9B5C9604CE45A0CC8B /* ProfileSetupView.swift */; };
 		FD7C95075A6179B781C0F865 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCE73A91D179D4D32A66FAD3 /* Session.swift */; };
+		52C01BD41635672B3F129E79 /* OpeningHours.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97B48936FD952D5EDE67AC50 /* OpeningHours.swift */; };
+		FAA9BE8358CE129F74BBCCDB /* OpeningHoursTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F27DF15FC6CF76D71D14A83D /* OpeningHoursTests.swift */; };
+		D1D240E27B9409C5884782F6 /* QuestComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752DDA9A39ADC5D14A3190CB /* QuestComponents.swift */; };
+		4DBD536527ABE20A0549DB9F /* QuestComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 752DDA9A39ADC5D14A3190CB /* QuestComponents.swift */; };
+		3C6126F68EBFDB2B2B0EB426 /* PlaceHoursCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3162721A3C1C47FE77DD631 /* PlaceHoursCheckView.swift */; };
+		3E5A16F0DE75520A0400E46D /* PlaceHoursCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3162721A3C1C47FE77DD631 /* PlaceHoursCheckView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -188,6 +194,10 @@
 		E8453011D7D7A341A706D607 /* SideQuestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SideQuestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F768863AB9C72A84EE0E4828 /* Planning.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Planning.swift; path = iOS/Core/Planning.swift; sourceTree = "<group>"; };
 		FCA69AFF2378409BBE288CE1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		97B48936FD952D5EDE67AC50 /* OpeningHours.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OpeningHours.swift; path = iOS/Core/OpeningHours.swift; sourceTree = "<group>"; };
+		F27DF15FC6CF76D71D14A83D /* OpeningHoursTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OpeningHoursTests.swift; path = iOS/Tests/OpeningHoursTests.swift; sourceTree = "<group>"; };
+		752DDA9A39ADC5D14A3190CB /* QuestComponents.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = QuestComponents.swift; path = iOS/Shared/QuestComponents.swift; sourceTree = "<group>"; };
+		E3162721A3C1C47FE77DD631 /* PlaceHoursCheckView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlaceHoursCheckView.swift; path = iOS/Shared/PlaceHoursCheckView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -255,6 +265,8 @@
 				D34B4756536541930DF95D54 /* MessageImportView.swift */,
 				679194ADE9B4CC3EFB31FCD0 /* CalendarEventEditor.swift */,
 				7848DFCF7700445A3E0A6F0A /* PlanCard.swift */,
+				E3162721A3C1C47FE77DD631 /* PlaceHoursCheckView.swift */,
+				752DDA9A39ADC5D14A3190CB /* QuestComponents.swift */,
 				03B01FE8DD73520E2CBD60A1 /* QuestStore.swift */,
 				3A705CE70EB09B71EE680584 /* SettingsView.swift */,
 			);
@@ -268,6 +280,7 @@
 				17FCE718858D266564E40E51 /* ProfileTests.swift */,
 				D33E659C8D6B3FD3FEBF8CEC /* MessageTests.swift */,
 				93334DE91AF5F9B49BCB79EB /* AvailabilityTests.swift */,
+				F27DF15FC6CF76D71D14A83D /* OpeningHoursTests.swift */,
 				D47B3EF8054A16C74D732F86 /* PlanningTests.swift */,
 				4EAAC255185CA48773439E49 /* SessionTests.swift */,
 				DE33B095D16EAEEABB2EC5A0 /* ClientAndStoreTests.swift */,
@@ -349,6 +362,7 @@
 				7B34D495DBBDFF421985E9C6 /* SharedImportStore.swift */,
 				9F2FE737C92F80F64E06EA76 /* LocationService.swift */,
 				E6516EB8711BA5DA52583AFA /* VenueResolver.swift */,
+				97B48936FD952D5EDE67AC50 /* OpeningHours.swift */,
 				A59431FA49B4E0FAFE1F0A92 /* DemoConversation.swift */,
 			);
 			name = Core;
@@ -595,6 +609,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52C01BD41635672B3F129E79 /* OpeningHours.swift in Sources */,
 				18EC44258FEE5465D7AB84FB /* Participant.swift in Sources */,
 				005E7614AB44677F347783E6 /* MessageImport.swift in Sources */,
 				F742364DDADFAEFF84B59AED /* AvailabilityEngine.swift in Sources */,
@@ -614,6 +629,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3E5A16F0DE75520A0400E46D /* PlaceHoursCheckView.swift in Sources */,
+				4DBD536527ABE20A0549DB9F /* QuestComponents.swift in Sources */,
 				F98B2A5EF6FBD6083D25E593 /* MessagesViewController.swift in Sources */,
 				112BBD6645CF79AF546C00DA /* QuestFlowView.swift in Sources */,
 				E05447FB98C8602AE7975A82 /* QuestStyle.swift in Sources */,
@@ -647,6 +664,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAA9BE8358CE129F74BBCCDB /* OpeningHoursTests.swift in Sources */,
 				E5441727E63290CA856F829B /* ShellTests.swift in Sources */,
 				F1D362FD2EFC4754A6B16177 /* ProfileTests.swift in Sources */,
 				A76A77E80B7B61F2B8136EC7 /* MessageTests.swift in Sources */,
@@ -666,6 +684,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C6126F68EBFDB2B2B0EB426 /* PlaceHoursCheckView.swift in Sources */,
+				D1D240E27B9409C5884782F6 /* QuestComponents.swift in Sources */,
 				4F2C199F7F601ECBE0B193FE /* SideQuestApp.swift in Sources */,
 				124DAB883EE988CDFEDABD1F /* OnboardingView.swift in Sources */,
 				B9963331BEBA2E1220DFE956 /* QuestFlowView.swift in Sources */,

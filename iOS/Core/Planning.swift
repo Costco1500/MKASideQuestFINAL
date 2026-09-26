@@ -19,7 +19,7 @@ public struct PlanningRequest: Codable, Equatable, Sendable {
     public var candidateTimeWindows: [CalendarBusyInterval]
     public var timeZone: String
 
-    public init(participants: [Participant], messages: [ImportedMessage], calendar: Calendar = .current) {
+    public init(participants: [Participant], messages: [ImportedMessage], now: Date = Date(), calendar: Calendar = .current) {
         self.participants = participants.map {
             PlanningParticipant(id: $0.id, ageRange: $0.ageRange, maxBudget: $0.maxBudget, approximateArea: $0.approximateArea,
                                 availability: AvailabilityEngine.freeWindows(busy: $0.busyIntervals, range: $0.availability))
@@ -27,7 +27,7 @@ public struct PlanningRequest: Codable, Equatable, Sendable {
         selectedMessages = MessageImport.analysisMessages(messages)
         timeZone = calendar.timeZone.identifier
         candidateTimeWindows = participants.first.map {
-            AvailabilityEngine.sharedFreeWindows(participants, range: $0.availability, calendar: calendar)
+            AvailabilityEngine.bestTimes(participants, range: $0.availability, now: now, calendar: calendar).map(\.window)
         } ?? []
     }
 }
