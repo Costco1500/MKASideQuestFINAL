@@ -2,6 +2,33 @@ import XCTest
 
 final class SideQuestUITests: XCTestCase {
     override func setUp() { continueAfterFailure = false }
+    func testProfileAndServerSettingsAreAvailableInContainingApp() {
+        let app = XCUIApplication(); app.launch()
+        app.buttons["Set up my profile"].tap()
+        XCTAssertTrue(app.textFields["Display name"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Your comfortable maximum"].exists)
+        app.navigationBars.buttons.firstMatch.tap()
+        app.buttons["Settings"].tap()
+        XCTAssertTrue(app.textFields["https://your-sidequest-api.example"].waitForExistence(timeout: 5))
+        app.buttons["Save server"].tap()
+        app.buttons["Use local demo server"].tap()
+        app.buttons["Save server"].tap()
+        XCTAssertTrue(app.staticTexts["Server saved."].exists)
+        app.buttons["Done"].tap()
+    }
+    func testMessagesProvidesOwnContextAndSettings() {
+        let messages = openMessagesExtension()
+        waitForStableFrame(messages.buttons["Settings"])
+        messages.buttons["Settings"].tap()
+        XCTAssertTrue(messages.staticTexts["Shared-session server"].waitForExistence(timeout: 5))
+        messages.buttons["Done"].tap()
+        let start = messages.buttons["Start SideQuest"]
+        for _ in 0..<3 where !start.isHittable { messages.swipeUp() }
+        waitForStableFrame(start); start.tap()
+        XCTAssertTrue(messages.textFields["Display name"].waitForExistence(timeout: 8))
+        XCTAssertTrue(messages.staticTexts["Only your own information"].exists)
+        messages.buttons["Cancel"].tap()
+    }
     func testDemoGeneratesPlansAndAcceptsVote() {
         let app = XCUIApplication(); app.launch()
         app.buttons["Try Demo"].tap()
@@ -29,11 +56,9 @@ final class SideQuestUITests: XCTestCase {
     }
     func testMessagesPollInsertsWithoutSending() {
         let messages = openMessagesExtension()
+        waitForStableFrame(messages.buttons["Try Demo"])
         messages.buttons["Try Demo"].tap()
-        let expanded = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
-            messages.buttons["generatePlans"].isHittable && messages.buttons["generatePlans"].frame.minY > 700
-        }, object: nil)
-        XCTAssertEqual(XCTWaiter.wait(for: [expanded], timeout: 8), .completed)
+        waitForStableFrame(messages.buttons["generatePlans"])
         messages.buttons["generatePlans"].tap()
         XCTAssertTrue(messages.staticTexts["Make it a group yes."].waitForExistence(timeout: 10))
         let insert = messages.buttons["Insert poll into Messages"]
@@ -42,6 +67,7 @@ final class SideQuestUITests: XCTestCase {
         insert.tap()
         XCTAssertTrue(messages.buttons["Send"].waitForExistence(timeout: 8))
         let screenshot = XCTAttachment(screenshot: messages.screenshot()); screenshot.lifetime = .keepAlways; add(screenshot)
+        messages.buttons["Remove app from message"].tap()
     }
     private func openMessagesExtension() -> XCUIApplication {
         let messages = XCUIApplication(bundleIdentifier: "com.apple.MobileSMS")
@@ -54,10 +80,33 @@ final class SideQuestUITests: XCTestCase {
         if quest.waitForExistence(timeout: 4) { quest.tap() }
         return messages
     }
+    func testMessagesWinnerOffersCalendarAndShare() {
+        let messages = openMessagesExtension()
+        waitForStableFrame(messages.buttons["Try Demo"]); messages.buttons["Try Demo"].tap()
+        waitForStableFrame(messages.buttons["generatePlans"]); messages.buttons["generatePlans"].tap()
+        XCTAssertTrue(messages.staticTexts["Make it a group yes."].waitForExistence(timeout: 8))
+        let vote = messages.buttons["vote-plan-1-down"]
+        for _ in 0..<5 where !vote.isHittable { messages.swipeUp() }
+        waitForStableFrame(vote); vote.tap()
+        let finalize = messages.buttons["finalize"]
+        for _ in 0..<8 where !finalize.isHittable { messages.swipeUp() }
+        waitForStableFrame(finalize); finalize.tap()
+        let calendar = messages.buttons["Add to Calendar"]
+        waitForStableFrame(calendar); calendar.tap()
+        XCTAssertTrue(messages.buttons["Cancel"].waitForExistence(timeout: 10))
+        let screenshot = XCTAttachment(screenshot: messages.screenshot()); screenshot.lifetime = .keepAlways; add(screenshot)
+        messages.buttons["Cancel"].tap()
+        if messages.buttons["Discard Changes"].waitForExistence(timeout: 2) { messages.buttons["Discard Changes"].tap() }
+        let share = messages.buttons["Share winning plan"]
+        waitForStableFrame(share); share.tap()
+        XCTAssertTrue(messages.buttons["Send"].waitForExistence(timeout: 8))
+        messages.buttons["Remove app from message"].tap()
+    }
     private func waitForStableFrame(_ element: XCUIElement) {
         var previous = CGRect.null
         var stable = 0
         let expectation = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard element.exists else { return false }
             let frame = element.frame
             stable = element.isHittable && frame == previous ? stable + 1 : 0
             previous = frame

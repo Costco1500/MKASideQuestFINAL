@@ -22,7 +22,10 @@ public struct SideQuestSession: Codable, Equatable, Identifiable, Sendable {
     public var winningPlanId: String?
     public var source: String
     public var revision: Int
-    public var winningPlan: PlanOption? { planOptions.first { $0.id == winningPlanId } }
+    public var winningPlan: PlanOption? {
+        guard let context else { return nil }
+        return planOptions.first { $0.id == winningPlanId && PlanRules.isEligible($0, for: context) }
+    }
 
     public static func demo() throws -> SideQuestSession {
         let people = DemoData.participants()

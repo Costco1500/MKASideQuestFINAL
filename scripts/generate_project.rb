@@ -21,6 +21,7 @@ definitions.each do |name, (type, folders, bundle)|
       'PRODUCT_BUNDLE_IDENTIFIER' => bundle, 'SWIFT_VERSION' => '5.0',
       'IPHONEOS_DEPLOYMENT_TARGET' => '17.0', 'TARGETED_DEVICE_FAMILY' => '1',
       'CODE_SIGN_STYLE' => 'Automatic', 'GENERATE_INFOPLIST_FILE' => 'YES',
+      'CODE_SIGN_IDENTITY[sdk=iphonesimulator*]' => '-',
       'CURRENT_PROJECT_VERSION' => '1', 'MARKETING_VERSION' => '1.0',
       'SWIFT_EMIT_LOC_STRINGS' => 'YES', 'ENABLE_USER_SCRIPT_SANDBOXING' => 'YES'
     })

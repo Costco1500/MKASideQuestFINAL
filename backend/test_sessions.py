@@ -56,5 +56,19 @@ class SessionTests(unittest.TestCase):
     def test_join_after_planning_reopens_context_collection(self):
         self.plan(); joined = self.join()
         self.assertEqual(joined["session"]["planOptions"], [])
+    def test_invites_are_read_only_members_cannot_plan_and_expired_sessions_close(self):
+        member = self.join()
+        with self.assertRaises(APIError) as error:
+            self.call("/vote", {"planId": "plan-1", "value": "down"}, self.owner["inviteToken"])
+        self.assertEqual(error.exception.status, 403)
+        with self.assertRaises(APIError) as error:
+            self.call("/plan", token=member["memberToken"])
+        self.assertEqual(error.exception.status, 403)
+        with self.assertRaises(APIError) as error:
+            self.call("/vote", method="DELETE")
+        self.assertEqual(error.exception.status, 404)
+        self.service.db.execute("UPDATE sessions SET expires=0"); self.service.db.commit()
+        with self.assertRaises(APIError) as error: self.call("", method="GET")
+        self.assertEqual(error.exception.status, 404)
 
 if __name__ == "__main__": unittest.main()

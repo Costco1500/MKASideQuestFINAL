@@ -18,8 +18,15 @@ final class StubProtocol: URLProtocol {
 }
 
 @MainActor final class ClientAndStoreTests: XCTestCase {
-    override func setUp() { URLProtocol.registerClass(StubProtocol.self) }
-    override func tearDown() { URLProtocol.unregisterClass(StubProtocol.self) }
+    var previousProfile: Data?
+    override func setUp() {
+        previousProfile = QuestPreferences.defaults.data(forKey: "profile")
+        URLProtocol.registerClass(StubProtocol.self)
+    }
+    override func tearDown() {
+        QuestPreferences.defaults.set(previousProfile, forKey: "profile")
+        URLProtocol.unregisterClass(StubProtocol.self)
+    }
     func idle(_ store: QuestStore) async throws {
         for _ in 0..<100 where store.busy { try await Task.sleep(for: .milliseconds(20)) }
         XCTAssertFalse(store.busy)

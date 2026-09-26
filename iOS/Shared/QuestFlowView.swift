@@ -5,6 +5,7 @@ struct QuestFlowView: View {
     @ObservedObject var store: QuestStore
     @State private var showingProfile = false
     @State private var showingSettings = false
+    @State private var calendarPlan: PlanOption?
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -46,6 +47,12 @@ struct QuestFlowView: View {
                     }
                 }
                 .sheet(isPresented: $showingSettings) { NavigationStack { SettingsView() } }
+                .sheet(item: $calendarPlan) { plan in
+                    CalendarEventEditor(title: plan.title, start: plan.start, end: plan.end, area: plan.area) { saved in
+                        calendarPlan = nil
+                        store.status = saved ? "Added to your calendar." : "Calendar closed without saving."
+                    }.ignoresSafeArea()
+                }
                 .task(id: store.session?.id) {
                     guard !store.isDemo, store.membership != nil else { return }
                     while !Task.isCancelled {
@@ -65,6 +72,9 @@ struct QuestFlowView: View {
         if let winner = session.winningPlan {
             Text("SideQuest set 🎉").font(.largeTitle.bold())
             PlanCard(plan: winner)
+            Text("\(session.participants.count) people · chosen by the group").font(.subheadline)
+            Button("Add to Calendar") { calendarPlan = winner }.buttonStyle(.borderedProminent)
+            Text("Choose a calendar and confirm in Apple's event editor.").font(.caption).foregroundStyle(.secondary)
             Button("Share winning plan") { store.share() }.buttonStyle(.borderedProminent)
         } else if !session.planOptions.isEmpty {
             Text("Make it a group yes.").font(.system(.largeTitle, design: .rounded, weight: .bold))

@@ -48,7 +48,7 @@ final class MessagesViewController: MSMessagesAppViewController {
                 ("✦ SIDEQUEST" as NSString).draw(at: CGPoint(x: 30, y: 26), withAttributes: [.font: UIFont.boldSystemFont(ofSize: 26), .foregroundColor: UIColor.white])
                 let summary: String
                 if let winner = session.winningPlan {
-                    summary = winner.title + "\n" + winner.start.formatted(date: .abbreviated, time: .shortened) + "\n~$\(Int(winner.estimatedCostPerPerson))/person · \(session.participants.count) people"
+                    summary = winner.title + "\n" + winner.start.formatted(date: .abbreviated, time: .shortened) + " – " + winner.end.formatted(date: .omitted, time: .shortened) + "\n~$\(Int(winner.estimatedCostPerPerson))/person · \(session.participants.count) people"
                 } else if session.planOptions.isEmpty { summary = "Good plans start\nwith everyone's input.\nTap to join." }
                 else { summary = session.planOptions.enumerated().map { "\($0.offset + 1). \($0.element.title)" }.joined(separator: "\n") }
                 (summary as NSString).draw(in: CGRect(x: 30, y: 90, width: 540, height: 190), withAttributes: [.font: UIFont.systemFont(ofSize: 29, weight: .semibold), .foregroundColor: UIColor.white])
