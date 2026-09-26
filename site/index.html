@@ -9,7 +9,7 @@
   <meta property="og:title" content="SideQuest — Less planning. More hanging out.">
   <meta property="og:description" content="Turn the group chat into your next good memory. An iMessage app built at HackGT 13.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=5">
   <script>
     document.documentElement.classList.add("js");
     // Apply a saved theme before first paint to avoid a flash. No saved choice = follow the system.
@@ -98,7 +98,7 @@
 
     <section class="statement">
       <div class="statement-grid">
-        <ul class="chat-col left reveal" aria-label="Messages that never become plans">
+        <ul class="chat-col left reveal-group" aria-label="Messages that never become plans">
           <li><b>Maya</b>we should hang out this week!!</li>
           <li><b>Jake</b>down whenever</li>
           <li><b>Priya</b>idk what do you guys wanna do</li>
@@ -107,7 +107,7 @@
 
         <p class="statement-text reveal">From “we should hang out” to a plan on everyone’s calendar. <span>Without leaving Messages.</span></p>
 
-        <ul class="chat-col right reveal" aria-label="More messages that never become plans">
+        <ul class="chat-col right reveal-group" aria-label="More messages that never become plans">
           <li><b>Alex</b>we need to do this fr</li>
           <li><b>Jordan</b>can’t this weekend, maybe next?</li>
           <li><b>Maya</b>someone make a plan lol</li>
@@ -211,17 +211,22 @@
         box.replaceChildren(frame);
       }
 
-      // Gentle fade-up as sections scroll into view; everything shows immediately without support.
-      var items = document.querySelectorAll(".reveal");
+      // Apple-style fade-up as sections scroll into view; everything shows immediately without support.
+      var items = document.querySelectorAll(".reveal, .reveal-group");
       if (!("IntersectionObserver" in window) || matchMedia("(prefers-reduced-motion: reduce)").matches) {
         items.forEach(function (el) { el.classList.add("in"); });
         return;
       }
       var observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) { entry.target.classList.add("in"); observer.unobserve(entry.target); }
+        // Items that enter together (e.g. a heading and a row of steps) arrive one after another.
+        var entering = entries.filter(function (e) { return e.isIntersecting; }).map(function (e) { return e.target; });
+        entering.sort(function (a, b) { return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1; });
+        entering.forEach(function (el, i) {
+          el.style.setProperty("--delay", Math.min(i, 6) * 100 + "ms");
+          el.classList.add("in");
+          observer.unobserve(el);
         });
-      }, { rootMargin: "0px 0px -8% 0px" });
+      }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
       items.forEach(function (el) { observer.observe(el); });
     })();
   </script>

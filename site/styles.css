@@ -698,20 +698,45 @@ h2 {
   .video { border-radius: 20px; }
 }
 
-/* Fade-up on scroll (only when JS runs and motion is welcome) */
+/* Apple-style motion (only when JS runs and motion is welcome).
+   Scroll reveals: long, soft fade-up; items entering together are staggered via --delay (set in JS). */
 @media (prefers-reduced-motion: no-preference) {
+  :root { --ease-out: cubic-bezier(0.16, 1, 0.3, 1); }
+
   .js .reveal {
     opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transform: translateY(44px);
+    transition: opacity 1s ease, transform 1.3s var(--ease-out);
+    transition-delay: var(--delay, 0s);
   }
   .js .reveal.in { opacity: 1; transform: none; }
-  /* The hero is always visible at first paint; it only gets a CSS-only intro. */
-  .hero-copy, .phone { animation: rise 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
-  .phone { animation-delay: 0.15s; }
-  @keyframes rise { from { opacity: 0; transform: translateY(16px); } }
-  .steps .reveal:nth-child(3n + 2) { transition-delay: 0.08s; }
-  .steps .reveal:nth-child(3n) { transition-delay: 0.16s; }
+
+  /* Hero intro plays on load, one element after another (CSS only, so it never stays hidden). */
+  .hero .eyebrow, .hero h1, .hero .lede, .hero .actions, .phone {
+    animation: rise 1.2s var(--ease-out) both;
+  }
+  .hero .eyebrow { animation-delay: 0.05s; }
+  .hero h1 { animation-delay: 0.15s; }
+  .hero .lede { animation-delay: 0.3s; }
+  .hero .actions { animation-delay: 0.42s; }
+  .phone { animation: rise-phone 1.4s var(--ease-out) 0.55s both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(28px); } }
+  @keyframes rise-phone { from { opacity: 0; transform: translateY(60px) scale(0.96); } }
+
+  /* Chat bubbles pop in one by one, keeping their fade-out opacities. */
+  .js .reveal-group li {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+    transition: opacity 0.7s ease, transform 0.9s var(--ease-out);
+  }
+  .js .reveal-group.in li { transform: none; }
+  .chat-col.left { --group-delay: 0.25s; }
+  .chat-col.right { --group-delay: 0.5s; }
+  .js .reveal-group.in li:nth-child(1) { opacity: 1; transition-delay: var(--group-delay); }
+  .js .reveal-group.in li:nth-child(2) { opacity: 0.85; transition-delay: calc(var(--group-delay) + 0.12s); }
+  .js .reveal-group.in li:nth-child(3) { opacity: 0.68; transition-delay: calc(var(--group-delay) + 0.24s); }
+  .js .reveal-group.in li:nth-child(4) { opacity: 0.5; transition-delay: calc(var(--group-delay) + 0.36s); }
+  .js .reveal-group.in li:nth-child(5) { opacity: 0.6; transition-delay: calc(var(--group-delay) + 0.5s); }
 }
 
 @media (prefers-reduced-motion: reduce) {
