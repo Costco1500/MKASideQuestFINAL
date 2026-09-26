@@ -92,6 +92,10 @@ def schema(request):
                       concerns={"type": "array", "items": string},
                       whyItWorks={"type": "object", "properties": {p["id"]: string for p in request["participants"]},
                                   "required": [p["id"] for p in request["participants"]], "additionalProperties": False})
+    properties["estimatedCostPerPerson"].update(minimum=0, maximum=min(p["maxBudget"] for p in request["participants"]))
+    properties["minimumAge"].update(minimum=0, maximum=min(eligibility(p["ageRange"]) for p in request["participants"]))
+    properties["groupFitScore"].update(minimum=0, maximum=100)
+    properties["area"] = {"type": "string", "enum": sorted({p["approximateArea"] for p in request["participants"]})}
     return {"type": "object", "properties": {"plans": {"type": "array", "minItems": 3, "maxItems": 3,
             "items": {"type": "object", "properties": properties, "required": list(properties), "additionalProperties": False}}},
             "required": ["plans"], "additionalProperties": False}
