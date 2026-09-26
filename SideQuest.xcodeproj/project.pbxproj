@@ -40,6 +40,7 @@
 		933A4E2167D1543C0D5A4144 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
 		9D532E7BAAC33A7C445CA0C9 /* SharedImportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 514CD008A0FBEED13FD8FCBF /* SharedImportTests.swift */; };
 		A1D83610A84ACDF137263857 /* PlanCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7848DFCF7700445A3E0A6F0A /* PlanCard.swift */; };
+		A2A19C9C167C2E5C4BC56047 /* LocationVenueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3834D6081C12D2BE3014CDF9 /* LocationVenueTests.swift */; };
 		A76A77E80B7B61F2B8136EC7 /* MessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33E659C8D6B3FD3FEBF8CEC /* MessageTests.swift */; };
 		AA939C539EFE5782D94D707B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
 		AF61C0F764EAE6BD7F9D6A83 /* Planning.swift in Sources */ = {isa = PBXBuildFile; fileRef = F768863AB9C72A84EE0E4828 /* Planning.swift */; };
@@ -149,6 +150,7 @@
 		2C13D7C71EFA8C33C708CB3B /* ShareViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShareViewController.swift; path = iOS/SideQuestShare/ShareViewController.swift; sourceTree = "<group>"; };
 		34494685C52E7100B818D4F6 /* SideQuestShare.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SideQuestShare.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		37CBB340F77C8372B1EFE30E /* QuestFlowView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = QuestFlowView.swift; path = iOS/Shared/QuestFlowView.swift; sourceTree = "<group>"; };
+		3834D6081C12D2BE3014CDF9 /* LocationVenueTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LocationVenueTests.swift; path = iOS/Tests/LocationVenueTests.swift; sourceTree = "<group>"; };
 		3A705CE70EB09B71EE680584 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsView.swift; path = iOS/Shared/SettingsView.swift; sourceTree = "<group>"; };
 		448BC1702DE5EFF917FD7781 /* SideQuestCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SideQuestCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		484EB1630A1E6DF1F3B559A5 /* MessagesViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MessagesViewController.swift; path = iOS/MessagesExtension/MessagesViewController.swift; sourceTree = "<group>"; };
@@ -264,6 +266,7 @@
 				8D4244FA07F5EDB013EDB71A /* SessionWorkflowTests.swift */,
 				0F009BD59C081650C4C67C89 /* ScreenshotImportTests.swift */,
 				514CD008A0FBEED13FD8FCBF /* SharedImportTests.swift */,
+				3834D6081C12D2BE3014CDF9 /* LocationVenueTests.swift */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -639,6 +642,7 @@
 				E777D17DE4BB8075BBCFEECA /* SessionWorkflowTests.swift in Sources */,
 				329D7B57FA205537C0E3A076 /* ScreenshotImportTests.swift in Sources */,
 				9D532E7BAAC33A7C445CA0C9 /* SharedImportTests.swift in Sources */,
+				A2A19C9C167C2E5C4BC56047 /* LocationVenueTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

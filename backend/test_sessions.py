@@ -201,4 +201,23 @@ class SessionTests(unittest.TestCase):
         self.assertEqual(error.exception.status, 404)
 
 
+    def test_coarse_location_is_shared_but_never_passed_to_llm(self):
+        person = profile()
+        person["location"] = {"latitude": 33.778123, "longitude": -84.398456, "displayArea": "Midtown"}
+        state = self.call("/context", {"participant": person})
+        self.assertEqual(state["participants"][0]["location"]["latitude"], 33.78)
+        self.join(); self.plan()
+        self.assertNotIn("location", self.model.call_args.args[0]["participants"][0])
+
+    def test_resolved_venues_are_owner_only_and_bound_to_plan_revision(self):
+        guest = self.ready_session(); planned = self.plan()
+        venue = {"name": "MapKit place", "address": "123 Example St", "latitude": 33.78, "longitude": -84.39}
+        body = {"revision": planned["revision"], "venues": [{"planId": p["id"], "venue": venue} for p in planned["planOptions"]]}
+        with self.assertRaises(APIError): self.call("/venues", body, guest["memberToken"])
+        updated = self.call("/venues", body)
+        self.assertEqual(updated["planOptions"][0]["venue"], venue)
+        with self.assertRaises(APIError): self.call("/venues", body)
+        self.call("/vote", {"planId": "plan-1", "value": "down"})
+        self.assertEqual(self.call("/finalize")["winningPlanId"], "plan-1")
+
 if __name__ == "__main__": unittest.main()

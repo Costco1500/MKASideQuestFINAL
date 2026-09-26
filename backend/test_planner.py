@@ -93,4 +93,15 @@ class PlannerTests(unittest.TestCase):
             self.assertEqual(len(payload["messages"]), 2)
             self.assertEqual(json.loads(payload["messages"][1]["content"]), context())
 
+    def test_llm_supplies_search_terms_and_never_authoritative_coordinates(self):
+        from planner import schema
+        properties = schema(context())["properties"]["plans"]["items"]["properties"]
+        self.assertIn("venueSearchQuery", properties)
+        self.assertNotIn("venue", properties)
+        invented = demo_plans(context())
+        invented[0]["venue"] = {"name": "Invented", "latitude": 1, "longitude": 2}
+        result = generate(context(), Mock(return_value={"plans": invented}))
+        self.assertEqual(result["source"], "demo")
+        self.assertTrue(all("venue" not in plan for plan in result["plans"]))
+
 if __name__ == "__main__": unittest.main()
