@@ -33,4 +33,17 @@ final class MessageTests: XCTestCase {
         XCTAssertEqual(MessageImport.analysisMessages(messages).count, 50)
         XCTAssertEqual(MessageImport.analysisMessages(messages).last?.text, "699")
     }
+    func testDemoChatScriptUsesCustomTextAndSelectsIt() {
+        let messages = DemoData.chatScript("Jake: bowling Friday?\nMaya: yes please")
+        XCTAssertEqual(messages.map(\.sender), ["Jake", "Maya"])
+        XCTAssertEqual(messages.map(\.text), ["bowling Friday?", "yes please"])
+        XCTAssertTrue(messages.allSatisfy(\.isSelected))
+    }
+    func testDemoChatScriptFallsBackToDefaultConversation() {
+        for script in [nil, "", " \n "] {
+            let messages = DemoData.chatScript(script)
+            XCTAssertEqual(messages.map(\.text), MessageImport.parse(DemoData.conversation).map(\.text))
+            XCTAssertTrue(messages.allSatisfy(\.isSelected))
+        }
+    }
 }
