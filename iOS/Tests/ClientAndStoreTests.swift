@@ -128,4 +128,18 @@ final class StubProtocol: URLProtocol {
         XCTAssertNotNil(guest.membership)
         SecItemDelete(MembershipVault.key(link) as CFDictionary)
     }
+    func testGeneratedPlansPassThroughVenueResolverBeforeVoting() async throws {
+        let store = QuestStore(useLiveServices: false)
+        store.isDemo = true
+        store.session = try SideQuestSession.demo(); store.session?.planOptions = []
+        store.messages = DemoData.chatScript(nil)
+        let place = PlanVenue(name: "MapKit fixture", address: "123 Example St", latitude: 33.78, longitude: -84.39)
+        store.venueResolver = VenueResolver(search: { _, _, _ in place })
+        store.generate(); try await idle(store)
+        XCTAssertEqual(store.session?.planOptions.count, 3)
+        XCTAssertTrue(store.session!.planOptions.allSatisfy { $0.venue == place })
+        store.vote(store.session!.planOptions[0], value: .down); store.finalize()
+        XCTAssertEqual(store.session?.winningPlan?.calendarLocation, "MapKit fixture, 123 Example St")
+    }
+
 }
