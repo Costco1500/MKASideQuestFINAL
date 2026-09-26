@@ -41,6 +41,14 @@ final class SideQuestUITests: XCTestCase {
         // Creation inserts an invitation before the host has supplied a profile.
         messages.terminate()
     }
+    func testStartSideQuestUsesConfiguredServer() {
+        let messages = openMessagesExtension()
+        let start = messages.buttons["Start SideQuest"]
+        for _ in 0..<3 where !start.isHittable { messages.swipeUp() }
+        waitForStableFrame(start); start.tap()
+        XCTAssertTrue(messages.buttons["Send"].waitForExistence(timeout: 10), "The saved server must support real session creation without switching to Demo")
+        messages.buttons["Remove app from message"].tap()
+    }
     func testDemoGeneratesPlansAndAcceptsVote() {
         let app = XCUIApplication(); app.launch()
         app.buttons["Try Demo"].tap()
