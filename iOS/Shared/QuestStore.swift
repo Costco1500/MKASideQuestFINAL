@@ -1,5 +1,7 @@
 import SwiftUI
 import Security
+import PhotosUI
+import ImageIO
 import SideQuestCore
 
 enum QuestPreferences {
@@ -63,10 +65,15 @@ enum MembershipVault {
     /// People in the active Messages conversation; nil outside Messages.
     @Published var chatSize: Int?
     private var readTask: Task<Void, Never>?
+    private var readID = UUID()
     var insert: ((SideQuestSession, SessionLink) -> Void)?
     var expand: (() -> Void)?
     var participantID: String { isDemo ? demoParticipantID : membership?.participantId ?? "" }
     var isOwner: Bool { isDemo || membership?.isOwner == true }
+    var canGenerate: Bool {
+        isOwner && session?.everyoneReady == true && session?.planOptions.isEmpty == true &&
+        !busy && !isReading && !MessageImport.analysisMessages(messages).isEmpty
+    }
     var link: SessionLink? {
         if isDemo, let session {
             return SessionLink(sessionId: session.id, inviteToken: String(repeating: "d", count: 43), serverURL: URL(string: "https://demo.sidequest.invalid")!, isDemo: true)
@@ -82,27 +89,69 @@ enum MembershipVault {
             do { try await operation() } catch { status = error.localizedDescription }
         }
     }
+    func startSession(expectedParticipantCount: Int) {
+        guard (1...12).contains(expectedParticipantCount), session == nil else { return }
+        expand?()
+        work { [self] in
+            guard let api else { throw PlanningError.invalidServer }
+            let member: Membership = try await api.request("api/sessions", body: ["expectedParticipantCount": expectedParticipantCount])
+            try accept(member, server: api.baseURL)
+            share()
+        }
+    }
     func startDemo() {
         stopReading(); expand?(); isDemo = true; invitation = nil; membership = nil; status = ""
         session = try? SideQuestSession.demo(); session?.planOptions = []; session?.context = nil
-        demoParticipantID = "alex"
-        messages = []
+        demoParticipantID = "alex"; messages = []
+        readChat()
     }
-    /// Demo only: simulates reading the conversation by revealing the scripted chat one message at a time.
+    /// Render the editable demo script into images and use the real Vision pipeline.
     func readChat() {
-        guard isDemo, !isReading else { return }
-        let script = DemoData.chatScript(QuestPreferences.demoChatScript)
-        messages = []; status = ""; isReading = true
-        readTask = Task { @MainActor [weak self] in
-            for message in script {
-                do { try await Task.sleep(for: .milliseconds(120)) } catch { return }
-                withAnimation(.easeOut(duration: 0.2)) { self?.messages.append(message) }
+        guard isDemo else { return }
+        importScreenshots(DemoChatScreenshots.images(script: QuestPreferences.demoChatScript))
+    }
+    func importScreenshots(_ images: [UIImage]) { recognize { images } }
+    func importPhotos(_ items: [PhotosPickerItem]) {
+        guard !items.isEmpty else { return }
+        recognize {
+            var images: [UIImage] = []
+            for item in items {
+                try Task.checkCancellation()
+                guard let data = try await item.loadTransferable(type: Data.self),
+                      let source = CGImageSourceCreateWithData(data as CFData, nil),
+                      let image = CGImageSourceCreateThumbnailAtIndex(source, 0, [
+                        kCGImageSourceCreateThumbnailFromImageAlways: true,
+                        kCGImageSourceCreateThumbnailWithTransform: true,
+                        kCGImageSourceThumbnailMaxPixelSize: 2400
+                      ] as CFDictionary) else { throw ScreenshotImportError.unreadableImage }
+                images.append(UIImage(cgImage: image))
             }
-            self?.isReading = false
-            self?.status = "Found \(script.count) messages in this chat."
+            return images
         }
     }
-    func stopReading() { readTask?.cancel(); readTask = nil; isReading = false }
+    private func recognize(_ load: @escaping () async throws -> [UIImage]) {
+        guard isOwner, !busy else { return }
+        stopReading(); status = ""; isReading = true
+        let scanID = readID
+        let names = session?.participants.map(\.displayName) ?? []
+        readTask = Task { @MainActor [weak self] in
+            do {
+                let images = try await load()
+                let blocks = try await ChatScreenshotOCRService().recognizeMessages(from: images)
+                try Task.checkCancellation()
+                guard let self, self.readID == scanID else { return }
+                let extracted = ScreenshotMessageParser.parse(blocks, participantNames: names)
+                self.messages = extracted
+                self.status = extracted.isEmpty ? "No readable messages found. Try a clearer screenshot." : "Found \(extracted.count) messages. Check the text and senders before analyzing."
+                self.isReading = false
+            } catch {
+                guard !Task.isCancelled, let self, self.readID == scanID else { return }
+                self.isReading = false
+                self.status = "Could not read these screenshots. Try selecting clearer images."
+            }
+        }
+    }
+    func stopReading() { readTask?.cancel(); readTask = nil; readID = UUID(); isReading = false }
     func accept(_ member: Membership, server: URL) throws {
         let link = SessionLink(sessionId: member.session.id, inviteToken: member.inviteToken, serverURL: server, isDemo: false)
         try MembershipVault.save(member, for: link)
@@ -118,10 +167,7 @@ enum MembershipVault {
             } else if let invitation {
                 let member: Membership = try await api.request("api/sessions/\(invitation.sessionId)/join", body: ParticipantBody(profile), token: invitation.inviteToken)
                 try accept(member, server: api.baseURL)
-            } else {
-                let member: Membership = try await api.request("api/sessions", body: ParticipantBody(profile))
-                try accept(member, server: api.baseURL)
-            }
+            } else { status = "Start a session before sharing your profile." }
         }
     }
     func apply(_ updated: SideQuestSession) {
@@ -151,21 +197,22 @@ enum MembershipVault {
         }
     }
     func generate() {
+        guard canGenerate else {
+            if session?.everyoneReady != true { status = "Waiting for everyone to tap Done on their profile." }
+            return
+        }
         work { [self] in
             if !isDemo { await refresh() }
-            guard var current = session else { return }
+            guard var current = session, current.everyoneReady else {
+                status = "Waiting for everyone to tap Done on their profile."; return
+            }
             let request = PlanningRequest(participants: current.participants, messages: messages)
             guard !request.candidateTimeWindows.isEmpty else { throw PlanningError.noAvailability }
-            if !isDemo, let api, let membership {
-                do {
-                    let updated: SideQuestSession = try await api.request("api/sessions/\(current.id)/plan", body: SessionPlanBody(request), token: membership.memberToken)
-                    guard PlanRules.validate(updated.planOptions, for: request) else { throw PlanningError.invalidResponse }
-                    apply(updated); messages = []; return
-                } catch let error as URLError {
-                    status = "Connection unavailable (\(error.code.rawValue)). Local demo only; votes will not sync."
-                    isDemo = true; self.membership = nil; invitation = nil; current.id = UUID().uuidString
-                    demoParticipantID = current.participants.first?.id ?? ""
-                }
+            if !isDemo {
+                guard let api, let membership else { throw PlanningError.invalidServer }
+                let updated: SideQuestSession = try await api.request("api/sessions/\(current.id)/plan", body: SessionPlanBody(request), token: membership.memberToken)
+                guard PlanRules.validate(updated.planOptions, for: request) else { throw PlanningError.invalidResponse }
+                apply(updated); messages = []; return
             }
             let result = try await PlanGenerator.generate(request)
             current.planOptions = result.plans; current.source = result.source
@@ -207,3 +254,5 @@ enum MembershipVault {
     }
     func reset() { stopReading(); session = nil; membership = nil; invitation = nil; messages = []; status = ""; isDemo = false }
 }
+
+private enum ScreenshotImportError: Error { case unreadableImage }

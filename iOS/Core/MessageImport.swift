@@ -6,6 +6,12 @@ public struct ImportedMessage: Codable, Equatable, Identifiable, Sendable {
     public var text: String
     public var timestamp: Date? = nil
     public var isSelected = false
+
+    public init(id: String = UUID().uuidString, sender: String, text: String,
+                timestamp: Date? = nil, isSelected: Bool = false) {
+        self.id = id; self.sender = sender; self.text = text
+        self.timestamp = timestamp; self.isSelected = isSelected
+    }
 }
 
 public struct SelectedMessage: Codable, Equatable, Sendable {
@@ -14,7 +20,7 @@ public struct SelectedMessage: Codable, Equatable, Sendable {
 }
 
 public enum MessageImport {
-    public enum Selection { case all, clear, latest50 }
+    public enum Selection { case all, clear, latest10, latest25, latest50 }
     public static func parse(_ text: String) -> [ImportedMessage] {
         text.prefix(100_000).components(separatedBy: .newlines).compactMap { line -> ImportedMessage? in
             let line = line.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -33,6 +39,8 @@ public enum MessageImport {
             switch selection {
             case .all: messages[index].isSelected = true
             case .clear: messages[index].isSelected = false
+            case .latest10: messages[index].isSelected = index >= max(0, messages.count - 10)
+            case .latest25: messages[index].isSelected = index >= max(0, messages.count - 25)
             case .latest50: messages[index].isSelected = index >= max(0, messages.count - 50)
             }
         }
@@ -41,11 +49,17 @@ public enum MessageImport {
     public static func analysisMessages(_ messages: [ImportedMessage]) -> [SelectedMessage] {
         var seen = Set<String>()
         return messages.filter(\.isSelected).reversed().compactMap { message in
-            let key = (message.sender + "\n" + message.text).lowercased()
-                .split(whereSeparator: \.isWhitespace).joined(separator: " ")
+            let sender = normalizedWhitespace(message.sender)
+            let text = normalizedWhitespace(message.text)
+            guard !text.isEmpty else { return nil }
+            let key = (sender + "\n" + text).lowercased()
             guard seen.insert(key).inserted else { return nil }
-            return SelectedMessage(sender: message.sender, text: message.text)
+            return SelectedMessage(sender: sender.isEmpty ? "Unknown" : sender, text: text)
         }.prefix(50).reversed()
+    }
+
+    static func normalizedWhitespace(_ text: String) -> String {
+        text.split(whereSeparator: \.isWhitespace).joined(separator: " ")
     }
 }
 
@@ -61,7 +75,7 @@ extension DemoData {
     Alex: After 6:30 works.
     """
 
-    /// Messages the demo "reads" from the chat: the organizer's custom script, or the default conversation.
+    /// Text source for the demo screenshot fixtures: the custom script or the default conversation.
     public static func chatScript(_ custom: String?) -> [ImportedMessage] {
         var messages = MessageImport.parse(custom ?? "")
         if messages.isEmpty { messages = MessageImport.parse(conversation) }

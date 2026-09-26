@@ -22,6 +22,15 @@ public struct SideQuestSession: Codable, Equatable, Identifiable, Sendable {
     public var winningPlanId: String?
     public var source: String
     public var revision: Int
+    public var expectedParticipantCount: Int? = nil
+    public var readyParticipantIds: [String]? = nil
+    public var readyCount: Int {
+        Set(readyParticipantIds ?? []).intersection(participants.filter(\.isValid).map(\.id)).count
+    }
+    public var everyoneReady: Bool {
+        guard let expectedParticipantCount, (1...12).contains(expectedParticipantCount) else { return false }
+        return participants.count == expectedParticipantCount && readyCount == expectedParticipantCount
+    }
     public var winningPlan: PlanOption? {
         guard let context else { return nil }
         return planOptions.first { $0.id == winningPlanId && PlanRules.isEligible($0, for: context) }
@@ -31,7 +40,8 @@ public struct SideQuestSession: Codable, Equatable, Identifiable, Sendable {
         let people = DemoData.participants()
         let request = PlanningRequest(participants: people, messages: [])
         return SideQuestSession(id: UUID().uuidString, participants: people, context: request,
-                                planOptions: try DemoPlanner.plans(for: request), votes: [], source: "demo", revision: 0)
+                                planOptions: try DemoPlanner.plans(for: request), votes: [], source: "demo", revision: 0,
+                                expectedParticipantCount: people.count, readyParticipantIds: people.map(\.id))
     }
 }
 public struct Membership: Codable, Sendable {

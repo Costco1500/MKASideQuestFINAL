@@ -3,6 +3,7 @@ import SideQuestCore
 
 struct QuestFlowView: View {
     @ObservedObject var store: QuestStore
+    @State private var expectedPeople = 2
     @State private var showingProfile = false
     @State private var showingSettings = false
     @State private var calendarPlan: PlanOption?
@@ -21,7 +22,9 @@ struct QuestFlowView: View {
                             Button("Join SideQuest") { store.expand?(); showingProfile = true }.buttonStyle(.borderedProminent)
                         } else {
                             Button("Try Demo") { store.startDemo() }.buttonStyle(.borderedProminent).controlSize(.large)
-                            Button("Start SideQuest") { store.expand?(); showingProfile = true }.buttonStyle(.bordered)
+                            Stepper("\(expectedPeople) people, including you", value: $expectedPeople, in: 1...12)
+                            Button("Start SideQuest") { store.startSession(expectedParticipantCount: expectedPeople) }.buttonStyle(.bordered).disabled(store.busy)
+                            Text("Start a session and send the invitation first. Everyone adds their profile and taps Done before plans can be made.").font(.caption)
                             Text("An offline demo is ready. For shared sessions, set your group's server in Settings.").font(.caption).foregroundStyle(.secondary)
                         }
                     }
@@ -30,9 +33,9 @@ struct QuestFlowView: View {
             }.background(Color.questBackground)
                 .safeAreaInset(edge: .bottom) {
                     if let session = store.session, session.planOptions.isEmpty, store.isOwner {
-                        Button(store.busy ? "Finding your next SideQuest…" : "Analyze \(MessageImport.analysisMessages(store.messages).count) selected messages") { store.generate() }
+                        Button(store.busy ? "Finding your next SideQuest…" : "Analyze \(MessageImport.analysisMessages(store.messages).count) Messages") { store.generate() }
                             .buttonStyle(.borderedProminent).controlSize(.large)
-                            .disabled(store.busy || store.isReading || MessageImport.analysisMessages(store.messages).isEmpty).accessibilityIdentifier("generatePlans")
+                            .disabled(!store.canGenerate).accessibilityIdentifier("generatePlans")
                             .padding().frame(maxWidth: .infinity).background(.ultraThinMaterial)
                     }
                 }
@@ -42,7 +45,7 @@ struct QuestFlowView: View {
                 }
                 .sheet(isPresented: $showingProfile) {
                     NavigationStack {
-                        ProfileSetupView(profile: ownProfile) { store.saveProfile($0); showingProfile = false }
+                        ProfileSetupView(profile: ownProfile, saveTitle: "Done — share my context") { store.saveProfile($0); showingProfile = false }
                             .toolbar { ToolbarItem(placement: .cancellationAction) { Button("Cancel") { showingProfile = false } } }
                     }
                 }
@@ -52,6 +55,9 @@ struct QuestFlowView: View {
                         calendarPlan = nil
                         store.status = saved ? "Added to your calendar." : "Calendar closed without saving."
                     }.ignoresSafeArea()
+                }
+                .onChange(of: store.chatSize, initial: true) { _, count in
+                    if let count { expectedPeople = min(12, max(1, count)) }
                 }
                 .task(id: store.session?.id) {
                     guard !store.isDemo, store.membership != nil else { return }
@@ -105,21 +111,26 @@ struct QuestFlowView: View {
             }
         } else {
             Text("Bring everyone into the plan.").font(.title2.bold())
+            VStack(alignment: .leading, spacing: 8) {
+                Label("\(session.readyCount) of \(session.expectedParticipantCount ?? session.participants.count) people Done", systemImage: session.everyoneReady ? "checkmark.circle.fill" : "person.2")
+                    .font(.headline).accessibilityIdentifier("sessionReadiness")
+                Text(session.everyoneReady ? "Everyone is ready. The organizer can analyze the selected messages." : "Waiting for everyone to add their profile, availability, and tap Done.").font(.subheadline)
+            }.questCard()
             DisclosureGroup("\(session.participants.count) people · up to $\(Int(Participant.groupBudget(session.participants) ?? 0))/person") {
                 ForEach(session.participants) { person in
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(person.displayName).font(.headline)
+                        Text(person.displayName + ((session.readyParticipantIds ?? []).contains(person.id) ? " · Done" : " · Waiting")).font(.headline)
                         Text("\(person.ageRange.label) · $\(Int(person.maxBudget)) max · \(person.approximateArea)").font(.caption)
                     }.frame(maxWidth: .infinity, alignment: .leading).padding(.vertical, 6)
                 }
             }.questCard()
             if !store.isDemo {
                 Button("Invite group to contribute") { store.share() }.buttonStyle(.borderedProminent)
-                Button("Edit my context") { showingProfile = true }
-                Text("Each person joins with their own information. Wait for everyone before generating.").font(.caption)
+                Button(session.participants.contains { $0.id == store.participantID } ? "Edit my context" : "Add my profile & availability") { showingProfile = true }.accessibilityIdentifier("myContext")
+                Text("Send the invitation to the whole group. Each person opens it and taps Done with their own information.").font(.caption)
             }
             if store.isOwner { MessageImportView(store: store) }
-            else { Text("Your context is shared. The organizer will generate plans when everyone has joined.") }
+            else { Text("You’re Done. Once everyone is ready, the organizer will generate plans here for your group to vote on.") }
             let request = PlanningRequest(participants: session.participants, messages: [])
             VStack(alignment: .leading, spacing: 8) {
                 Label("Shared free time", systemImage: "calendar").font(.headline)

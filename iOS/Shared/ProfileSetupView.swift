@@ -3,6 +3,7 @@ import SideQuestCore
 
 struct ProfileSetupView: View {
     @State var profile: Participant
+    var saveTitle = "Save my context"
     var save: (Participant) -> Void
     @State private var calendarStatus = ""
     @State private var loadingCalendar = false
@@ -44,7 +45,7 @@ struct ProfileSetupView: View {
                 if !calendarStatus.isEmpty { Text(calendarStatus).font(.caption) }
                 Text("Google calendars already in Apple's Calendar app are included.").font(.caption)
             }
-            Button("Save my context") { save(profile) }
+            Button(saveTitle) { save(profile) }
                 .disabled(!profile.isValid).accessibilityIdentifier("saveProfile")
         }.navigationTitle("Your context")
             .onChange(of: profile.availability) { _, _ in

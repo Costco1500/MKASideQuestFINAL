@@ -24,7 +24,7 @@ struct SettingsView: View {
             Section("Demo chat script") {
                 TextEditor(text: $chatScript).frame(minHeight: 160).font(.callout).autocorrectionDisabled()
                     .accessibilityLabel("Demo chat script")
-                Text("One \"Name: message\" per line. \"Read this chat\" shows these messages. Use the demo names so plans and votes line up: \(DemoData.participants().map(\.displayName).joined(separator: ", ")).")
+                Text("One \"Name: message\" per line. Demo screenshots are rendered from these messages and scanned on-device. Use the demo names so plans and votes line up: \(DemoData.participants().map(\.displayName).joined(separator: ", ")).")
                     .font(.caption)
                 Button("Save script") {
                     QuestPreferences.demoChatScript = chatScript
