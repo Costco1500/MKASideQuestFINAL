@@ -40,3 +40,73 @@ final class WarmDemoTests: XCTestCase {
         return (max(x,y) + 0.05) / (min(x,y) + 0.05)
     }
 }
+
+@MainActor final class OfflineDemoTests: XCTestCase {
+    private func makeStore() -> QuestStore { QuestStore(phaseDelay: .zero, voteDelay: .zero) }
+    private func settle(_ store: QuestStore) async throws {
+        for _ in 0..<100 where store.busy { try await Task.sleep(for: .milliseconds(10)) }
+        XCTAssertFalse(store.busy)
+    }
+    func testLaunchAndResetNeedNoSetup() async throws {
+        let store = makeStore()
+        XCTAssertEqual(store.stage, .conversation)
+        XCTAssertEqual(store.messages.count, 38)
+        XCTAssertTrue(store.session.planOptions.isEmpty)
+        store.analyze(); try await settle(store)
+        XCTAssertEqual(store.stage, .understanding)
+        store.showPlans()
+        store.vote(store.session.planOptions[0], value: .down)
+        store.simulateGroupVotes(); try await settle(store)
+        store.reset()
+        XCTAssertEqual(store.stage, .conversation)
+        XCTAssertEqual(store.messages.count, 38)
+        XCTAssertTrue(store.session.planOptions.isEmpty)
+        XCTAssertTrue(store.session.votes.isEmpty)
+        XCTAssertNil(store.session.winningPlan)
+    }
+    func testExactlyThreeOfflinePlansExplainEveryFriendAndMeetConstraints() async throws {
+        let store = makeStore(); store.analyze(); store.analyze(); try await settle(store)
+        XCTAssertEqual(store.session.source, "demo")
+        XCTAssertEqual(store.session.planOptions.map(\.title), ["Clay & Boba", "Sunset Picnic + Cards", "Gallery + Dessert"])
+        XCTAssertTrue(PlanRules.validate(store.session.planOptions, for: try XCTUnwrap(store.session.context)))
+        XCTAssertEqual(store.session.planOptions.map(\.estimatedCostPerPerson), [12, 8, 10])
+        XCTAssertTrue(store.session.planOptions.allSatisfy { Calendar.current.component(.hour, from: $0.start) == 19 })
+        XCTAssertTrue(store.session.planOptions[0].whyItWorks["maya"]!.contains("pottery"))
+    }
+    func testGroupVotesAreDeterministicAndUseVoteEngine() async throws {
+        let store = makeStore(); store.analyze(); try await settle(store); store.showPlans()
+        store.vote(store.session.planOptions[0], value: .down)
+        store.simulateGroupVotes(); store.simulateGroupVotes(); try await settle(store)
+        XCTAssertEqual(store.stage, .winner)
+        XCTAssertEqual(store.session.votes.count, 12)
+        XCTAssertEqual(store.session.winningPlan?.id, "plan-1")
+        XCTAssertEqual(store.session.winningPlan?.id, VoteEngine.winner(in: store.session)?.id)
+        store.reset(); store.analyze(); try await settle(store); store.showPlans()
+        store.vote(store.session.planOptions[0], value: .pass)
+        store.vote(store.session.planOptions[1], value: .down)
+        store.simulateGroupVotes(); try await settle(store)
+        XCTAssertEqual(store.session.winningPlan?.id, "plan-2", "Alex's vote must count; never hardcode the winner")
+    }
+    func testResetCancelsInFlightAnalysis() async throws {
+        let store = QuestStore(phaseDelay: .milliseconds(25), voteDelay: .zero)
+        store.analyze(); store.reset()
+        try await Task.sleep(for: .milliseconds(150))
+        XCTAssertEqual(store.stage, .conversation)
+        XCTAssertTrue(store.session.planOptions.isEmpty)
+    }
+    func testWinningDemoResumesAfterMapsAndInsertsOnlyOnRequest() async throws {
+        let store = makeStore(); store.analyze(); try await settle(store); store.showPlans()
+        store.vote(store.session.planOptions[0], value: .down)
+        store.simulateGroupVotes(); try await settle(store)
+        var inserted: SessionLink?
+        store.insert = { _, link in inserted = link }
+        XCTAssertNil(inserted)
+        store.rememberMapsReturn()
+        let reopened = makeStore()
+        XCTAssertTrue(reopened.resumeAfterMaps())
+        XCTAssertEqual(reopened.stage, .winner)
+        XCTAssertEqual(reopened.session.winningPlan?.id, "plan-1")
+        store.share(); XCTAssertTrue(try XCTUnwrap(inserted).isDemo)
+        XCTAssertFalse(makeStore().resumeAfterMaps())
+    }
+}
