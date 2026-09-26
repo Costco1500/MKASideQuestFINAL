@@ -20,6 +20,7 @@
 		773EB96AB2FC602E1F80FF0F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
 		922E56DB188D0432795B1480 /* SideQuestCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448BC1702DE5EFF917FD7781 /* SideQuestCore.framework */; };
 		933A4E2167D1543C0D5A4144 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
+		A76A77E80B7B61F2B8136EC7 /* MessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33E659C8D6B3FD3FEBF8CEC /* MessageTests.swift */; };
 		AA939C539EFE5782D94D707B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
 		B9963331BEBA2E1220DFE956 /* QuestFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37CBB340F77C8372B1EFE30E /* QuestFlowView.swift */; };
 		C21DE472F18D324ABDDADA2A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
@@ -107,6 +108,7 @@
 		B33D9F9B5C9604CE45A0CC8B /* ProfileSetupView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ProfileSetupView.swift; path = iOS/Shared/ProfileSetupView.swift; sourceTree = "<group>"; };
 		B7CEE04B47375DE4CE98E4D7 /* SideQuestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SideQuestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8CCAAEFE789C7C9C6499AE1 /* ShellTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ShellTests.swift; path = iOS/Tests/ShellTests.swift; sourceTree = "<group>"; };
+		D33E659C8D6B3FD3FEBF8CEC /* MessageTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MessageTests.swift; path = iOS/Tests/MessageTests.swift; sourceTree = "<group>"; };
 		E8453011D7D7A341A706D607 /* SideQuestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SideQuestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FCA69AFF2378409BBE288CE1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
@@ -173,6 +175,7 @@
 			children = (
 				B8CCAAEFE789C7C9C6499AE1 /* ShellTests.swift */,
 				17FCE718858D266564E40E51 /* ProfileTests.swift */,
+				D33E659C8D6B3FD3FEBF8CEC /* MessageTests.swift */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -473,6 +476,7 @@
 			files = (
 				E5441727E63290CA856F829B /* ShellTests.swift in Sources */,
 				F1D362FD2EFC4754A6B16177 /* ProfileTests.swift in Sources */,
+				A76A77E80B7B61F2B8136EC7 /* MessageTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
