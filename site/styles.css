@@ -1,29 +1,43 @@
+/* Colors mirror QuestPalette in iOS/Shared/QuestStyle.swift (light, then dark). */
 :root {
-  --accent: #4747e0;
-  --accent-soft: rgba(71, 71, 224, 0.12);
-  --bg: #f2f2f7;
-  --card: #ffffff;
-  --text: #1c1c1e;
-  --muted: #6e6e73;
-  --line: rgba(60, 60, 67, 0.12);
-  --bubble-them: #e9e9eb;
-  --bubble-me: #0a84ff;
-  --shadow: 0 20px 50px rgba(28, 28, 60, 0.12);
+  --bg: #f6f0e7;
+  --surface: #fdfbf7;
+  --raised: #fff8ef;
+  --clay: #c97854;
+  --amber: #d79a5b;
+  --soft: #e9b87e;
+  --text: #2c2520;
+  --muted: #74675e;
+  --line: #e8ddd1;
+  --link: #964d30;
+  --primary-fill: #995033;
+  --primary-text: #fff8ef;
+  --tint: rgba(201, 120, 84, 0.14);
+  --shadow: 0 8px 20px rgba(44, 37, 32, 0.065);
+  --shadow-lift: 0 18px 40px rgba(44, 37, 32, 0.12);
+  --phone: #2c2520;
   --radius: 24px;
   --font: ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --accent: #6b6bff;
-    --accent-soft: rgba(107, 107, 255, 0.18);
-    --bg: #000000;
-    --card: #1c1c1e;
-    --text: #f2f2f7;
-    --muted: #a1a1a6;
-    --line: rgba(235, 235, 245, 0.14);
-    --bubble-them: #2c2c2e;
-    --shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    --bg: #1b1714;
+    --surface: #27211d;
+    --raised: #332a24;
+    --clay: #d98a64;
+    --amber: #e0a563;
+    --soft: #63472f;
+    --text: #f3e9dd;
+    --muted: #b9aa9d;
+    --line: #43382f;
+    --link: #e9b87e;
+    --primary-fill: #d98a64;
+    --primary-text: #2c2520;
+    --tint: rgba(217, 138, 100, 0.16);
+    --shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    --shadow-lift: 0 18px 40px rgba(0, 0, 0, 0.45);
+    --phone: #0f0c0a;
   }
 }
 
@@ -41,10 +55,10 @@ body {
   overflow-x: hidden;
 }
 
-a { color: var(--accent); }
+a { color: var(--link); }
 
 a:focus-visible, .button:focus-visible {
-  outline: 3px solid var(--accent);
+  outline: 3px solid var(--clay);
   outline-offset: 3px;
   border-radius: 12px;
 }
@@ -60,8 +74,9 @@ a:focus-visible, .button:focus-visible {
 .nav {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px 16px;
   padding-top: 20px;
   padding-bottom: 20px;
 }
@@ -69,7 +84,7 @@ a:focus-visible, .button:focus-visible {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   color: var(--text);
   text-decoration: none;
 }
@@ -77,14 +92,20 @@ a:focus-visible, .button:focus-visible {
 .brand-tile {
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 16px;
-  background: var(--accent);
-  color: #fff;
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 19px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  color: var(--text);
 }
 
+.brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+
 .brand-name { font-size: 1.4rem; font-weight: 700; }
+
+.brand-tagline { color: var(--muted); font-size: 0.78rem; }
 
 .nav nav { display: flex; gap: 20px; }
 
@@ -92,6 +113,7 @@ a:focus-visible, .button:focus-visible {
   color: var(--muted);
   text-decoration: none;
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .nav nav a:hover { color: var(--text); }
@@ -110,8 +132,8 @@ a:focus-visible, .button:focus-visible {
   margin: 0 0 16px;
   padding: 6px 12px;
   border-radius: 999px;
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--tint);
+  color: var(--link);
   font-size: 0.85rem;
   font-weight: 700;
 }
@@ -133,17 +155,25 @@ h1 {
 .actions { display: flex; flex-wrap: wrap; gap: 12px; }
 
 .button {
-  display: inline-block;
-  padding: 14px 22px;
-  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  padding: 12px 22px;
+  border-radius: 22px;
   font-weight: 700;
   text-decoration: none;
 }
 
-.button.primary { background: var(--accent); color: #fff; }
+.button.primary {
+  background: var(--primary-fill);
+  color: var(--primary-text);
+  box-shadow: 0 6px 16px rgba(44, 37, 32, 0.08);
+}
 
 .button.secondary {
-  background: var(--card);
+  border-radius: 20px;
+  background: var(--raised);
   color: var(--text);
   box-shadow: inset 0 0 0 1px var(--line);
 }
@@ -154,8 +184,8 @@ h1 {
   width: min(320px, 100%);
   padding: 12px;
   border-radius: 44px;
-  background: #1c1c1e;
-  box-shadow: var(--shadow);
+  background: var(--phone);
+  box-shadow: var(--shadow-lift);
 }
 
 .phone-screen {
@@ -165,7 +195,7 @@ h1 {
   min-height: 460px;
   padding: 20px 14px;
   border-radius: 34px;
-  background: var(--card);
+  background: var(--bg);
 }
 
 .chat-head {
@@ -187,16 +217,25 @@ h1 {
 
 .bubble b { display: block; font-size: 0.7rem; color: var(--muted); }
 
-.bubble.them { align-self: flex-start; background: var(--bubble-them); }
+.bubble.them {
+  align-self: flex-start;
+  background: var(--raised);
+  border: 1px solid var(--line);
+}
 
-.bubble.me { align-self: flex-end; background: var(--bubble-me); color: #fff; }
+.bubble.me {
+  align-self: flex-end;
+  background: var(--primary-fill);
+  color: var(--primary-text);
+}
 
 .plan-card {
   margin-top: 8px;
   padding: 14px;
   border-radius: 20px;
-  background: var(--bg);
-  box-shadow: inset 0 0 0 1px var(--line);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
 }
 
 .plan-top { display: flex; justify-content: space-between; align-items: center; }
@@ -206,8 +245,8 @@ h1 {
 .plan-match {
   padding: 3px 8px;
   border-radius: 999px;
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--tint);
+  color: var(--link);
   font-size: 0.75rem;
   font-weight: 700;
 }
@@ -221,14 +260,19 @@ h1 {
 .votes span {
   flex: 1;
   padding: 6px 0;
-  border-radius: 10px;
-  background: var(--card);
+  border-radius: 12px;
+  background: var(--raised);
+  border: 1px solid var(--line);
   text-align: center;
   font-size: 0.72rem;
   font-weight: 700;
 }
 
-.votes span:first-child { background: var(--accent); color: #fff; }
+/* Selected vote uses the app's selected secondary button: soft fill, clay border. */
+.votes span:first-child {
+  background: var(--soft);
+  border: 2px solid var(--clay);
+}
 
 /* Sections */
 .section { padding-top: 56px; padding-bottom: 56px; }
@@ -244,7 +288,9 @@ h2 {
 .card {
   padding: 20px;
   border-radius: var(--radius);
-  background: var(--card);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
 }
 
 .steps {
@@ -265,8 +311,8 @@ h2 {
   width: 36px;
   height: 36px;
   border-radius: 12px;
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--soft);
+  color: var(--text);
   font-weight: 800;
 }
 
@@ -304,8 +350,8 @@ h2 {
   height: 64px;
   margin-bottom: 12px;
   border-radius: 50%;
-  background: var(--accent);
-  color: #fff;
+  background: var(--primary-fill);
+  color: var(--primary-text);
   font-size: 1.4rem;
   padding-left: 4px;
 }
@@ -330,15 +376,20 @@ h2 {
   .steps { grid-template-columns: repeat(3, 1fr); }
 }
 
+@media (max-width: 520px) {
+  .brand-tagline { display: none; }
+}
+
 @media (max-width: 420px) {
   .nav nav { gap: 14px; font-size: 0.9rem; }
-  .actions .button { flex: 1 1 100%; text-align: center; }
+  .actions .button { flex: 1 1 100%; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .button, .card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
   .button:hover { transform: translateY(-1px); }
-  .steps .card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+  .button:active { transform: scale(0.985); }
+  .steps .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lift); }
 }
 
 @media (prefers-reduced-motion: reduce) {
