@@ -9,7 +9,7 @@
   <meta property="og:title" content="SideQuest — Less planning. More hanging out.">
   <meta property="og:description" content="Turn the group chat into your next good memory. An iMessage app built at HackGT 13.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="styles.css?v=4">
   <script>
     document.documentElement.classList.add("js");
     // Apply a saved theme before first paint to avoid a flash. No saved choice = follow the system.
@@ -52,17 +52,46 @@
       </div>
 
       <div class="phone" aria-hidden="true">
+        <span class="btn action"></span><span class="btn vol-up"></span><span class="btn vol-down"></span><span class="btn power"></span>
         <div class="phone-screen">
-          <div class="chat-head">Weekend crew</div>
-          <div class="bubble them"><b>Maya</b>we should actually hang out this week</div>
-          <div class="bubble them"><b>Jake</b>I’m free after 6 but broke lol</div>
-          <div class="bubble me">Let me SideQuest it</div>
-          <div class="plan-card">
-            <div class="plan-top"><span class="plan-emoji">🎨</span><span class="plan-match">92% match</span></div>
-            <div class="plan-title">Pottery night + tacos</div>
-            <div class="plan-meta">Thu · 7–9 PM · ~$20 each</div>
-            <div class="votes"><span class="on">Down 3</span><span>Maybe 1</span><span>Pass 0</span></div>
+          <div class="island"></div>
+          <div class="status-bar">
+            <span>9:41</span>
+            <span class="status-icons">
+              <svg width="17" height="11" viewBox="0 0 17 11"><g fill="currentColor"><rect x="0" y="7" width="3" height="4" rx="1"/><rect x="4.5" y="5" width="3" height="6" rx="1"/><rect x="9" y="2.5" width="3" height="8.5" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></g></svg>
+              <svg width="15" height="11" viewBox="0 0 15 11"><path fill="currentColor" d="M7.5 2.3c2 0 3.8.8 5.2 2.1l1.1-1.1A8.9 8.9 0 0 0 7.5.7 8.9 8.9 0 0 0 1.2 3.3l1.1 1.1a7.4 7.4 0 0 1 5.2-2.1zm0 3.2c1.1 0 2.2.4 3 1.2l1.1-1.1a5.8 5.8 0 0 0-8.2 0l1.1 1.1c.8-.8 1.9-1.2 3-1.2zm0 3.1c-.4 0-.8.2-1.1.5L7.5 10.2l1.1-1.1c-.3-.3-.7-.5-1.1-.5z"/></svg>
+              <svg width="26" height="12" viewBox="0 0 26 12"><rect x="0.5" y="0.5" width="22" height="11" rx="3.5" fill="none" stroke="currentColor" opacity="0.4"/><rect x="2" y="2" width="19" height="8" rx="2" fill="currentColor"/><path d="M24 4v4c.8-.3 1.3-1.1 1.3-2S24.8 4.3 24 4z" fill="currentColor" opacity="0.4"/></svg>
+            </span>
           </div>
+          <div class="chat-header">
+            <span class="back">‹</span>
+            <div class="avatars"><span>M</span><span>J</span><span>+3</span></div>
+            <span class="group-name">Weekend crew</span>
+          </div>
+          <div class="thread">
+            <div class="stamp">Today 6:12 PM</div>
+            <div class="bubble them"><b>Alex</b>we haven’t hung out in forever 😭</div>
+            <div class="bubble them"><b>Maya</b>we should actually hang out this week</div>
+            <div class="bubble them"><b>Jake</b>I’m free after 6 but broke lol</div>
+            <div class="bubble me">Let me SideQuest it</div>
+            <div class="plan-card">
+              <div class="plan-body">
+                <div class="plan-top"><span class="plan-emoji">🎨</span><span class="plan-match">92% match</span></div>
+                <div class="plan-title">Pottery night + tacos</div>
+                <div class="plan-meta">Thu · 7–9 PM · ~$20 each</div>
+                <div class="votes"><span class="on">Down 3</span><span>Maybe 1</span><span>Pass 0</span></div>
+              </div>
+              <div class="plan-caption"><b>SideQuest</b> <span>· Tap to vote</span></div>
+            </div>
+            <div class="delivered">Delivered</div>
+          </div>
+          <div class="compose">
+            <span class="plus">+</span>
+            <span class="field">iMessage
+              <svg width="12" height="16" viewBox="0 0 12 16"><path fill="currentColor" d="M6 10.5A2.5 2.5 0 0 0 8.5 8V3a2.5 2.5 0 0 0-5 0v5A2.5 2.5 0 0 0 6 10.5zM10.5 8h-1a3.5 3.5 0 0 1-7 0h-1a4.5 4.5 0 0 0 4 4.47V15h1v-2.53a4.5 4.5 0 0 0 4-4.47z"/></svg>
+            </span>
+          </div>
+          <div class="home-indicator"></div>
         </div>
       </div>
     </section>
