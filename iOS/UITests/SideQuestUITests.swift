@@ -107,10 +107,14 @@ final class SideQuestUITests: XCTestCase {
     }
     func testMessagesWinnerOffersCalendarAndShare() {
         let messages = openMessagesExtension()
+        // Stable planner categories exercise real MapKit and the offline demo path.
+        // Other planning tests use the live server; this test focuses on native handoffs.
+        setPlanningServer(in: messages, url: "http://127.0.0.1:9")
         waitForStableFrame(messages.buttons["Try Demo"]); messages.buttons["Try Demo"].tap()
         readDemoChat(in: messages)
         waitForStableFrame(messages.buttons["generatePlans"]); messages.buttons["generatePlans"].tap()
         XCTAssertTrue(messages.staticTexts["Make it a group yes."].waitForExistence(timeout: 60))
+        setPlanningServer(in: messages, url: nil)
         let groundedPlan = messages.buttons.matching(NSPredicate(format: "identifier BEGINSWITH %@", "openMaps-")).firstMatch
         XCTAssertTrue(groundedPlan.waitForExistence(timeout: 8), "At least one live demo search should resolve a venue")
         let planID = String(groundedPlan.identifier.dropFirst("openMaps-".count))
@@ -139,8 +143,17 @@ final class SideQuestUITests: XCTestCase {
             for _ in 0..<3 where !sidequest.exists { messages.swipeUp() }
             XCTAssertTrue(sidequest.waitForExistence(timeout: 5)); sidequest.tap()
         }
+        // iOS restores the Messages extension in its half-height system sheet.
+        let grabber = messages.buttons["Sheet Grabber"]
+        if grabber.waitForExistence(timeout: 3), grabber.value as? String == "Half screen" {
+            grabber.tap()
+            waitForStableFrame(messages.scrollViews["questScroll"])
+        }
         let calendar = messages.buttons["Add to Calendar"]
-        reveal(calendar, in: messages)
+        let restored = XCTAttachment(screenshot: messages.screenshot()); restored.lifetime = .keepAlways; add(restored)
+        for _ in 0..<5 where !calendar.isHittable {
+            messages.scrollViews["questScroll"].swipeUp(velocity: .slow)
+        }
         waitForStableFrame(calendar); calendar.tap()
         XCTAssertTrue(messages.buttons["Cancel"].waitForExistence(timeout: 10))
         let screenshot = XCTAttachment(screenshot: messages.screenshot()); screenshot.lifetime = .keepAlways; add(screenshot)
@@ -156,6 +169,20 @@ final class SideQuestUITests: XCTestCase {
         XCTAssertTrue(analyze.waitForExistence(timeout: 8))
         let loaded = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@ AND enabled == true", "Analyze Recent Chat"), object: analyze)
         XCTAssertEqual(XCTWaiter.wait(for: [loaded], timeout: 15), .completed)
+    }
+    private func setPlanningServer(in app: XCUIApplication, url: String?) {
+        waitForStableFrame(app.buttons["Settings"]); app.buttons["Settings"].tap()
+        if let url {
+            let field = app.textFields["https://your-sidequest-api.example"]
+            XCTAssertTrue(field.waitForExistence(timeout: 5)); field.tap()
+            field.typeText(String(repeating: XCUIKeyboardKey.delete.rawValue, count: (field.value as? String ?? "").count))
+            field.typeText(url)
+        } else {
+            app.buttons["Use local demo server"].tap()
+        }
+        app.buttons["Save server"].tap()
+        XCTAssertTrue(app.staticTexts["Server saved."].exists)
+        app.buttons["Done"].tap()
     }
     func testScreenshotReviewSelectionAndSenderCorrection() {
         let app = XCUIApplication(); app.launch()
@@ -198,7 +225,7 @@ final class SideQuestUITests: XCTestCase {
         waitForStableFrame(scan); scan.tap()
         XCTAssertTrue(app.buttons["Cancel"].waitForExistence(timeout: 10))
         let photos = app.images.matching(NSPredicate(format: "identifier == %@ AND label BEGINSWITH %@", "PXGGridLayout-Info", "Photo, Screenshot"))
-        guard photos.count >= 3 else {
+        guard photos.element(boundBy: 2).waitForExistence(timeout: 10) else {
             app.buttons["Cancel"].tap()
             throw XCTSkip("Seed the three exported demo screenshots into Simulator Photos first; see OCR/session TDD evidence.")
         }
@@ -236,7 +263,7 @@ final class SideQuestUITests: XCTestCase {
         if photos.buttons["Continue"].waitForExistence(timeout: 3) { photos.buttons["Continue"].tap() }
         if photos.buttons["Cancel"].exists { photos.buttons["Cancel"].tap() }
         let screenshots = photos.images.matching(NSPredicate(format: "identifier == %@ AND label BEGINSWITH %@", "PXGGridLayout-Info", "Photo, Screenshot"))
-        guard screenshots.count >= 3 else { throw XCTSkip("Seed the three demo screenshots into Simulator Photos first.") }
+        guard screenshots.element(boundBy: 2).waitForExistence(timeout: 10) else { throw XCTSkip("Seed the three demo screenshots into Simulator Photos first.") }
         photos.buttons["Select"].tap()
         for index in [2, 1, 0] {
             screenshots.element(boundBy: index).coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
