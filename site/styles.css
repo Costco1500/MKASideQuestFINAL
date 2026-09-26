@@ -607,6 +607,304 @@ h2 {
 
 .steps p { margin: 0; color: var(--muted); }
 
+/* Step illustrations. Base styles are the finished state; motion lives in the reduced-motion-aware block below. */
+.viz {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  aspect-ratio: 4 / 3;
+  margin-bottom: 22px;
+  padding: 18px;
+  overflow: hidden;
+  border-radius: 24px;
+  background: var(--surface);
+  box-shadow: 0 1px 0 var(--line), 0 12px 30px -18px rgba(29, 26, 23, 0.25);
+  font-size: 12px;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.v-badge {
+  align-self: center;
+  margin-top: 14px;
+  padding: 5px 12px;
+  border-radius: 980px;
+  background: var(--tint);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+/* 1. Start: app drawer tap sends an invite card into the thread */
+.viz-start { justify-content: space-between; padding-bottom: 12px; }
+
+.v-thread { display: flex; flex-direction: column; gap: 8px; }
+
+.v-bubble {
+  align-self: flex-start;
+  max-width: 80%;
+  padding: 7px 11px;
+  border-radius: 16px;
+  background: var(--bubble);
+}
+
+.v-invite {
+  display: flex;
+  align-items: center;
+  align-self: flex-end;
+  gap: 9px;
+  width: 72%;
+  padding: 9px 11px;
+  border-radius: 16px;
+  background: var(--band);
+  border: 0.5px solid var(--line);
+}
+
+.v-spark {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 9px;
+  background: var(--pill);
+  color: var(--pill-text);
+}
+
+.v-invite-text { display: flex; flex-direction: column; }
+
+.v-invite-text b { font-size: 12px; }
+
+.v-invite-text span { color: var(--muted); font-size: 10px; letter-spacing: 0; }
+
+.v-drawer {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 0.5px solid var(--line);
+}
+
+.v-app {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--bubble);
+}
+
+.v-app.v-sq { background: var(--pill); color: var(--pill-text); }
+
+/* 2. Scan: a chat screenshot with a sweeping scan line */
+.v-shot {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 64%;
+  margin: 0 auto;
+  padding: 12px;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--band);
+  border: 0.5px solid var(--line);
+}
+
+.v-shot i {
+  display: block;
+  width: var(--w);
+  height: 11px;
+  border-radius: 6px;
+  background: var(--tint);
+}
+
+.v-shot i.r { align-self: flex-end; background: color-mix(in srgb, var(--pill) 45%, transparent); }
+
+.v-scanline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 2px;
+  background: var(--pill);
+  box-shadow: 0 0 12px 2px color-mix(in srgb, var(--pill) 55%, transparent);
+  opacity: 0;
+}
+
+/* 3. Done: avatars get checkmarks as the progress bar fills */
+.v-people {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.v-people li { position: relative; }
+
+.v-av {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--c);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.v-tick {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  display: grid;
+  place-items: center;
+  width: 17px;
+  height: 17px;
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+  background: #526b42;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.v-progress {
+  width: 70%;
+  height: 6px;
+  margin: 18px auto 0;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--bubble);
+}
+
+.v-progress span { display: block; width: 100%; height: 100%; border-radius: 3px; background: var(--pill); }
+
+/* 4. Plans: three plan cards fan out */
+.viz-plans { align-items: center; }
+
+.v-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 33%;
+  padding: 12px 11px;
+  border-radius: 16px;
+  background: var(--band);
+  border: 0.5px solid var(--line);
+  box-shadow: 0 10px 24px -14px rgba(29, 26, 23, 0.4);
+}
+
+.v-card span { font-size: 22px; line-height: 1.2; }
+
+.v-card b { font-size: 12px; }
+
+.v-card em { color: var(--muted); font-size: 10px; font-style: normal; letter-spacing: 0; }
+
+.v-card.c1 { transform: translate(-122%, -44%) rotate(-7deg); }
+.v-card.c2 { transform: translate(-50%, -54%); background: var(--surface); border-color: var(--pill); }
+.v-card.c3 { transform: translate(22%, -44%) rotate(7deg); align-items: flex-end; text-align: right; }
+
+/* 5. Vote: bars grow and the winner is crowned */
+.viz-vote { gap: 10px; }
+
+.v-row {
+  display: grid;
+  grid-template-columns: 74px 1fr 14px 18px;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 12px;
+}
+
+.v-row.win { background: var(--tint); }
+
+.v-label { font-size: 11px; font-weight: 600; white-space: nowrap; }
+
+.v-bar { height: 8px; overflow: hidden; border-radius: 4px; background: var(--bubble); }
+
+.v-bar span { display: block; width: var(--w); height: 100%; border-radius: 4px; background: var(--pill); }
+
+.v-row:not(.win) .v-bar span { background: color-mix(in srgb, var(--pill) 45%, transparent); }
+
+.v-count { color: var(--muted); font-size: 11px; font-weight: 600; text-align: right; }
+
+.v-crown { font-size: 13px; }
+
+.v-chips { display: flex; justify-content: center; gap: 6px; margin-top: 4px; }
+
+.v-chips span {
+  padding: 4px 10px;
+  border-radius: 980px;
+  background: var(--bubble);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.v-chips .on { background: var(--pill); color: var(--pill-text); }
+
+/* 6. Calendar: the event drops into Thursday evening */
+.v-cal {
+  width: 76%;
+  margin: 0 auto;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--band);
+  border: 0.5px solid var(--line);
+}
+
+.v-cal-head {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 8px 12px 6px;
+  border-bottom: 0.5px solid var(--line);
+}
+
+.v-cal-head span { color: var(--accent); font-size: 10px; font-weight: 600; letter-spacing: 0; }
+
+.v-cal-head b { font-size: 16px; }
+
+.v-hours { position: relative; padding: 2px 0; }
+
+.v-hours > span {
+  display: block;
+  height: 24px;
+  padding-left: 10px;
+  border-top: 0.5px solid var(--line);
+  color: var(--muted);
+  font-size: 9px;
+  letter-spacing: 0;
+  line-height: 18px;
+}
+
+.v-hours > span:first-child { border-top: 0; }
+
+.v-event {
+  position: absolute;
+  top: 28px;
+  left: 44px;
+  right: 8px;
+  height: 46px;
+  padding: 5px 8px;
+  border-left: 3px solid var(--pill);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--pill) 22%, var(--surface));
+}
+
+.v-event b { display: block; font-size: 11px; }
+
+.v-event span { color: var(--muted); font-size: 10px; letter-spacing: 0; }
+
 /* Demo */
 .demo { padding: 120px 0; }
 
@@ -737,6 +1035,102 @@ h2 {
   .js .reveal-group.in li:nth-child(3) { opacity: 0.68; transition-delay: calc(var(--group-delay) + 0.24s); }
   .js .reveal-group.in li:nth-child(4) { opacity: 0.5; transition-delay: calc(var(--group-delay) + 0.36s); }
   .js .reveal-group.in li:nth-child(5) { opacity: 0.6; transition-delay: calc(var(--group-delay) + 0.5s); }
+}
+
+/* Step illustrations: each plays a 7s loop once its step has scrolled in (.in). Keyframes end/hold on
+   the finished state defined in the base styles, which is also what reduced-motion visitors see. */
+@media (prefers-reduced-motion: no-preference) {
+  .steps > li.in .v-bubble { animation: v-fade 7s ease infinite both; }
+  .steps > li.in .v-sq { animation: v-tap 7s ease infinite; }
+  .steps > li.in .v-invite { animation: v-slide-in 7s var(--ease-out) infinite both; }
+
+  .steps > li.in .v-scanline { animation: v-scan 7s linear infinite; }
+  .steps > li.in .v-shot i { animation: v-hl 7s ease infinite both; }
+  .steps > li.in .v-shot i:nth-child(1) { animation-delay: 0.3s; }
+  .steps > li.in .v-shot i:nth-child(2) { animation-delay: 0.9s; }
+  .steps > li.in .v-shot i:nth-child(3) { animation-delay: 1.5s; }
+  .steps > li.in .v-shot i:nth-child(4) { animation-delay: 2.1s; }
+  .steps > li.in .v-shot i:nth-child(5) { animation-delay: 2.7s; }
+  .steps > li.in .v-shot i:nth-child(6) { animation-delay: 3.3s; }
+  .steps > li.in .viz-scan .v-badge { animation: v-pop 7s var(--ease-out) infinite both; }
+
+  .steps > li.in .v-tick { animation: v-tick-pop 7s var(--ease-out) infinite both; }
+  .steps > li.in .v-people li:nth-child(1) .v-tick { animation-delay: 0.4s; }
+  .steps > li.in .v-people li:nth-child(2) .v-tick { animation-delay: 0.85s; }
+  .steps > li.in .v-people li:nth-child(3) .v-tick { animation-delay: 1.3s; }
+  .steps > li.in .v-people li:nth-child(4) .v-tick { animation-delay: 1.75s; }
+  .steps > li.in .v-people li:nth-child(5) .v-tick { animation-delay: 2.2s; }
+  .steps > li.in .v-progress span { animation: v-fill 7s ease infinite both; }
+  .steps > li.in .viz-done .v-badge { animation: v-pop 7s var(--ease-out) -0.7s infinite both; }
+
+  .steps > li.in .v-card.c2 { animation: v-fan2 7s var(--ease-out) infinite both; }
+  .steps > li.in .v-card.c1 { animation: v-fan1 7s var(--ease-out) infinite both; }
+  .steps > li.in .v-card.c3 { animation: v-fan3 7s var(--ease-out) infinite both; }
+
+  .steps > li.in .v-chips .on { animation: v-tap 7s ease infinite; }
+  .steps > li.in .v-bar span { animation: v-grow 7s var(--ease-out) infinite both; }
+  .steps > li.in .v-count { animation: v-count 7s ease infinite both; }
+  .steps > li.in .v-row.win { animation: v-win 7s ease infinite both; }
+  .steps > li.in .v-crown { animation: v-pop 7s var(--ease-out) -0.5s infinite both; }
+
+  .steps > li.in .v-event { animation: v-drop 7s var(--ease-out) infinite both; }
+  .steps > li.in .viz-cal .v-badge { animation: v-pop 7s var(--ease-out) -0.7s infinite both; }
+
+  @keyframes v-fade { 0% { opacity: 0; transform: translateY(8px); } 8%, 90% { opacity: 1; transform: none; } 97%, 100% { opacity: 0; } }
+  @keyframes v-tap {
+    0%, 8% { transform: scale(1); box-shadow: 0 0 0 0 transparent; }
+    12% { transform: scale(0.84); }
+    18% { transform: scale(1); box-shadow: 0 0 0 7px var(--tint); }
+    26%, 100% { transform: scale(1); box-shadow: 0 0 0 0 transparent; }
+  }
+  @keyframes v-slide-in {
+    0%, 16% { opacity: 0; transform: translateY(70px) scale(0.9); }
+    32%, 88% { opacity: 1; transform: none; }
+    96%, 100% { opacity: 0; transform: none; }
+  }
+  @keyframes v-scan {
+    0% { top: 0; opacity: 0; }
+    4% { opacity: 1; }
+    52% { top: 100%; opacity: 1; }
+    56%, 100% { top: 100%; opacity: 0; }
+  }
+  @keyframes v-hl { 0% { opacity: 0.3; } 5%, 78% { opacity: 1; } 90%, 100% { opacity: 0.3; } }
+  @keyframes v-pop {
+    0%, 55% { opacity: 0; transform: scale(0.8); }
+    62% { opacity: 1; transform: scale(1.05); }
+    66%, 88% { opacity: 1; transform: scale(1); }
+    96%, 100% { opacity: 0; transform: scale(1); }
+  }
+  @keyframes v-tick-pop {
+    0% { transform: scale(0); }
+    5% { transform: scale(1.3); }
+    8%, 76% { transform: scale(1); }
+    84%, 100% { transform: scale(0); }
+  }
+  @keyframes v-fill { 0%, 5% { width: 0; } 40%, 86% { width: 100%; } 94%, 100% { width: 0; } }
+  @keyframes v-fan2 {
+    0%, 4% { opacity: 0; transform: translate(-50%, -20%) scale(0.9); }
+    22%, 88% { opacity: 1; transform: translate(-50%, -54%); }
+    96%, 100% { opacity: 0; transform: translate(-50%, -54%); }
+  }
+  @keyframes v-fan1 {
+    0%, 10% { opacity: 0; transform: translate(-50%, -40%) scale(0.9); }
+    30%, 88% { opacity: 1; transform: translate(-122%, -44%) rotate(-7deg); }
+    96%, 100% { opacity: 0; transform: translate(-122%, -44%) rotate(-7deg); }
+  }
+  @keyframes v-fan3 {
+    0%, 14% { opacity: 0; transform: translate(-50%, -40%) scale(0.9); }
+    34%, 88% { opacity: 1; transform: translate(22%, -44%) rotate(7deg); }
+    96%, 100% { opacity: 0; transform: translate(22%, -44%) rotate(7deg); }
+  }
+  @keyframes v-grow { 0%, 14% { width: 0; } 44%, 86% { width: var(--w); } 94%, 100% { width: 0; } }
+  @keyframes v-count { 0%, 30% { opacity: 0; } 42%, 86% { opacity: 1; } 94%, 100% { opacity: 0; } }
+  @keyframes v-win { 0%, 44% { background: transparent; } 52%, 86% { background: var(--tint); } 94%, 100% { background: transparent; } }
+  @keyframes v-drop {
+    0%, 10% { opacity: 0; transform: translateY(-46px); }
+    28%, 88% { opacity: 1; transform: none; }
+    96%, 100% { opacity: 0; transform: none; }
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

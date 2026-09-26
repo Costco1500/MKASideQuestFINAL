@@ -9,7 +9,7 @@
   <meta property="og:title" content="SideQuest — Less planning. More hanging out.">
   <meta property="og:description" content="Turn the group chat into your next good memory. An iMessage app built at HackGT 13.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="styles.css?v=6">
   <script>
     document.documentElement.classList.add("js");
     // Apply a saved theme before first paint to avoid a flash. No saved choice = follow the system.
@@ -122,31 +122,89 @@
         <h2 class="reveal">How it works.</h2>
         <ol class="steps">
           <li class="reveal">
+            <div class="viz viz-start" aria-hidden="true">
+              <div class="v-thread">
+                <div class="v-bubble">let’s do something this weekend</div>
+                <div class="v-invite">
+                  <span class="v-spark"><svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M10 2.5l1.8 5.2 5.2 1.8-5.2 1.8L10 16.5l-1.8-5.2L3 9.5l5.2-1.8zM18.5 14l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/></svg></span>
+                  <span class="v-invite-text"><b>SideQuest</b><span>Join the plan · 5 invited</span></span>
+                </div>
+              </div>
+              <div class="v-drawer">
+                <span class="v-app"></span><span class="v-app"></span>
+                <span class="v-app v-sq"><svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M10 2.5l1.8 5.2 5.2 1.8-5.2 1.8L10 16.5l-1.8-5.2L3 9.5l5.2-1.8zM18.5 14l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/></svg></span>
+                <span class="v-app"></span>
+              </div>
+            </div>
             <span class="step-num">01</span>
             <h3>Start a SideQuest.</h3>
             <p>Open it from the + menu in any conversation and drop the invite into the group chat.</p>
           </li>
           <li class="reveal">
+            <div class="viz viz-scan" aria-hidden="true">
+              <div class="v-shot">
+                <i class="l" style="--w: 72%"></i>
+                <i class="l" style="--w: 50%"></i>
+                <i class="r" style="--w: 58%"></i>
+                <i class="l" style="--w: 80%"></i>
+                <i class="r" style="--w: 44%"></i>
+                <i class="l" style="--w: 62%"></i>
+                <span class="v-scanline"></span>
+              </div>
+              <span class="v-badge">8 messages found</span>
+            </div>
             <span class="step-num">02</span>
             <h3>Scan the chat.</h3>
             <p>Add a few screenshots. Text is recognized on your iPhone, and you choose which messages count.</p>
           </li>
           <li class="reveal">
+            <div class="viz viz-done" aria-hidden="true">
+              <ul class="v-people">
+                <li><span class="v-av" style="--c: #c97854">M</span><span class="v-tick">✓</span></li>
+                <li><span class="v-av" style="--c: #d79a5b">J</span><span class="v-tick">✓</span></li>
+                <li><span class="v-av" style="--c: #8b7d72">P</span><span class="v-tick">✓</span></li>
+                <li><span class="v-av" style="--c: #a8674a">A</span><span class="v-tick">✓</span></li>
+                <li><span class="v-av" style="--c: #b58a5c">S</span><span class="v-tick">✓</span></li>
+              </ul>
+              <div class="v-progress"><span></span></div>
+              <span class="v-badge">Everyone’s in</span>
+            </div>
             <span class="step-num">03</span>
             <h3>Everyone taps Done.</h3>
             <p>Each friend adds their availability, budget and rough area. Planning waits for the whole group.</p>
           </li>
           <li class="reveal">
+            <div class="viz viz-plans" aria-hidden="true">
+              <div class="v-card c1"><span>🎳</span><b>Bowling</b><em>Fri · ~$18</em></div>
+              <div class="v-card c3"><span>🌮</span><b>Tacos</b><em>Sat · ~$15</em></div>
+              <div class="v-card c2"><span>🎨</span><b>Pottery</b><em>Thu · ~$20</em></div>
+            </div>
             <span class="step-num">04</span>
             <h3>Get three plans.</h3>
             <p>AI suggests hangouts that fit everyone’s free time, lowest budget, age and location.</p>
           </li>
           <li class="reveal">
+            <div class="viz viz-vote" aria-hidden="true">
+              <div class="v-row win"><span class="v-label">🎨 Pottery</span><span class="v-bar"><span style="--w: 86%"></span></span><span class="v-count">4</span><span class="v-crown">👑</span></div>
+              <div class="v-row"><span class="v-label">🎳 Bowling</span><span class="v-bar"><span style="--w: 44%"></span></span><span class="v-count">2</span></div>
+              <div class="v-row"><span class="v-label">🌮 Tacos</span><span class="v-bar"><span style="--w: 22%"></span></span><span class="v-count">1</span></div>
+              <div class="v-chips"><span class="on">Down</span><span>Maybe</span><span>Pass</span></div>
+            </div>
             <span class="step-num">05</span>
             <h3>Vote in Messages.</h3>
             <p>Down, Maybe or Pass. The winner is picked fairly and deterministically.</p>
           </li>
           <li class="reveal">
+            <div class="viz viz-cal" aria-hidden="true">
+              <div class="v-cal">
+                <div class="v-cal-head"><span>THU</span><b>2</b></div>
+                <div class="v-hours">
+                  <span>6 PM</span><span>7 PM</span><span>8 PM</span><span>9 PM</span>
+                  <div class="v-event"><b>Pottery night + tacos</b><span>7–9 PM</span></div>
+                </div>
+              </div>
+              <span class="v-badge">Added to Calendar ✓</span>
+            </div>
             <span class="step-num">06</span>
             <h3>Lock it in.</h3>
             <p>Share the winning plan to the thread and add it to your calendar in one tap.</p>
