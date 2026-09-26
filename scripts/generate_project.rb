@@ -4,6 +4,7 @@ root = File.expand_path('..', __dir__)
 Dir.chdir(root)
 path = 'SideQuest.xcodeproj'
 project = File.exist?(path) ? Xcodeproj::Project.open(path) : Xcodeproj::Project.new(path)
+project.files.select { |file| file.path&.start_with?('iOS/') && !File.exist?(file.path) }.each(&:remove_from_project)
 definitions = {
   'SideQuestCore' => [:framework, ['iOS/Core'], 'com.sidequest.core'],
   'SideQuest' => [:application, ['iOS/App', 'iOS/Shared'], 'com.sidequest.app'],
