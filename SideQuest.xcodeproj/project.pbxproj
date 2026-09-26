@@ -32,6 +32,7 @@
 		8FC5B7BCB65902F4AD3F5EB2 /* ScreenshotMessageParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 809C0AE43BD4D5AD20C5DA7B /* ScreenshotMessageParser.swift */; };
 		922E56DB188D0432795B1480 /* SideQuestCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448BC1702DE5EFF917FD7781 /* SideQuestCore.framework */; };
 		933A4E2167D1543C0D5A4144 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
+		9D532E7BAAC33A7C445CA0C9 /* SharedImportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 514CD008A0FBEED13FD8FCBF /* SharedImportTests.swift */; };
 		A1D83610A84ACDF137263857 /* PlanCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7848DFCF7700445A3E0A6F0A /* PlanCard.swift */; };
 		A76A77E80B7B61F2B8136EC7 /* MessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33E659C8D6B3FD3FEBF8CEC /* MessageTests.swift */; };
 		AA939C539EFE5782D94D707B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCA69AFF2378409BBE288CE1 /* Foundation.framework */; };
@@ -129,6 +130,7 @@
 		448BC1702DE5EFF917FD7781 /* SideQuestCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SideQuestCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		484EB1630A1E6DF1F3B559A5 /* MessagesViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MessagesViewController.swift; path = iOS/MessagesExtension/MessagesViewController.swift; sourceTree = "<group>"; };
 		4EAAC255185CA48773439E49 /* SessionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SessionTests.swift; path = iOS/Tests/SessionTests.swift; sourceTree = "<group>"; };
+		514CD008A0FBEED13FD8FCBF /* SharedImportTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SharedImportTests.swift; path = iOS/Tests/SharedImportTests.swift; sourceTree = "<group>"; };
 		625930BA50A00E3FF2CAAF78 /* OnboardingView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OnboardingView.swift; path = iOS/App/OnboardingView.swift; sourceTree = "<group>"; };
 		679194ADE9B4CC3EFB31FCD0 /* CalendarEventEditor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CalendarEventEditor.swift; path = iOS/Shared/CalendarEventEditor.swift; sourceTree = "<group>"; };
 		6843BBB5271423246A6913F4 /* CalendarProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CalendarProvider.swift; path = iOS/Core/CalendarProvider.swift; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 				DE33B095D16EAEEABB2EC5A0 /* ClientAndStoreTests.swift */,
 				8D4244FA07F5EDB013EDB71A /* SessionWorkflowTests.swift */,
 				0F009BD59C081650C4C67C89 /* ScreenshotImportTests.swift */,
+				514CD008A0FBEED13FD8FCBF /* SharedImportTests.swift */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -554,6 +557,7 @@
 				E2BC323A04C3869149B39CA8 /* ClientAndStoreTests.swift in Sources */,
 				E777D17DE4BB8075BBCFEECA /* SessionWorkflowTests.swift in Sources */,
 				329D7B57FA205537C0E3A076 /* ScreenshotImportTests.swift in Sources */,
+				9D532E7BAAC33A7C445CA0C9 /* SharedImportTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
