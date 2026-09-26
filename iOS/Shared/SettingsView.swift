@@ -5,6 +5,8 @@ struct SettingsView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var server = QuestPreferences.server
     @State private var status = ""
+    @State private var chatScript = QuestPreferences.demoChatScript ?? DemoData.conversation
+    @State private var chatScriptStatus = ""
     var body: some View {
         Form {
             Section("Shared-session server") {
@@ -18,6 +20,20 @@ struct SettingsView: View {
                     QuestPreferences.server = server; status = "Server saved."
                 }
                 if !status.isEmpty { Text(status).font(.caption) }
+            }
+            Section("Demo chat script") {
+                TextEditor(text: $chatScript).frame(minHeight: 160).font(.callout).autocorrectionDisabled()
+                    .accessibilityLabel("Demo chat script")
+                Text("One \"Name: message\" per line. \"Read this chat\" shows these messages. Use the demo names so plans and votes line up: \(DemoData.participants().map(\.displayName).joined(separator: ", ")).")
+                    .font(.caption)
+                Button("Save script") {
+                    QuestPreferences.demoChatScript = chatScript
+                    chatScriptStatus = "Script saved · \(DemoData.chatScript(chatScript).count) messages."
+                }
+                Button("Reset to default") {
+                    QuestPreferences.demoChatScript = nil; chatScript = DemoData.conversation; chatScriptStatus = "Default script restored."
+                }
+                if !chatScriptStatus.isEmpty { Text(chatScriptStatus).font(.caption) }
             }
             Section("Privacy") {
                 Text("Imported conversations stay in memory and are cleared after planning. Only selected messages are sent. Calendars contribute busy times, never titles or notes. You can enter your area manually.")

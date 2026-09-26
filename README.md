@@ -7,10 +7,14 @@ Native iPhone app + Messages extension, built with SwiftUI, Messages, EventKit, 
 1. Open `SideQuest.xcodeproj` in Xcode 26.3 or newer.
 2. Choose **SideQuest** and **iPhone 17 Pro**, then Run. The containing app embeds the Messages extension.
 3. In Simulator, open **Messages → a conversation → + → scroll → SideQuest**.
-4. Tap **Try Demo → Analyze 8 selected messages**. Vote Down/Maybe/Pass, then **Set the SideQuest → Add to Calendar**.
+4. Tap **Try Demo → Read this chat → Analyze 8 selected messages**. Vote Down/Maybe/Pass, then **Set the SideQuest → Add to Calendar**.
 5. **Insert poll into Messages** and **Share winning plan** put cards in the compose field. You press Send yourself.
 
 The **SideQuestMessages** scheme launches Messages directly. Try Demo uses the same screens as shared sessions and needs no network, account, or API key. Demo votes are local; switch the “Demo voter” picker to simulate the four participants.
+
+### Presenting the demo
+
+Apple does not let Messages extensions read a conversation, so in demo mode **Read this chat** is simulated: it reveals a scripted conversation one message at a time. Edit the script in **Settings → Demo chat script** (one `Name: message` per line, using Alex, Maya, Jake and Sarah so plans and votes line up), then send those same messages in the group chat you present. The containing app labels the button **Load demo chat**. Planning, voting, availability and calendar steps are the real implementation.
 
 ## Shared sessions
 
@@ -47,7 +51,7 @@ The committed Xcode project runs without generation tools. After adding source f
 
 ## Privacy and limits
 
-- No iMessage history API or scraping. Latest 50 means imported messages only.
+- No iMessage history API or scraping. Latest 50 means imported messages only. The demo's “Read this chat” shows the saved demo script, not Messages content.
 - Raw imports stay in memory, are cleared after planning/extension deactivation, and are never persisted by the server. Only selected, deduplicated messages are sent, at most 50.
 - Calendar data becomes busy intervals immediately; titles, notes, and attendees are not transmitted. Availability and winner selection are deterministic.
 - Location is entered as an approximate area; no GPS tracking. Age ranges are only activity eligibility constraints. Budget uses everyone's lowest comfortable maximum.
