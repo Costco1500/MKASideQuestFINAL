@@ -1,5 +1,6 @@
 import XCTest
 @testable import SideQuestCore
+@testable import SideQuest
 
 final class SharedImportTests: XCTestCase {
     func testRoundTripPendingImportAndClear() throws {
@@ -14,6 +15,26 @@ final class SharedImportTests: XCTestCase {
         try store.clearImportedMessages()
         XCTAssertFalse(store.hasPendingImport)
         XCTAssertEqual(try store.loadImportedMessages(), [])
+    }
+    @MainActor func testReviewConsumesDraftButPreservesImportDuringExistingPoll() throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let handoff = SharedImportStore(directory: directory)
+        let messages = DemoData.chatScript(nil)
+        try handoff.saveImportedMessages(messages)
+        let store = QuestStore(useLiveServices: false)
+        store.startDemo()
+        store.reviewPendingImport(from: handoff)
+        XCTAssertEqual(store.messages, messages)
+        XCTAssertFalse(store.isPreloadedConversation)
+        XCTAssertFalse(handoff.hasPendingImport)
+
+        try handoff.saveImportedMessages(messages)
+        store.session = try SideQuestSession.demo()
+        store.messages = []
+        store.reviewPendingImport(from: handoff)
+        XCTAssertTrue(handoff.hasPendingImport, "A current poll must not swallow a new import")
+        XCTAssertTrue(store.messages.isEmpty)
     }
     func testUnavailableAppGroupFailsRatherThanUsingPrivateDefaults() {
         let store = SharedImportStore(directory: nil)
