@@ -115,12 +115,14 @@ enum MembershipVault {
         guard isDemo else { return }
         importScreenshots(DemoChatScreenshots.images(script: QuestPreferences.demoChatScript))
     }
-    func importScreenshots(_ images: [UIImage]) { recognize { images } }
+    func importScreenshots(_ images: [UIImage]) {
+        recognize { try await ChatScreenshotOCRService().recognizeMessages(from: images) }
+    }
     func importPhotos(_ items: [PhotosPickerItem]) {
         guard !items.isEmpty else { return }
         recognize {
-            var images: [UIImage] = []
-            for item in items {
+            var blocks: [OCRTextBlock] = []
+            for (index, item) in items.enumerated() {
                 try Task.checkCancellation()
                 guard let data = try await item.loadTransferable(type: Data.self),
                       let source = CGImageSourceCreateWithData(data as CFData, nil),
@@ -129,20 +131,23 @@ enum MembershipVault {
                         kCGImageSourceCreateThumbnailWithTransform: true,
                         kCGImageSourceThumbnailMaxPixelSize: 2400
                       ] as CFDictionary) else { throw ScreenshotImportError.unreadableImage }
-                images.append(UIImage(cgImage: image))
+                // Recognize one photo at a time so the extension never retains the whole image batch.
+                let recognized = try await ChatScreenshotOCRService().recognizeMessages(from: [UIImage(cgImage: image)])
+                blocks.append(contentsOf: recognized.map { block in
+                    var ordered = block; ordered.screenshotIndex = index; return ordered
+                })
             }
-            return images
+            return blocks
         }
     }
-    private func recognize(_ load: @escaping () async throws -> [UIImage]) {
+    private func recognize(_ scan: @escaping () async throws -> [OCRTextBlock]) {
         guard isOwner, !busy else { return }
         stopReading(); status = ""; isReading = true
         let scanID = readID
         let names = session?.participants.map(\.displayName) ?? []
         readTask = Task { @MainActor [weak self] in
             do {
-                let images = try await load()
-                let blocks = try await ChatScreenshotOCRService().recognizeMessages(from: images)
+                let blocks = try await scan()
                 try Task.checkCancellation()
                 guard let self, self.readID == scanID else { return }
                 let extracted = ScreenshotMessageParser.parse(blocks, participantNames: names)

@@ -21,6 +21,8 @@ final class SideQuestUITests: XCTestCase {
         waitForStableFrame(messages.buttons["Settings"])
         messages.buttons["Settings"].tap()
         XCTAssertTrue(messages.staticTexts["Shared-session server"].waitForExistence(timeout: 5))
+        messages.buttons["Use local demo server"].tap()
+        messages.buttons["Save server"].tap()
         messages.buttons["Done"].tap()
         let start = messages.buttons["Start SideQuest"]
         for _ in 0..<3 where !start.isHittable { messages.swipeUp() }
@@ -134,6 +136,35 @@ final class SideQuestUITests: XCTestCase {
         XCTAssertTrue(app.buttons["Cancel"].waitForExistence(timeout: 10))
         app.buttons["Cancel"].tap()
         XCTAssertTrue(app.buttons["generatePlans"].isEnabled, "Cancel retains the reviewed selection")
+    }
+    func testPhotosPickerImportsScreenshots() throws {
+        let app = openMessagesExtension()
+        waitForStableFrame(app.buttons["Try Demo"]); app.buttons["Try Demo"].tap()
+        readDemoChat(in: app)
+        let clear = app.buttons["Clear Imported Messages"]
+        for _ in 0..<10 where !clear.isHittable { app.swipeUp() }
+        waitForStableFrame(clear); clear.tap()
+        XCTAssertFalse(app.buttons["generatePlans"].isEnabled)
+        let scan = app.buttons["Scan Recent Chat"]
+        for _ in 0..<5 where !scan.isHittable { app.swipeDown() }
+        waitForStableFrame(scan); scan.tap()
+        XCTAssertTrue(app.buttons["Cancel"].waitForExistence(timeout: 10))
+        let photos = app.images.matching(NSPredicate(format: "identifier == %@ AND label BEGINSWITH %@", "PXGGridLayout-Info", "Photo, Screenshot"))
+        guard photos.count >= 3 else {
+            app.buttons["Cancel"].tap()
+            throw XCTSkip("Seed the three exported demo screenshots into Simulator Photos first; see OCR/session TDD evidence.")
+        }
+        // Photos exposes these visible thumbnails as images rather than tappable controls.
+        for index in [2, 1, 0] {
+            photos.element(boundBy: index).coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
+        }
+        app.buttons["Done"].tap()
+        let analyze = app.buttons["generatePlans"]
+        let loaded = XCTNSPredicateExpectation(predicate: NSPredicate(format: "label == %@ AND enabled == true", "Analyze 8 Messages"), object: analyze)
+        XCTAssertEqual(XCTWaiter.wait(for: [loaded], timeout: 20), .completed)
+        let attachment = XCTAttachment(screenshot: app.screenshot()); attachment.lifetime = .keepAlways; add(attachment)
+        waitForStableFrame(analyze); analyze.tap()
+        XCTAssertTrue(app.staticTexts["Make it a group yes."].waitForExistence(timeout: 10))
     }
     private func waitForStableFrame(_ element: XCUIElement) {
         var previous = CGRect.null
