@@ -238,7 +238,7 @@ struct QuestFlowView: View {
                 voteTally(plan)
                 whyItWorks(plan)
             }
-            Text("The winning plan is chosen by the same vote engine used throughout SideQuest.")
+            Text("Everyone had a say. Now make it a memory.")
                 .font(.caption).foregroundStyle(Color.questSecondary)
         }
     }
