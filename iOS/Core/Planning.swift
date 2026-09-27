@@ -90,6 +90,17 @@ public enum PlanningError: LocalizedError {
     }
 }
 
+/// Real places near Georgia Tech and Midtown for the curated plans, as listed in Apple Maps in September 2026.
+/// The demo shows them without a lookup; the place ID only lets Maps open each business's own page.
+public enum DemoVenues {
+    public static let glazeTea = PlanVenue(name: "Glaze Tea", address: "960 Spring St NW, Atlanta, GA 30309",
+                                           latitude: 33.78081, longitude: -84.38929, placeID: "I7B0061422F5DEC63")
+    public static let piedmontPark = PlanVenue(name: "Piedmont Park", address: "1320 Monroe Dr NE, Atlanta, GA 30306",
+                                               latitude: 33.78728, longitude: -84.37208, placeID: "I4C670C799ADD7DA4")
+    public static let atlantaContemporary = PlanVenue(name: "Atlanta Contemporary", address: "535 Means St NW, Atlanta, GA 30318",
+                                                      latitude: 33.77294, longitude: -84.40531, placeID: "I1AA7244113AD17B9")
+}
+
 public enum DemoPlanner {
     public static func plans(for request: PlanningRequest) throws -> [PlanOption] {
         guard let window = request.candidateTimeWindows.first, let first = request.participants.first,
@@ -103,15 +114,24 @@ public enum DemoPlanner {
             ["alex": "Plenty of time after your 6:30 lab.", "maya": "A relaxed break from your laptop.", "jake": "An $8 plan leaves breathing room this week.", "sarah": "Space to talk, with no loud restaurant."],
             ["alex": "An easy evening after class, with something sweet.", "maya": "A dose of creativity without a whole class.", "jake": "About $10, comfortably inside your budget.", "sarah": "An indoor option with time to catch up."]
         ]
+        let venues = budget < 10 ? [DemoVenues.piedmontPark, DemoVenues.piedmontPark, DemoVenues.atlantaContemporary]
+                                 : [DemoVenues.glazeTea, DemoVenues.piedmontPark, DemoVenues.atlantaContemporary]
+        let secondStops: [String?] = budget < 10 ? [nil, nil, nil] : [nil, nil, "Insomnia Cookies · 930 Spring St NW"]
+        let tips: [[String]] = budget < 10 ? [[], [], []] : [
+            ["Grab air-dry clay beforehand at Blick Art Materials, 878 Peachtree St NE.", "Glaze Tea is open until 10 PM."],
+            ["Bring a blanket, snacks, and a deck of cards."],
+            ["Atlanta Contemporary is free and open until 8 PM on Thursdays."]
+        ]
         return titles.enumerated().map { index, title in
-            PlanOption(id: "plan-\(index + 1)", title: title, activity: activities[index], secondStop: nil,
+            PlanOption(id: "plan-\(index + 1)", title: title, activity: activities[index], secondStop: secondStops[index],
                        start: start, end: min(window.end, start.addingTimeInterval(7200)), area: first.approximateArea,
                        estimatedCostPerPerson: budget < 10 ? 0 : [12.0, 8, 10][index],
                        explanation: ["Creative · quiet · everyone available", "Relaxed · inexpensive · easy for everyone", "Indoor · casual · time to reconnect"][index],
                        whyItWorks: Dictionary(uniqueKeysWithValues: request.participants.map { ($0.id, fits[index][$0.id] ?? "Fits your available time and comfortable budget.") }),
-                       concerns: ["Curated demo suggestion. Prices, access and opening hours are not verified."], minimumAge: 0, groupFitScore: Double(90 - index),
+                       concerns: tips[index] + ["Real place, curated for this demo. Nothing is booked; check hours and prices before you go."],
+                       minimumAge: 0, groupFitScore: Double(90 - index),
                        venueSearchQuery: ["art supply store", "public park", "art gallery"][index],
-                       venue: PlanVenue(name: "Midtown meetup point", address: "Midtown Atlanta · demo meeting point", latitude: DemoData.location.latitude, longitude: DemoData.location.longitude))
+                       venue: venues[index])
         }
     }
 }

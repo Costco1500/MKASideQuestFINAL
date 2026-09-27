@@ -1,5 +1,6 @@
 import XCTest
 import UIKit
+import CoreLocation
 @testable import SideQuest
 @testable import SideQuestCore
 
@@ -72,6 +73,20 @@ final class WarmDemoTests: XCTestCase {
         XCTAssertEqual(store.session.planOptions.map(\.estimatedCostPerPerson), [12, 8, 10])
         XCTAssertTrue(store.session.planOptions.allSatisfy { Calendar.current.component(.hour, from: $0.start) == 19 })
         XCTAssertTrue(store.session.planOptions[0].whyItWorks["maya"]!.contains("pottery"))
+    }
+    func testEachPlanNamesARealNearbyBusinessWithItsStreetAddress() async throws {
+        let store = makeStore(); store.analyze(); try await settle(store)
+        let plans = store.session.planOptions
+        let venues = plans.compactMap(\.venue)
+        XCTAssertEqual(venues.map(\.name), ["Glaze Tea", "Piedmont Park", "Atlanta Contemporary"])
+        XCTAssertEqual(venues.map(\.address), ["960 Spring St NW, Atlanta, GA 30309", "1320 Monroe Dr NE, Atlanta, GA 30306", "535 Means St NW, Atlanta, GA 30318"])
+        XCTAssertTrue(venues.allSatisfy { $0.isValid && $0.placeID?.isEmpty == false })
+        // Walkable or a short ride from Tech Square, where the chat says the group is.
+        let techSquare = CLLocation(latitude: 33.7768, longitude: -84.3890)
+        XCTAssertTrue(venues.allSatisfy { CLLocation(latitude: $0.latitude, longitude: $0.longitude).distance(from: techSquare) < 3_000 })
+        XCTAssertEqual(plans[2].secondStop, "Insomnia Cookies · 930 Spring St NW")
+        XCTAssertEqual(plans[0].calendarLocation, "Glaze Tea, 960 Spring St NW, Atlanta, GA 30309")
+        XCTAssertFalse(plans.flatMap(\.concerns).joined().localizedCaseInsensitiveContains("meetup point"))
     }
     func testGroupVotesAreDeterministicAndUseVoteEngine() async throws {
         let store = makeStore(); store.analyze(); try await settle(store); store.showPlans()

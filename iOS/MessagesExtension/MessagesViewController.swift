@@ -54,11 +54,20 @@ final class MessagesViewController: MSMessagesAppViewController {
                 canvas.fillEllipse(in: CGRect(x: -60, y: 210, width: 180, height: 180))
                 // Messages overlays the app icon on the top-left corner, so the wordmark starts after it.
                 ("✦ SIDEQUEST" as NSString).draw(at: CGPoint(x: 100, y: 28), withAttributes: [.font: UIFont.systemFont(ofSize: 24, weight: .heavy), .foregroundColor: UIColor.white])
-                let summary: String
+                var lines = ["A little less planning.", "A lot more together."]
                 if let winner = session.winningPlan {
-                    summary = winner.title + "\n" + winner.start.formatted(.dateTime.weekday(.wide).hour().minute()) + "\n~$\(Int(winner.estimatedCostPerPerson))/person · 4 friends\nTap to open"
-                } else { summary = "A little less planning.\nA lot more together." }
-                (summary as NSString).draw(in: CGRect(x: 30, y: 92, width: 540, height: 196), withAttributes: [.font: UIFont.systemFont(ofSize: 25, weight: .bold), .foregroundColor: UIColor.white])
+                    lines = [winner.title, winner.start.formatted(.dateTime.weekday(.wide).hour().minute())]
+                    if let venue = winner.venue {
+                        // "Glaze Tea · 960 Spring St NW": the street is the address before the city.
+                        lines.append([venue.name, venue.address?.components(separatedBy: ",").first].compactMap { $0 }.joined(separator: " · "))
+                    }
+                    lines += ["~$\(Int(winner.estimatedCostPerPerson))/person · 4 friends", "Tap to open"]
+                }
+                let truncating = NSMutableParagraphStyle(); truncating.lineBreakMode = .byTruncatingTail
+                for (index, line) in lines.enumerated() {
+                    (line as NSString).draw(in: CGRect(x: 30, y: 92 + CGFloat(index) * 38, width: 540, height: 36),
+                                            withAttributes: [.font: UIFont.systemFont(ofSize: 25, weight: .bold), .foregroundColor: UIColor.white, .paragraphStyle: truncating])
+                }
             }
             message.layout = layout; message.url = try link.url(); message.summaryText = "SideQuest: " + subtitle
             conversation.insert(message) { [weak self] error in

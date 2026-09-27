@@ -12,7 +12,7 @@ A native SwiftUI + iMessage prototype: turn “we should hang out” into a plan
 
 **No server, API key, screenshots, photo setup, or second device is needed.** Analysis takes 1.8 seconds and group votes arrive in 1.4 seconds. Tap **… → Reset Demo** in Debug builds to record again. The discreet **Offline prototype** label explains what is simulated.
 
-Dates use the next Thursday. Participant profiles are already filled in. Maps opens a clearly labeled sample meetup point in Midtown Atlanta; it is not a booked or verified activity venue. The demo never waits for a place lookup. Apple's Maps app may need internet to load its map.
+Dates use the next Thursday. Participant profiles are already filled in. Each plan names a real place near Georgia Tech and Midtown, with the street address Apple Maps listed in September 2026: **Glaze Tea** (960 Spring St NW), **Piedmont Park** (1320 Monroe Dr NE), and **Atlanta Contemporary** (535 Means St NW, free and open until 8 PM Thursdays), then **Insomnia Cookies** (930 Spring St NW). Nothing is booked. Plans appear without any place lookup; Maps opens the business's own page when it loads within three seconds, otherwise a pin at the address. Apple's Maps app may need internet to load its map. The places live in `DemoVenues` in `iOS/Core/Planning.swift`.
 
 ## Validation
 

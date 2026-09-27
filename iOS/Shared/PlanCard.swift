@@ -32,10 +32,10 @@ struct PlanCard<Footer: View>: View {
                         if let address = venue.address { Text(address).font(.caption).foregroundStyle(Color.questSecondary) }
                     }
                     Spacer(minLength: 4)
-                    Button { onOpenMaps?(); venue.mapItem.openInMaps() } label: { Image(systemName: "arrow.triangle.turn.up.right.diamond.fill") }
-                        .buttonStyle(QuestSecondaryButtonStyle()).accessibilityLabel("Open in Apple Maps").accessibilityIdentifier("openMaps-\(plan.id)")
+                    Button { onOpenMaps?(); venue.openInMaps() } label: { Image(systemName: "arrow.triangle.turn.up.right.diamond.fill") }
+                        .buttonStyle(QuestSecondaryButtonStyle()).accessibilityLabel("Open \(venue.name) in Apple Maps").accessibilityIdentifier("openMaps-\(plan.id)")
                 }
-                Text("Demo meetup pin · choose a venue before going").font(.caption2).foregroundStyle(Color.questSecondary)
+                Text("Real place · nothing booked yet").font(.caption2).foregroundStyle(Color.questSecondary)
             } else {
                 Label(plan.area, systemImage: "mappin.and.ellipse").font(.headline)
                 Text("Specific location not found").font(.caption).foregroundStyle(Color.questSecondary)

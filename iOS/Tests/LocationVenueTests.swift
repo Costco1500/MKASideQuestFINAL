@@ -29,12 +29,14 @@ final class LocationVenueTests: XCTestCase {
         XCTAssertFalse(wire.contains("33.778123"))
     }
     func testVenueRoundTripsAndOldPlansStillDecodeWithoutVenue() throws {
-        let venue = PlanVenue(name: "A MapKit result", address: "123 Example St", latitude: 33.78, longitude: -84.39)
+        let venue = PlanVenue(name: "A MapKit result", address: "123 Example St", latitude: 33.78, longitude: -84.39, placeID: "I0000")
         XCTAssertEqual(try APIJSON.decoder.decode(PlanVenue.self, from: APIJSON.encoder.encode(venue)), venue)
         let request = PlanningRequest(participants: DemoData.participants(), messages: [])
         let plans = try DemoPlanner.plans(for: request)
         XCTAssertTrue(PlanRules.validate(plans, for: request))
-        let old = try APIJSON.decoder.decode([PlanOption].self, from: APIJSON.encoder.encode(plans))
+        // Plans saved before venues existed have no venue key at all.
+        let withoutVenues = plans.map { plan -> PlanOption in var old = plan; old.venue = nil; return old }
+        let old = try APIJSON.decoder.decode([PlanOption].self, from: APIJSON.encoder.encode(withoutVenues))
         XCTAssertNil(old[0].venue)
         XCTAssertNotNil(old[0].venueSearchQuery)
     }

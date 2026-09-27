@@ -61,7 +61,7 @@ struct QuestFlowView: View {
                     VStack(alignment: .leading, spacing: 22) {
                         QuestHero(title: "A little less planning.\nA lot more together.", subtitle: "A guided SideQuest prototype.")
                         Text("This walkthrough uses a fictional conversation, curated plans, and simulated friends' votes. No live AI analysis takes place.")
-                        Text("Calendar and Messages actions are real. Maps opens a sample meetup point; no venue or booking is confirmed.")
+                        Text("Calendar and Messages actions are real. Each plan names a real place near Georgia Tech and Midtown with its street address; nothing is booked.")
                         Spacer()
                     }.padding(24).questScreen()
                         .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { showingAbout = false } } }

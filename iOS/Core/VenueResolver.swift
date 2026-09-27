@@ -8,8 +8,11 @@ public struct PlanVenue: Codable, Equatable, Sendable {
     public var longitude: Double
     /// Listed hours in OpenStreetMap syntax, when a matching place publishes them.
     public var openingHours: String? = nil
-    public init(name: String, address: String?, latitude: Double, longitude: Double, openingHours: String? = nil) {
-        self.name = name; self.address = address; self.latitude = latitude; self.longitude = longitude; self.openingHours = openingHours
+    /// Apple Maps place ID, so Maps can open the business's own page instead of a dropped pin.
+    public var placeID: String? = nil
+    public init(name: String, address: String?, latitude: Double, longitude: Double, openingHours: String? = nil, placeID: String? = nil) {
+        self.name = name; self.address = address; self.latitude = latitude; self.longitude = longitude
+        self.openingHours = openingHours; self.placeID = placeID
     }
     public var isValid: Bool {
         !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
@@ -19,6 +22,21 @@ public struct PlanVenue: Codable, Equatable, Sendable {
         let item = MKMapItem(placemark: MKPlacemark(coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude)))
         item.name = name
         return item
+    }
+    /// Opens the business's own Apple Maps page when its place ID loads within a few seconds,
+    /// otherwise a named pin at the venue's coordinates.
+    @MainActor public func openInMaps() {
+        guard #available(iOS 18.0, *), let placeID, let identifier = MKMapItem.Identifier(rawValue: placeID) else {
+            mapItem.openInMaps(); return
+        }
+        let request = MKMapItemRequest(mapItemIdentifier: identifier)
+        let pin = mapItem
+        Task { @MainActor in
+            let timeout = Task { try await Task.sleep(for: .seconds(3)); request.cancel() }
+            let place = try? await request.mapItem
+            timeout.cancel()
+            (place ?? pin).openInMaps()
+        }
     }
 }
 
