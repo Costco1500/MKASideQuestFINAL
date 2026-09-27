@@ -4,7 +4,7 @@ Native iPhone app + Messages extension, built with SwiftUI, Messages, EventKit, 
 
 ## Website
 
-A static showcase page lives in `site/` and deploys to GitHub Pages at https://costco1500.github.io/MKASideQuestFINAL/ on pushes that change it. Preview locally with `python3 -m http.server 8000 --directory site`. To embed the demo video, set `data-youtube-id` in `site/index.html` to the 11-character YouTube video ID.
+A static showcase page lives in `site/` and deploys to GitHub Pages at https://costco1500.github.io/MKASideQuestFINAL/ on pushes that change it. Preview locally with `python3 -m http.server 8000 --directory site`. The demo video is `site/media/sidequest-demo.mp4` (H.264/AAC, 960×540, web-optimized) with poster `site/media/sidequest-demo-poster.jpg`. After changing `site/styles.css`, bump its `?v=` number in `site/index.html` so browsers skip the cached copy.
 
 ## Run in Xcode
 

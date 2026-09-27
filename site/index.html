@@ -9,7 +9,7 @@
   <meta property="og:title" content="SideQuest — Less planning. More hanging out.">
   <meta property="og:description" content="Turn the group chat into your next good memory. An iMessage app built at HackGT 13.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=6">
+  <link rel="stylesheet" href="styles.css?v=7">
   <script>
     document.documentElement.classList.add("js");
     // Apply a saved theme before first paint to avoid a flash. No saved choice = follow the system.
@@ -216,14 +216,12 @@
     <section id="demo" class="demo">
       <div class="container">
         <h2 class="reveal">See it in action.</h2>
-        <p class="section-sub reveal">A walkthrough of SideQuest running inside Messages.</p>
-        <!-- To show the video, put the 11-character YouTube ID in data-youtube-id (e.g. "dQw4w9WgXcQ"). -->
-        <div class="video reveal" data-youtube-id="">
-          <div class="video-placeholder">
-            <span class="play" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg></span>
-            <p class="video-title">Demo video coming soon.</p>
-            <p class="muted">We’re recording the full walkthrough.</p>
-          </div>
+        <p class="section-sub reveal">A three-minute walkthrough of SideQuest running inside Messages.</p>
+        <div class="video reveal">
+          <video controls playsinline preload="metadata" poster="media/sidequest-demo-poster.jpg" aria-label="SideQuest demo video">
+            <source src="media/sidequest-demo.mp4" type="video/mp4">
+            <a href="media/sidequest-demo.mp4">Download the SideQuest demo video (MP4)</a>
+          </video>
         </div>
       </div>
     </section>
@@ -256,18 +254,6 @@
       });
       systemDark.addEventListener("change", syncToggle);
       syncToggle();
-
-      var box = document.querySelector("[data-youtube-id]");
-      var id = (box.getAttribute("data-youtube-id") || "").trim();
-      if (/^[A-Za-z0-9_-]{11}$/.test(id)) {
-        var frame = document.createElement("iframe");
-        frame.src = "https://www.youtube-nocookie.com/embed/" + id;
-        frame.title = "SideQuest demo video";
-        frame.allow = "accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen";
-        frame.allowFullscreen = true;
-        frame.loading = "lazy";
-        box.replaceChildren(frame);
-      }
 
       // Apple-style fade-up as sections scroll into view; everything shows immediately without support.
       var items = document.querySelectorAll(".reveal, .reveal-group");
